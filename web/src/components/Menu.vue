@@ -5,8 +5,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import TabMenu from 'primevue/TabMenu'
+import { ref } from 'vue';
+import TabMenu from 'primevue/tabmenu'
 
 const items = ref([
     {

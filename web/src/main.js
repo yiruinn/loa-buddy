@@ -7,6 +7,7 @@ import Mari from './views/Mari.vue'
 import Engravings from './views/Engravings.vue'
 import SpecialHoning from './views/SpecialHoning.vue'
 import Settings from './views/Settings.vue'
+
 import PrimeVue from 'primevue/config';
 
 import 'primevue/resources/themes/lara-light-teal/theme.css';
