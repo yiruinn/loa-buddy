@@ -1,15 +1,9 @@
 <template>
-  <div>
-    <h1>{{ message }}</h1>
-  </div>
+  <Menu />
+  <router-view/>
+  
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      message: 'Hello, World!'
-    }
-  }
-}
+<script setup>
+  import Menu from './components/Menu.vue'
 </script>
