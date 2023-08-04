@@ -1,0 +1,79 @@
+[
+    {
+        "name": "Crystalized Guardian Stone [4000]",
+        "category": "Honing",
+        "quantity": 4000,
+        "unit": 10,
+        "cost": 280
+    },
+    {
+        "name": "Crystalized Destruction Stone [1000]",
+        "category": "Honing",
+        "quantity": 1000,
+        "unit": 10,
+        "cost": 150
+    },
+    {
+        "name": "Honor Leapstone [30]",
+        "category": "Honing",
+        "quantity": 30,
+        "unit": 1,
+        "cost": 45
+    },
+    {
+        "name": "Great Honor Leapstone [50]",
+        "category": "Honing",
+        "quantity": 50,
+        "unit": 1,
+        "cost": 100
+    },
+    {
+        "name": "Marvelous Honor Leapstone [20]",
+        "category": "Honing",
+        "quantity": 20,
+        "unit": 1,
+        "cost": 100
+    },
+    {
+        "name": "Honor Shard Pouch (S) [20]",
+        "category": "Honing",
+        "quantity": 20,
+        "unit": 1,
+        "cost": 112
+    },
+    {
+        "name": "Honor Shard Pouch (L) [20]",
+        "category": "Honing",
+        "quantity": 20,
+        "unit": 1,
+        "cost": 291
+    },
+    {
+        "name": "Superior Oreha Fusion Material [30]",
+        "category": "Honing",
+        "quantity": 30,
+        "unit": 1,
+        "cost": 45
+    },
+    {
+        "name": "Solar Grace [60]",
+        "category": "Honing",
+        "quantity": 60,
+        "unit": 1,
+        "cost": 120
+    },
+    {
+        "name": "Solar Blessing [50]",
+        "category": "Honing",
+        "quantity": 50,
+        "unit": 1,
+        "cost": 250
+    },
+    {
+        "name": "Solar Protection [30]",
+        "category": "Honing",
+        "quantity": 30,
+        "unit": 1,
+        "cost": 300
+    }
+]
