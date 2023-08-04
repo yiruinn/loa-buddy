@@ -1,19 +1,14 @@
 <template>
   <div>
     <h2> Mari's Shop </h2>
-    <InputText
-      id="exchangeRate"
-      v-model="exchangeRate"
-      :useGrouping="false"
-      placeholder="Enter exchange rate..."
-      @input="calculatePrices"
-    />
-  
+    <InputText id="exchangeRate" v-model="exchangeRate" :useGrouping="false" placeholder="Enter exchange rate"
+      @input="calculatePrices" />
+
     <hr>
 
     <DataTable :value="items" tableStyle="min-width: 50rem">
-      <Column field="name" header="Name"></Column>
-      <Column field="category" header="Category"></Column>
+      <Column field="name" sortable header="Name"></Column>
+      <Column field="category" sortable header="Category"></Column>
       <Column field="quantity" header="Quantity"></Column>
       <Column field="unit" header="Unit"></Column>
       <Column :field="calculateItemPrice" header="Price"></Column>
@@ -47,14 +42,13 @@ function calculatePrices() {
 </script>
 
 <style scoped>
+h2 {
+  margin-top: 20px;
+}
 
-  h2 {
-    margin-top: 20px;
-  }
-
-  hr {
-    border: 1px solid #ddd;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
+hr {
+  border: 1px solid #ddd;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 </style>
