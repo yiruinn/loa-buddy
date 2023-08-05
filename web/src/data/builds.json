@@ -1,0 +1,38 @@
+[
+    {
+        "name": "Surge Deathblade",
+        "primary_stat": "spec",
+        "secondary_stats": ["crit"],
+        "engravings": [
+          {
+            "name": "Surge",
+            "priority": 1
+          },
+          {
+            "name": "Grudge",
+            "priority": 2
+          },
+          {
+            "name": "Ambush Master",
+            "priority": 3
+          },
+          {
+            "name": "Adrenaline",
+            "priority": 4
+          },
+          {
+            "name": "Cursed Doll",
+            "priority": 5
+          },
+          {
+            "name": "Keen Blunt Weapon",
+            "priority": 5
+          },
+          {
+            "name": "Ether Predator",
+            "priority": 6
+          }
+        ]
+      }
+      
+]
