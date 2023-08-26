@@ -1,16 +1,3 @@
-<!-- <template>
-    <div>
-        <BuildCard :build="buildData[0]" />
-    </div>
-</template>
-  
-<script setup>
-import BuildCard from '../components/EngravingCard.vue'; // Adjust the path as needed
-import buildData from '../data/engravings.json'
-
-</script> -->
-  
-
 <template>
     <div>
         <h1>Build Search</h1>
@@ -32,12 +19,17 @@ import buildData from '../data/engravings.json'
 
         <hr>
 
-        <h2>Builds (Two match only)</h2>
-        <div v-if="filteredBuilds.length > 0">
-            <EngravingCard v-for="build in filteredBuilds" :build="build" />
+        <h2>Builds</h2>
+        <!-- <div v-if="filteredBuilds.length > 0"> -->
+        <div v-if="engraving1 == '' && engraving2 == ''">
+            <div class="formgrid grid">
+                <EngravingCard v-for="build in builds" :build="build" />
+            </div>
         </div>
         <div v-else>
-            <p>No matching builds.</p>
+            <div class="formgrid grid">
+                <EngravingCard v-for="build in filteredBuilds" :build="build" />
+            </div>
         </div>
     </div>
 </template>
@@ -61,13 +53,13 @@ const filteredBuilds = ref([]);
 const filterBuilds = () => {
     filteredBuilds.value = []
 
-    // // Apply the engraving filters
+    // Apply the engraving filters
     for (let build of builds) {
         const engraving1Found = build.engravings.find(e => e.name === engraving1.value);
         const engraving2Found = build.engravings.find(e => e.name === engraving2.value);
 
-        if (engraving1Found && engraving2Found && engraving1Found.priority !== engraving2Found.priority) {
-            let buildCopy = { ...build }
+        if (engraving1Found || engraving2Found) {
+            let buildCopy = JSON.parse(JSON.stringify(build))
             buildCopy.engravings.forEach(engraving => {
                 if (engraving.name === engraving1.value || engraving.name === engraving2.value) {
                     engraving.highlighted = true;

@@ -2,7 +2,9 @@
     <Card style="width: 20em; text-align: center">
         <template #title>
             <p> {{ build.name }} </p>
+            <hr>
         </template>
+
         <template #subtitle>
             <p>Primary Stat: {{ build.primary_stat }}</p>
             <p>Secondary Stat: {{ build.secondary_stats.join(', ') }}</p>
@@ -10,7 +12,7 @@
         <template #content>
             <p v-for="group in groupedEngravings" :key="group[0].priority"
                 :class="{ highlighted: group.some(e => e.highlighted) }">
-                {{ group.map(engraving => engraving.name).join(', ') }}
+                {{ group.map(engraving => engraving.name).join('/') }}
             </p>
         </template>
     </Card>

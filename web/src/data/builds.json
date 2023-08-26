@@ -33,6 +33,36 @@
             "priority": 6
           }
         ]
+      },
+      {
+        "name": "RE Deathblade",
+        "primary_stat": "spec",
+        "secondary_stats": ["crit"],
+        "engravings": [
+          {
+            "name": "Remaining Energy",
+            "priority": 1
+          },
+          {
+            "name": "Grudge",
+            "priority": 2
+          },
+          {
+            "name": "Super Charge",
+            "priority": 3
+          },
+          {
+            "name": "Ambush Master",
+            "priority": 4
+          },
+          {
+            "name": "Cursed Doll",
+            "priority": 5
+          },
+          {
+            "name": "Adrenaline",
+            "priority": 6
+          }
+        ]
       }
-      
 ]
