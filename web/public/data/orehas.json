@@ -1,0 +1,74 @@
+[
+    {
+      "name": "Abidos Fusion Material",
+      "items": [
+        { "name": "Fish", "quantity": 86, "costPerItem": 50 },
+        { "name": "Redflesh Fish", "quantity": 45, "costPerItem": 111 },
+        { "name": "Abidos Carp", "quantity": 33, "costPerItem": 678 }
+      ],
+      "craftingCost": 400,
+      "quantity": 10,
+      "sellingPrice": 74,
+      "craftingTime": 59.716666667
+    },
+    {
+        "name": "Abidos Fusion Material",
+        "items": [
+          { "name": "Meat", "quantity": 86, "costPerItem": 67 },
+          { "name": "Treated Meat", "quantity": 45, "costPerItem": 122 },
+          { "name": "Abidos Meat", "quantity": 33, "costPerItem": 817 }
+        ],
+        "craftingCost": 400,
+        "quantity": 10,
+        "sellingPrice": 74,
+        "craftingTime": 59.716666667
+      },
+      {
+        "name": "Abidos Fusion Material",
+        "items": [
+          { "name": "Relic", "quantity": 86, "costPerItem": 50 },
+          { "name": "Rare Relic", "quantity": 45, "costPerItem": 135 },
+          { "name": "Abidos Relic", "quantity": 33, "costPerItem": 620 }
+        ],
+        "craftingCost": 400,
+        "quantity": 10,
+        "sellingPrice": 74,
+        "craftingTime": 59.716666667
+      },
+      {
+        "name": "Abidos Fusion Material",
+        "items": [
+          { "name": "Flower", "quantity": 86, "costPerItem": 77 },
+          { "name": "Shy Flower", "quantity": 45, "costPerItem": 160 },
+          { "name": "Abidos Flower", "quantity": 33, "costPerItem": 733 }
+        ],
+        "craftingCost": 400,
+        "quantity": 10,
+        "sellingPrice": 74,
+        "craftingTime": 59.716666667
+      },
+      {
+        "name": "Abidos Fusion Material",
+        "items": [
+          { "name": "Timber", "quantity": 86, "costPerItem": 59 },
+          { "name": "Tender Timber", "quantity": 45, "costPerItem": 116 },
+          { "name": "Abidos Timber", "quantity": 33, "costPerItem": 677 }
+        ],
+        "craftingCost": 400,
+        "quantity": 10,
+        "sellingPrice": 74,
+        "craftingTime": 59.716666667
+      },
+      {
+        "name": "Abidos Fusion Material",
+        "items": [
+          { "name": "Ore", "quantity": 86, "costPerItem": 75 },
+          { "name": "Heavy Ore", "quantity": 45, "costPerItem": 130 },
+          { "name": "Strong Ore", "quantity": 33, "costPerItem": 725 }
+        ],
+        "craftingCost": 400,
+        "quantity": 10,
+        "sellingPrice": 74,
+        "craftingTime": 59.716666667
+      }
+]
