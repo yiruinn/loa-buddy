@@ -5,7 +5,6 @@
         <thead>
           <tr>
             <th>Recipe</th>
-            <th>Items</th>
             <th>Cost per 100</th>
             <th>Crafting Cost</th>
             <th>Total Cost</th>
@@ -19,17 +18,18 @@
         <tbody>
           <tr v-for="(recipe, index) in recipes" :key="index">
             <td>
-              <ul>
-                <li>{{ recipe.name }}</li>
-                <li>x{{ recipe.quantity }}</li>
-              </ul>
-            </td>
-            <td>
-              <ul>
-                <li v-for="(item, itemIndex) in recipe.items" :key="itemIndex">
-                  {{ item.name }} x{{ item.quantity }}
-                </li>
-              </ul>
+              <n-popover trigger="hover">
+                <template #trigger>
+                  <n-button text> <!-- Use a text button for a less intrusive look -->
+                    {{ recipe.name }} (x{{ recipe.quantity }})
+                  </n-button>
+                </template>
+                <ul>
+                  <li v-for="(item, itemIndex) in recipe.items" :key="itemIndex">
+                    {{ item.name }} x{{ item.quantity }}
+                  </li>
+                </ul>
+              </n-popover>
             </td>
             <td>
               <ul>
@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import { NCard, NH2, NTable, NInputNumber } from 'naive-ui';
+import { NCard, NTable, NInputNumber, NPopover, NButton } from 'naive-ui';
 
 // Define props
 const props = defineProps({
