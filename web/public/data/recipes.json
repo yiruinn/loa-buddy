@@ -1,0 +1,93 @@
+[
+  {
+    "name": "Abidos Fusion Material",
+    "craftingCost": 400,
+    "quantity": 10,
+    "sellingPrice": 0,
+    "craftingTime": 60,
+    "materialOptions": [
+      {
+        "category": "Fishing",
+        "items": [
+          { "id": "fish", "quantity": 86 },
+          { "id": "redflesh_fish", "quantity": 45 },
+          { "id": "abidos_solar_carp", "quantity": 33 }
+        ]
+      },
+      {
+        "category": "Hunting",
+        "items": [
+          { "id": "thick_raw_meat", "quantity": 86 },
+          { "id": "treated_meat", "quantity": 45 },
+          { "id": "abidos_thick_raw_meat", "quantity": 33 }
+        ]
+      },
+      {
+        "category": "Excavating",
+        "items": [
+          { "id": "ancient_relic", "quantity": 86 },
+          { "id": "rare_relic", "quantity": 45 },
+          { "id": "abidos_relic", "quantity": 33 }
+        ]
+      },
+      {
+        "category": "Foraging",
+        "items": [
+          { "id": "wild_flower", "quantity": 86 },
+          { "id": "shy_wild_flower", "quantity": 45 },
+          { "id": "abidos_wild_flower", "quantity": 33 }
+        ]
+      },
+      {
+        "category": "Logging",
+        "items": [
+          { "id": "timber", "quantity": 86 },
+          { "id": "tender_timber", "quantity": 45 },
+          { "id": "abidos_timber", "quantity": 33 }
+        ]
+      },
+      {
+        "category": "Mining",
+        "items": [
+          { "id": "iron_ore", "quantity": 86 },
+          { "id": "heavy_iron_ore", "quantity": 45 },
+          { "id": "abidos_iron_ore", "quantity": 33 }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Prime Oreha Fusion Material",
+    "craftingCost": 300,
+    "quantity": 15,
+    "sellingPrice": 0,
+    "craftingTime": 75,
+    "materialOptions": [
+      {
+        "category": "Fishing",
+        "items": [
+          { "id": "fish", "quantity": 142 },
+          { "id": "redflesh_fish", "quantity": 69 },
+          { "id": "oreha_solar_carp", "quantity": 52 }
+
+        ]
+      },
+      {
+        "category": "Excavating",
+        "items": [
+          { "id": "ancient_relic", "quantity": 107 },
+          { "id": "rare_relic", "quantity": 51 },
+          { "id": "oreha_relic", "quantity": 52 }
+        ]
+      },
+      {
+        "category": "Hunting",
+        "items": [
+          { "id": "thick_raw_meat", "quantity": 142 },
+          { "id": "treated_meat", "quantity": 69 },
+          { "id": "oreha_thick_meat", "quantity": 52 }
+        ]
+      }
+    ]
+  }
+]
