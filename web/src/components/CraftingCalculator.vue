@@ -23,10 +23,11 @@
                 @update:value="category => updateMaterial(index, category)"
                 placeholder="Select Material"
                 class="material-select"
+                :render-tag="({ option }) => `${recipe.name} (${option.value})`"
               />
             </td>
-            <td>{{ getAdjustedCraftingCost(recipe) }}</td>
-            <td>{{ getTotalCost(recipe, index) }}</td>
+            <td>{{ getAdjustedCraftingCost(recipe).toFixed(2) }}</td>
+            <td>{{ getTotalCost(recipe, index).toFixed(2) }}</td>
             <td>
               <n-input-number
                 v-model:value="recipe.sellingPrice"
@@ -86,7 +87,7 @@ const getAdjustedCraftingCost = (recipe) =>
 
 const getSortedMaterialOptions = (recipe) => {
   const adjustedGoldCost = getAdjustedCraftingCost(recipe);
-  const sortedOptions = recipe.materialOptions
+  return recipe.materialOptions
     .map(option => {
       const materialCost = calculateMaterialCost(option.items);
       const totalCost = materialCost + adjustedGoldCost;
@@ -100,14 +101,6 @@ const getSortedMaterialOptions = (recipe) => {
       label: `${option.category} - ${option.cost.toFixed(2)}g`,
       value: option.category,
     }));
-
-  return [
-    {
-      type: 'group',
-      label: recipe.name,
-      children: sortedOptions,
-    },
-  ];
 };
 
 const updateMaterial = (index, category) => {
@@ -128,7 +121,7 @@ const calculateTax = (sellingPrice) => Math.ceil(sellingPrice * 0.05);
 
 const getProfit = (recipe, index) => {
   const tax = calculateTax(recipe.sellingPrice);
-  return (recipe.sellingPrice - tax - getUnitPrice(recipe, index)).toFixed(2);
+  return (recipe.sellingPrice - tax - parseFloat(getUnitPrice(recipe, index))).toFixed(2);
 };
 
 const getAdjustedCraftingTime = (recipe) =>
@@ -136,16 +129,14 @@ const getAdjustedCraftingTime = (recipe) =>
 
 const getProfitPerHour = (recipe, index) => {
   const profitValue = parseFloat(getProfit(recipe, index));
-  const timeInHours = getAdjustedCraftingTime(recipe) / 60;
+  const timeInHours = parseFloat(getAdjustedCraftingTime(recipe)) / 60;
   return (profitValue / timeInHours).toFixed(2);
 };
 
 const initializeCategories = () => {
   selectedCategories.value = props.recipes.map(recipe => {
     const sortedOptions = getSortedMaterialOptions(recipe);
-    // The options are now nested in a group
-    const options = sortedOptions.length > 0 ? sortedOptions[0].children : [];
-    return options.length > 0 ? options[0].value : null;
+    return sortedOptions.length > 0 ? sortedOptions[0].value : null;
   });
 };
 
