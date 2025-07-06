@@ -3,7 +3,12 @@
     <n-collapse>
       <n-collapse-item name="1">
         <template #header>
-          <span style="font-size: 1.2em; font-weight: bold;">Material Costs</span>
+          <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+            <span style="font-size: 1.2em; font-weight: bold;">Material Costs</span>
+            <span v-if="formattedLastUpdated" style="font-size: 0.9em; color: #aaa; margin-right: 15px">
+              Last Updated: {{ formattedLastUpdated }}
+            </span>
+          </div>
         </template>
         <div class="material-costs-grid">
           <div class="material-row">
@@ -62,6 +67,16 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  lastUpdated: {
+    type: String,
+    default: '',
+  },
+});
+
+const formattedLastUpdated = computed(() => {
+  if (!props.lastUpdated) return '';
+  const date = new Date(props.lastUpdated);
+  return date.toLocaleString();
 });
 
 const itemCategoryMapping = {

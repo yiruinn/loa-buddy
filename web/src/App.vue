@@ -41,7 +41,7 @@
                 </n-collapse-item>
               </n-collapse>
             </n-card>
-            <MaterialCosts :materials="materials" />
+            <MaterialCosts :materials="materials" :last-updated="lastUpdated" />
             <CraftingCalculator
               :recipes="recipes"
               :materials="materials"
@@ -68,6 +68,7 @@ import { materialCosts } from './store';
 const currentTool = ref('crafting');
 const recipes = ref([]);
 const materials = ref([]);
+const lastUpdated = ref('');
 const craftingCostReductionPercent = ref(10);
 const craftingTimeReductionPercent = ref(20);
 
@@ -105,9 +106,10 @@ onMounted(async () => {
     const recipesData = await recipesResponse.json();
     const materialsData = await materialsResponse.json();
     
-    materials.value = materialsData;
+    materials.value = materialsData.materials;
+    lastUpdated.value = materialsData.last_updated;
     
-    materialsData.forEach(material => {
+    materialsData.materials.forEach(material => {
       materialCosts[material.id] = material.pricePer100;
     });
 
