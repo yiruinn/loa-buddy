@@ -1,43 +1,60 @@
 <template>
-  <n-collapse class="material-costs-collapse">
-    <n-collapse-item title="Material Costs" name="1">
-      <div class="material-costs-grid">
-        <div class="material-row">
-          <div v-for="group in topRowGroups" :key="group.category" class="material-group">
-            <h3>{{ group.category }}</h3>
-            <div v-for="item in group.items" :key="item.id" class="material-cost-item">
-              <span>{{ item.name }}</span>
-              <n-input-number
-                v-model:value="materialCosts[item.id]"
-                :min="0"
-                :show-button="false"
-                :style="{ width: '100px' }"
-              />
+  <n-card style="margin-bottom: 20px;">
+    <n-collapse>
+      <n-collapse-item name="1">
+        <template #header>
+          <span style="font-size: 1.2em; font-weight: bold;">Material Costs</span>
+        </template>
+        <div class="material-costs-grid">
+          <div class="material-row">
+            <div v-for="group in topRowGroups" :key="group.category" class="material-group">
+              <div class="category-header">
+                <img :src="getCategoryIcon(group.category)" :alt="group.category" class="category-icon" />
+                <h3>{{ group.category }}</h3>
+              </div>
+              <div v-for="item in group.items" :key="item.id" class="material-cost-item">
+                <div class="material-info">
+                  <img :src="`/icons/${item.id}.webp`" :alt="item.name" class="material-icon" />
+                  <span>{{ item.name }}</span>
+                </div>
+                <n-input-number
+                  v-model:value="materialCosts[item.id]"
+                  :min="0"
+                  :show-button="false"
+                  :style="{ width: '100px' }"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="material-row">
+            <div v-for="group in bottomRowGroups" :key="group.category" class="material-group">
+              <div class="category-header">
+                <img :src="getCategoryIcon(group.category)" :alt="group.category" class="category-icon" />
+                <h3>{{ group.category }}</h3>
+              </div>
+              <div v-for="item in group.items" :key="item.id" class="material-cost-item">
+                <div class="material-info">
+                  <img :src="`/icons/${item.id}.webp`" :alt="item.name" class="material-icon" />
+                  <span>{{ item.name }}</span>
+                </div>
+                <n-input-number
+                  v-model:value="materialCosts[item.id]"
+                  :min="0"
+                  :show-button="false"
+                  :style="{ width: '100px' }"
+                />
+              </div>
             </div>
           </div>
         </div>
-        <div class="material-row">
-          <div v-for="group in bottomRowGroups" :key="group.category" class="material-group">
-            <h3>{{ group.category }}</h3>
-            <div v-for="item in group.items" :key="item.id" class="material-cost-item">
-              <span>{{ item.name }}</span>
-              <n-input-number
-                v-model:value="materialCosts[item.id]"
-                :min="0"
-                :show-button="false"
-                :style="{ width: '100px' }"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </n-collapse-item>
-  </n-collapse>
+      </n-collapse-item>
+    </n-collapse>
+  </n-card>
 </template>
 
 <script setup>
 import { computed } from 'vue';
-import { NCollapse, NCollapseItem, NInputNumber } from 'naive-ui';
+import { NCard, NInputNumber, NCollapse, NCollapseItem } from 'naive-ui';
 import { materialCosts } from '../store';
 
 const props = defineProps({
@@ -57,11 +74,11 @@ const itemCategoryMapping = {
   'abidos_thick_raw_meat': 'Hunting',
   'oreha_thick_meat': 'Hunting',
   'thick_raw_meat': 'Hunting',
-  'ancient_relic': 'Excavation',
-  'rare_relic': 'Excavation',
-  'abidos_relic': 'Excavation',
-  'oreha_relic': 'Excavation',
-  'relic': 'Excavation',
+  'ancient_relic': 'Excavating',
+  'rare_relic': 'Excavating',
+  'abidos_relic': 'Excavating',
+  'oreha_relic': 'Excavating',
+  'relic': 'Excavating',
   'wild_flower': 'Foraging',
   'shy_wild_flower': 'Foraging',
   'abidos_wild_flower': 'Foraging',
@@ -85,7 +102,7 @@ const groupedItems = computed(() => {
     'Mining': { category: 'Mining', items: [] },
     'Hunting': { category: 'Hunting', items: [] },
     'Fishing': { category: 'Fishing', items: [] },
-    'Excavation': { category: 'Excavation', items: [] },
+    'Excavating': { category: 'Excavating', items: [] },
   };
   
   props.materials.forEach(item => {
@@ -97,22 +114,20 @@ const groupedItems = computed(() => {
   return Object.values(groups).filter(group => group.items.length > 0);
 });
 
-const topRowCategories = ['Fishing', 'Hunting', 'Excavation'];
+const topRowCategories = ['Fishing', 'Hunting', 'Excavating'];
 const topRowGroups = computed(() => 
   groupedItems.value.filter(g => topRowCategories.includes(g.category))
 );
 const bottomRowGroups = computed(() => 
   groupedItems.value.filter(g => !topRowCategories.includes(g.category))
 );
+
+const getCategoryIcon = (category) => {
+  return `/icons/${category.toLowerCase()}.webp`;
+};
 </script>
 
 <style scoped>
-.material-costs-collapse {
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
 .material-costs-grid {
   padding: 16px;
 }
@@ -133,10 +148,38 @@ const bottomRowGroups = computed(() =>
   font-size: 16px;
 }
 
-.material-cost-item {
+.category-header {
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-bottom: 12px;
+}
+
+.category-header h3 {
+  margin: 0;
+}
+
+.category-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.material-cost-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 8px;
+}
+
+.material-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.material-icon {
+  width: 24px;
+  height: 24px;
 }
 </style>

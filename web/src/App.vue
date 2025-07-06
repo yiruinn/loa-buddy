@@ -22,16 +22,25 @@
 
         <n-layout-content style="padding: 24px;">
           <div v-if="currentTool === 'crafting'">
-            <div class="reduction-inputs">
-              <div class="input-group">
-                <span>Crafting Cost Reduction (%)</span>
-                <n-input-number v-model:value="craftingCostReductionPercent" :min="0" :max="100" />
+            <n-card style="margin-bottom: 20px;">
+              <n-collapse>
+                <n-collapse-item name="1">
+                  <template #header>
+                    <span style="font-size: 1.2em; font-weight: bold;">Crafting Reductions</span>
+                  </template>
+                  <div class="reduction-inputs">
+                <div class="input-group">
+                  <span>Crafting Cost Reduction (%)</span>
+                  <n-input-number v-model:value="craftingCostReductionPercent" :min="0" :max="100" :show-button="false" />
+                </div>
+                <div class="input-group">
+                  <span>Crafting Time Reduction (%)</span>
+                  <n-input-number v-model:value="craftingTimeReductionPercent" :min="0" :max="100" :show-button="false" />
+                </div>
               </div>
-              <div class="input-group">
-                <span>Crafting Time Reduction (%)</span>
-                <n-input-number v-model:value="craftingTimeReductionPercent" :min="0" :max="100" />
-              </div>
-            </div>
+                </n-collapse-item>
+              </n-collapse>
+            </n-card>
             <MaterialCosts :materials="materials" />
             <CraftingCalculator
               :recipes="recipes"
@@ -50,7 +59,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { NLayout, NLayoutHeader, NLayoutContent, NLayoutSider, NMenu, NConfigProvider, darkTheme, NInputNumber } from 'naive-ui';
+import { NLayout, NLayoutHeader, NLayoutContent, NLayoutSider, NMenu, NConfigProvider, darkTheme, NInputNumber, NCard, NCollapse, NCollapseItem } from 'naive-ui';
 import CraftingCalculator from './components/CraftingCalculator.vue';
 import MaterialCosts from './components/MaterialCosts.vue';
 import MarketCalculator from './components/MarketCalculator.vue';
@@ -113,8 +122,8 @@ onMounted(async () => {
 <style>
 .reduction-inputs {
   display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
+  flex-direction: column;
+  gap: 10px;
 }
 .input-group {
   display: flex;
