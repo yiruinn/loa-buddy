@@ -50,7 +50,7 @@
               style="margin-bottom: 20px;"
             />
           </div>
-          <MarketCalculator v-if="currentTool === 'market'" />
+          <MariCalculator v-if="currentTool === 'market'" />
         </n-layout-content>
       </n-layout>
     </n-layout>
@@ -62,7 +62,7 @@ import { ref, onMounted } from 'vue';
 import { NLayout, NLayoutHeader, NLayoutContent, NLayoutSider, NMenu, NConfigProvider, darkTheme, NInputNumber, NCard, NCollapse, NCollapseItem } from 'naive-ui';
 import CraftingCalculator from './components/CraftingCalculator.vue';
 import MaterialCosts from './components/MaterialCosts.vue';
-import MarketCalculator from './components/MarketCalculator.vue';
+import MariCalculator from './components/MariCalculator.vue';
 import { materialCosts } from './store';
 
 const currentTool = ref('crafting');
@@ -81,7 +81,7 @@ const menuOptions = [
         key: 'crafting'
       },
       {
-        label: 'Market Calculator',
+        label: "Mari's Shop Calculator",
         key: 'market'
       }
     ]

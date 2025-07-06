@@ -1,0 +1,235 @@
+{
+  "t4_honing": [
+    {
+      "item_name": "Metallurgy: Hellfire [11-14] (Bound)",
+      "deals": [
+        {
+          "quantity": 5,
+          "blue_crystal_cost": 40
+        }
+      ]
+    },
+    {
+      "item_name": "Destiny Leapstone (Bound)",
+      "deals": [
+        {
+          "quantity": 100,
+          "blue_crystal_cost": 30
+        }
+      ]
+    },
+    {
+      "item_name": "Abidos Fusion Material (Bound)",
+      "deals": [
+        {
+          "quantity": 50,
+          "blue_crystal_cost": 65
+        }
+      ]
+    },
+    {
+      "item_name": "Lava's Breath (Bound)",
+      "deals": [
+        {
+          "quantity": 10,
+          "blue_crystal_cost": 85
+        }
+      ]
+    },
+    {
+      "item_name": "Artisan's Metallurgy: Level 1 (Bound)",
+      "deals": [
+        {
+          "quantity": 2,
+          "blue_crystal_cost": 80
+        }
+      ]
+    },
+    {
+      "item_name": "Artisan's Tailoring: Level 1 (Bound)",
+      "deals": [
+        {
+          "quantity": 2,
+          "blue_crystal_cost": 60
+        }
+      ]
+    },
+    {
+      "item_name": "Destiny Shard Pouch (S)",
+      "deals": [
+        {
+          "quantity": 10,
+          "blue_crystal_cost": 35
+        }
+      ]
+    },
+    {
+      "item_name": "Glacier's Breath (Bound)",
+      "deals": [
+        {
+          "quantity": 30,
+          "blue_crystal_cost": 55
+        }
+      ]
+    }
+  ],
+  "t3_honing": [
+    {
+      "item_name": "Honor Shard Pouch (L)",
+      "deals": [
+        {
+          "quantity": 20,
+          "blue_crystal_cost": 154
+        },
+        {
+          "quantity": 30,
+          "blue_crystal_cost": 210
+        }
+      ]
+    },
+    {
+      "item_name": "Radiant Honor Leapstone (Bound)",
+      "deals": [
+        {
+          "quantity": 100,
+          "blue_crystal_cost": 30
+        }
+      ]
+    },
+    {
+      "item_name": "Prime Oreha Fusion Material (Bound)",
+      "deals": [
+        {
+          "quantity": 100,
+          "blue_crystal_cost": 50
+        }
+      ]
+    },
+    {
+      "item_name": "Superior Oreha Fusion Material (Bound)",
+      "deals": [
+        {
+          "quantity": 100,
+          "blue_crystal_cost": 40
+        }
+      ]
+    },
+    {
+      "item_name": "Solar Grace (Bound)",
+      "deals": [
+        {
+          "quantity": 120,
+          "blue_crystal_cost": 40
+        }
+      ]
+    },
+    {
+      "item_name": "Solar Blessing (Bound)",
+      "deals": [
+        {
+          "quantity": 80,
+          "blue_crystal_cost": 56
+        }
+      ]
+    }
+  ],
+  "t2_honing": [
+    {
+      "item_name": "Harmony Shard Pouch (L)",
+      "deals": [
+        {
+          "quantity": 50,
+          "blue_crystal_cost": 5
+        }
+      ]
+    }
+  ],
+  "life_skill": [
+    {
+      "item_name": "Basic Life Energy Potion",
+      "deals": [
+        {
+          "quantity": 10,
+          "blue_crystal_cost": 230
+        }
+      ]
+    },
+    {
+      "item_name": "Trade Skill Tool Restoration Kit",
+      "deals": [
+        {
+          "quantity": 20,
+          "blue_crystal_cost": 10
+        }
+      ]
+    }
+  ],
+  "etc": [
+    {
+      "item_name": "Legendary - Rare Card Pack IV",
+      "deals": [
+        {
+          "quantity": 15,
+          "blue_crystal_cost": 330
+        },
+        {
+          "quantity": 10,
+          "blue_crystal_cost": 230
+        }
+      ]
+    },
+    {
+      "item_name": "Legendary Rapport Selection Chest",
+      "deals": [
+        {
+          "quantity": 3,
+          "blue_crystal_cost": 126
+        },
+        {
+          "quantity": 5,
+          "blue_crystal_cost": 190
+        }
+      ]
+    },
+    {
+      "item_name": "Stronghold Energy (M)",
+      "deals": [
+        {
+          "quantity": 10,
+          "blue_crystal_cost": 120
+        }
+      ]
+    },
+    {
+      "item_name": "Epic Rapport Selection Chest",
+      "deals": [
+        {
+          "quantity": 10,
+          "blue_crystal_cost": 80
+        },
+        {
+          "quantity": 5,
+          "blue_crystal_cost": 50
+        }
+      ]
+    },
+    {
+      "item_name": "Guild Honor Banner",
+      "deals": [
+        {
+          "quantity": 5,
+          "blue_crystal_cost": 40
+        }
+      ]
+    },
+    {
+      "item_name": "Any Card Pack IV",
+      "deals": [
+        {
+          "quantity": 20,
+          "blue_crystal_cost": 230
+        }
+      ]
+    }
+  ]
+}
