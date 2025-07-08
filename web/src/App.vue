@@ -41,7 +41,6 @@
                 </n-collapse-item>
               </n-collapse>
             </n-card>
-            <MaterialCosts :materials="materials" />
             <CraftingCalculator
               :recipes="recipes"
               :materials="materials"
@@ -51,6 +50,7 @@
             />
           </div>
           <MariCalculator v-if="currentTool === 'market'" />
+          <MaterialsPage v-if="currentTool === 'materials'" />
         </n-layout-content>
       </n-layout>
     </n-layout>
@@ -61,7 +61,7 @@
 import { ref, onMounted } from 'vue';
 import { NLayout, NLayoutHeader, NLayoutContent, NLayoutSider, NMenu, NConfigProvider, darkTheme, NInputNumber, NCard, NCollapse, NCollapseItem } from 'naive-ui';
 import CraftingCalculator from './components/CraftingCalculator.vue';
-import MaterialCosts from './components/MaterialCosts.vue';
+import MaterialsPage from './components/MaterialsPage.vue';
 import MariCalculator from './components/MariCalculator.vue';
 
 const currentTool = ref('crafting');
@@ -82,6 +82,10 @@ const menuOptions = [
       {
         label: "Mari's Shop Calculator",
         key: 'market'
+      },
+      {
+        label: 'Material Prices',
+        key: 'materials'
       }
     ]
   },

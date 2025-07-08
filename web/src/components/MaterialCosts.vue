@@ -1,6 +1,6 @@
 <template>
   <n-card style="margin-bottom: 20px;">
-    <n-collapse>
+    <n-collapse default-expanded-names="1">
       <n-collapse-item name="1">
         <template #header>
           <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
@@ -9,7 +9,14 @@
               <span v-if="formattedLastUpdated" style="font-size: 0.9em; color: #aaa; margin-right: 15px">
                 Last Updated: {{ formattedLastUpdated }}
               </span>
-              <n-button @click.stop="updateAllPrices" size="small">Refresh</n-button>
+              <n-select
+                v-model:value="selectedRegion"
+                :options="regionOptions"
+                size="small"
+                style="width: 100px; margin-right: 10px;"
+                @click.stop
+              />
+              <n-button @click.stop="updateAllPrices(selectedRegion)" size="small">Refresh</n-button>
             </div>
           </div>
         </template>
@@ -61,8 +68,8 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue';
-import { NCard, NInputNumber, NCollapse, NCollapseItem, NButton } from 'naive-ui';
+import { ref, computed, watch } from 'vue';
+import { NCard, NInputNumber, NCollapse, NCollapseItem, NButton, NSelect } from 'naive-ui';
 import { materialCosts, updateAllPrices, saveMaterialCosts } from '../store';
 
 const props = defineProps({
@@ -71,6 +78,13 @@ const props = defineProps({
     required: true,
   },
 });
+
+const selectedRegion = ref(materialCosts.region);
+const regionOptions = [
+  { label: 'NAW', value: 'naw' },
+  { label: 'NAE', value: 'nae' },
+  { label: 'EUC', value: 'euc' },
+];
 
 watch(
   () => materialCosts.materials,
