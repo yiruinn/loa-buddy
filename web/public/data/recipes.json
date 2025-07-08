@@ -1,6 +1,7 @@
 [
   {
     "name": "Abidos Fusion Material",
+    "type": "special",
     "craftingCost": 400,
     "quantity": 10,
     "sellingPrice": 0,
@@ -58,6 +59,7 @@
   },
   {
     "name": "Prime Oreha Fusion Material",
+    "type": "special",
     "craftingCost": 300,
     "quantity": 15,
     "sellingPrice": 0,
@@ -92,6 +94,7 @@
   },
   {
     "name": "Superior Oreha Fusion Material",
+    "type": "special",
     "craftingCost": 250,
     "quantity": 20,
     "sellingPrice": 0,
@@ -125,6 +128,7 @@
   },
   {
     "name": "Oreha Fusion Material",
+    "type": "special",
     "craftingCost": 205,
     "quantity": 30,
     "sellingPrice": 0,

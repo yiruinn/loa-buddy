@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted, computed } from 'vue';
 import {
   NCard, NTable, NInputNumber, NSelect
 } from 'naive-ui';
@@ -63,17 +63,25 @@ const props = defineProps({
     type: Array,
     required: true,
   },
-  craftingCostReductionPercent: {
-    type: Number,
-    default: 0,
-  },
-  craftingTimeReductionPercent: {
-    type: Number,
-    default: 0,
+  craftingReductions: {
+    type: Object,
+    required: true,
   },
 });
 
 const selectedCategories = ref([]);
+
+const getAdjustedCraftingCost = (recipe) => {
+  const categoryReduction = props.craftingReductions[recipe.type]?.cost || 0;
+  const totalReduction = props.craftingReductions.general.cost + categoryReduction;
+  return recipe.craftingCost * (1 - totalReduction / 100);
+};
+
+const getAdjustedCraftingTime = (recipe) => {
+  const categoryReduction = props.craftingReductions[recipe.type]?.time || 0;
+  const totalReduction = props.craftingReductions.general.time + categoryReduction;
+  return (recipe.craftingTime * (1 - totalReduction / 100)).toFixed(2);
+};
 
 const calculateMaterialCost = (items) => {
   return items.reduce((sum, item) => {
@@ -81,9 +89,6 @@ const calculateMaterialCost = (items) => {
     return sum + (item.quantity * cost) / 100;
   }, 0);
 };
-
-const getAdjustedCraftingCost = (recipe) =>
-  (recipe.craftingCost * (1 - props.craftingCostReductionPercent / 100));
 
 const getSortedMaterialOptions = (recipe) => {
   const adjustedGoldCost = getAdjustedCraftingCost(recipe);
@@ -124,9 +129,6 @@ const getProfit = (recipe, index) => {
   return (recipe.sellingPrice - tax - parseFloat(getUnitPrice(recipe, index))).toFixed(2);
 };
 
-const getAdjustedCraftingTime = (recipe) =>
-  (recipe.craftingTime * (1 - props.craftingTimeReductionPercent / 100)).toFixed(2);
-
 const getProfitPerHour = (recipe, index) => {
   const profitValue = parseFloat(getProfit(recipe, index));
   const timeInHours = parseFloat(getAdjustedCraftingTime(recipe)) / 60;
@@ -141,7 +143,7 @@ const initializeCategories = () => {
 };
 
 onMounted(initializeCategories);
-watch(() => props.recipes, initializeCategories, { deep: true });
+watch(() => [props.recipes, props.craftingReductions], initializeCategories, { deep: true });
 
 </script>
 
