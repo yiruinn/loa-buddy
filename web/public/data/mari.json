@@ -33,6 +33,10 @@
         {
           "quantity": 10,
           "blue_crystal_cost": 85
+        },
+        {
+          "quantity": 15,
+          "blue_crystal_cost": 120
         }
       ]
     },
@@ -60,6 +64,14 @@
         {
           "quantity": 10,
           "blue_crystal_cost": 35
+        },
+        {
+          "quantity": 15,
+          "blue_crystal_cost": 47
+        },
+        {
+          "quantity": 20,
+          "blue_crystal_cost": 60
         }
       ]
     },
@@ -69,6 +81,37 @@
         {
           "quantity": 30,
           "blue_crystal_cost": 55
+        },
+        {
+          "quantity": 20,
+          "blue_crystal_cost": 50
+        }
+      ]
+    },
+    {
+      "item_name": "Artisan's Metallurgy: Level 2 (Bound)",
+      "deals": [
+        {
+          "quantity": 1,
+          "blue_crystal_cost": 130
+        }
+      ]
+    },
+    {
+      "item_name": "Artisan's Tailoring: Level 2 (Bound)",
+      "deals": [
+        {
+          "quantity": 1,
+          "blue_crystal_cost": 100
+        }
+      ]
+    },
+    {
+      "item_name": "Tailoring: Hellfire [11-14] (Bound)",
+      "deals": [
+        {
+          "quantity": 5,
+          "blue_crystal_cost": 60
         }
       ]
     }
@@ -111,6 +154,10 @@
         {
           "quantity": 100,
           "blue_crystal_cost": 40
+        },
+        {
+            "quantity": 200,
+            "blue_crystal_cost": 65
         }
       ]
     },
@@ -228,6 +275,10 @@
         {
           "quantity": 20,
           "blue_crystal_cost": 230
+        },
+        {
+            "quantity": 30,
+            "blue_crystal_cost": 410
         }
       ]
     }
