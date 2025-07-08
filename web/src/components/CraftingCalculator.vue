@@ -77,7 +77,7 @@ const selectedCategories = ref([]);
 
 const calculateMaterialCost = (items) => {
   return items.reduce((sum, item) => {
-    const cost = materialCosts[item.id] || 0;
+    const cost = materialCosts.materials[item.id] || 0;
     return sum + (item.quantity * cost) / 100;
   }, 0);
 };

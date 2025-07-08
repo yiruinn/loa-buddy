@@ -5,9 +5,12 @@
         <template #header>
           <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
             <span style="font-size: 1.2em; font-weight: bold;">Material Costs</span>
-            <span v-if="formattedLastUpdated" style="font-size: 0.9em; color: #aaa; margin-right: 15px">
-              Last Updated: {{ formattedLastUpdated }}
-            </span>
+            <div style="display: flex; align-items: center;">
+              <span v-if="formattedLastUpdated" style="font-size: 0.9em; color: #aaa; margin-right: 15px">
+                Last Updated: {{ formattedLastUpdated }}
+              </span>
+              <n-button @click.stop="updateAllPrices" size="small">Refresh</n-button>
+            </div>
           </div>
         </template>
         <div class="material-costs-grid">
@@ -23,7 +26,7 @@
                   <span>{{ item.name }}</span>
                 </div>
                 <n-input-number
-                  v-model:value="materialCosts[item.id]"
+                  v-model:value="materialCosts.materials[item.id]"
                   :min="0"
                   :show-button="false"
                   :style="{ width: '100px' }"
@@ -43,7 +46,7 @@
                   <span>{{ item.name }}</span>
                 </div>
                 <n-input-number
-                  v-model:value="materialCosts[item.id]"
+                  v-model:value="materialCosts.materials[item.id]"
                   :min="0"
                   :show-button="false"
                   :style="{ width: '100px' }"
@@ -58,24 +61,28 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { NCard, NInputNumber, NCollapse, NCollapseItem } from 'naive-ui';
-import { materialCosts } from '../store';
+import { computed, watch } from 'vue';
+import { NCard, NInputNumber, NCollapse, NCollapseItem, NButton } from 'naive-ui';
+import { materialCosts, updateAllPrices, saveMaterialCosts } from '../store';
 
 const props = defineProps({
   materials: {
     type: Array,
     required: true,
   },
-  lastUpdated: {
-    type: String,
-    default: '',
-  },
 });
 
+watch(
+  () => materialCosts.materials,
+  (newVal, oldVal) => {
+    saveMaterialCosts();
+  },
+  { deep: true }
+);
+
 const formattedLastUpdated = computed(() => {
-  if (!props.lastUpdated) return '';
-  const date = new Date(props.lastUpdated);
+  if (!materialCosts.lastUpdated) return '';
+  const date = new Date(materialCosts.lastUpdated);
   return date.toLocaleString();
 });
 
@@ -86,7 +93,7 @@ const itemCategoryMapping = {
   'oreha_solar_carp': 'Fishing',
   'meat': 'Hunting',
   'treated_meat': 'Hunting',
-  'abidos_thick_raw_meat': 'Hunting',
+  'abidos_thick_meat': 'Hunting',
   'oreha_thick_meat': 'Hunting',
   'thick_raw_meat': 'Hunting',
   'ancient_relic': 'Excavating',
