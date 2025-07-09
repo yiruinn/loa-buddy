@@ -1,0 +1,342 @@
+[
+  {
+    "input": {
+      "id": "wild_flower",
+      "quantity": 100
+    },
+    "output": {
+      "id": "gathering_powder",
+      "quantity": 80
+    }
+  },
+  {
+    "input": {
+      "id": "shy_wild_flower",
+      "quantity": 50
+    },
+    "output": {
+      "id": "gathering_powder",
+      "quantity": 80
+    }
+  },
+  {
+    "input": {
+      "id": "timber",
+      "quantity": 100
+    },
+    "output": {
+      "id": "logging_powder",
+      "quantity": 80
+    }
+  },
+  {
+    "input": {
+      "id": "tender_timber",
+      "quantity": 50
+    },
+    "output": {
+      "id": "logging_powder",
+      "quantity": 80
+    }
+  },
+  {
+    "input": {
+      "id": "iron_ore",
+      "quantity": 100
+    },
+    "output": {
+      "id": "mining_powder",
+      "quantity": 80
+    }
+  },
+  {
+    "input": {
+      "id": "heavy_iron_ore",
+      "quantity": 50
+    },
+    "output": {
+      "id": "mining_powder",
+      "quantity": 80
+    }
+  },
+  {
+    "input": {
+      "id": "thick_raw_meat",
+      "quantity": 100
+    },
+    "output": {
+      "id": "hunting_powder",
+      "quantity": 80
+    }
+  },
+  {
+    "input": {
+      "id": "treated_meat",
+      "quantity": 50
+    },
+    "output": {
+      "id": "hunting_powder",
+      "quantity": 80
+    }
+  },
+  {
+    "input": {
+      "id": "fish",
+      "quantity": 100
+    },
+    "output": {
+      "id": "fishing_powder",
+      "quantity": 80
+    }
+  },
+  {
+    "input": {
+      "id": "redflesh_fish",
+      "quantity": 50
+    },
+    "output": {
+      "id": "fishing_powder",
+      "quantity": 80
+    }
+  },
+  {
+    "input": {
+      "id": "ancient_relic",
+      "quantity": 100
+    },
+    "output": {
+      "id": "excavating_powder",
+      "quantity": 80
+    }
+  },
+  {
+    "input": {
+      "id": "rare_relic",
+      "quantity": 50
+    },
+    "output": {
+      "id": "excavating_powder",
+      "quantity": 80
+    }
+  },
+  {
+    "input": {
+      "id": "heavy_iron_ore",
+      "quantity": 25
+    },
+    "output": {
+      "id": "iron_ore",
+      "quantity": 50
+    }
+  },
+  {
+    "input": {
+      "id": "strong_iron_ore",
+      "quantity": 5
+    },
+    "output": {
+      "id": "iron_ore",
+      "quantity": 50
+    }
+  },
+  {
+    "input": {
+      "id": "tender_timber",
+      "quantity": 25
+    },
+    "output": {
+      "id": "timber",
+      "quantity": 50
+    }
+  },
+  {
+    "input": {
+      "id": "sturdy_timber",
+      "quantity": 5
+    },
+    "output": {
+      "id": "timber",
+      "quantity": 50
+    }
+  },
+  {
+    "input": {
+      "id": "gathering_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "shy_wild_flower",
+      "quantity": 50
+    }
+  },
+  {
+    "input": {
+      "id": "gathering_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "bright_wild_flower",
+      "quantity": 10
+    }
+  },
+  {
+    "input": {
+      "id": "gathering_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "abidos_wild_flower",
+      "quantity": 10
+    }
+  },
+  {
+    "input": {
+      "id": "logging_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "tender_timber",
+      "quantity": 50
+    }
+  },
+  {
+    "input": {
+      "id": "logging_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "sturdy_timber",
+      "quantity": 10
+    }
+  },
+  {
+    "input": {
+      "id": "logging_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "abidos_timber",
+      "quantity": 10
+    }
+  },
+  {
+    "input": {
+      "id": "mining_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "heavy_iron_ore",
+      "quantity": 50
+    }
+  },
+  {
+    "input": {
+      "id": "mining_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "strong_iron_ore",
+      "quantity": 10
+    }
+  },
+  {
+    "input": {
+      "id": "mining_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "abidos_iron_ore",
+      "quantity": 10
+    }
+  },
+  {
+    "input": {
+      "id": "hunting_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "treated_meat",
+      "quantity": 50
+    }
+  },
+  {
+    "input": {
+      "id": "hunting_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "oreha_thick_meat",
+      "quantity": 10
+    }
+  },
+  {
+    "input": {
+      "id": "hunting_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "abidos_thick_meat",
+      "quantity": 10
+    }
+  },
+  {
+    "input": {
+      "id": "fishing_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "redflesh_fish",
+      "quantity": 50
+    }
+  },
+  {
+    "input": {
+      "id": "fishing_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "oreha_solar_carp",
+      "quantity": 10
+    }
+  },
+  {
+    "input": {
+      "id": "fishing_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "abidos_solar_carp",
+      "quantity": 10
+    }
+  },
+  {
+    "input": {
+      "id": "excavating_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "rare_relic",
+      "quantity": 50
+    }
+  },
+  {
+    "input": {
+      "id": "excavating_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "oreha_relic",
+      "quantity": 10
+    }
+  },
+  {
+    "input": {
+      "id": "excavating_powder",
+      "quantity": 100
+    },
+    "output": {
+      "id": "abidos_relic",
+      "quantity": 10
+    }
+  }
+]

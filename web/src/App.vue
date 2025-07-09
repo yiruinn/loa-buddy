@@ -86,6 +86,7 @@
           </div>
           <MariCalculator v-if="currentTool === 'market'" />
           <MaterialsPage v-if="currentTool === 'materials'" />
+          <StrongholdExchangeCalculator v-if="currentTool === 'stronghold'" />
         </n-layout-content>
       </n-layout>
     </n-layout>
@@ -98,6 +99,7 @@ import { NLayout, NLayoutHeader, NLayoutContent, NLayoutSider, NMenu, NConfigPro
 import CraftingCalculator from './components/CraftingCalculator.vue';
 import MaterialsPage from './components/MaterialsPage.vue';
 import MariCalculator from './components/MariCalculator.vue';
+import StrongholdExchangeCalculator from './components/StrongholdExchangeCalculator.vue';
 
 const currentTool = ref('crafting');
 const recipes = ref([]);
@@ -129,6 +131,10 @@ const menuOptions = [
       {
         label: 'Material Prices',
         key: 'materials'
+      },
+      {
+        label: 'Stronghold Arbitrage',
+        key: 'stronghold'
       }
     ]
   },
