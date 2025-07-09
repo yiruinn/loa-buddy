@@ -9,15 +9,14 @@
     </div>
     <n-tabs type="segment" default-value="t4_honing">
       <n-tab-pane
-        v-for="(items, category) in sortedMariShopData"
+        v-for="(items, category) in processedMariShopData"
         :key="category"
         :name="category"
         :tab="formatCategoryName(category)"
       >
         <n-table :bordered="false" :single-line="false" style="table-layout: fixed; width: 100%">
           <colgroup>
-            <col style="width: 30%" />
-            <col style="width: 15%" />
+            <col style="width: 45%" />
             <col style="width: 20%" />
             <col style="width: 20%" />
             <col style="width: 15%" />
@@ -29,7 +28,6 @@
                 <span v-if="sortOrder === 'asc'">▲</span>
                 <span v-if="sortOrder === 'desc'">▼</span>
               </th>
-              <th>Quantity</th>
               <th>Blue Crystal Cost</th>
               <th>Total Gold Cost</th>
               <th>Unit Gold Cost</th>
@@ -37,12 +35,57 @@
           </thead>
           <tbody>
             <template v-for="item in items" :key="item.item_name">
-              <tr v-for="(deal, index) in item.deals" :key="index">
-                <td v-if="index === 0" :rowspan="item.deals.length">{{ item.item_name }}</td>
-                <td>{{ deal.quantity }}</td>
-                <td>{{ deal.blue_crystal_cost }}</td>
-                <td>{{ calculateGoldCost(deal.blue_crystal_cost) }}</td>
-                <td>{{ (calculateGoldCost(deal.blue_crystal_cost) / deal.quantity).toFixed(2) }}</td>
+              <tr v-if="item.cheapestDeal">
+                <td style="display: flex; align-items: center">
+                  <n-button
+                    text
+                    size="tiny"
+                    @click="toggleRow(item.item_name)"
+                    style="margin-right: 8px"
+                    :disabled="item.deals.length <= 1"
+                  >
+                    {{ expandedRows.has(item.item_name) ? '-' : '+' }}
+                  </n-button>
+                  <span
+                    >{{ item.item_name }} [{{ item.cheapestDeal.quantity }}]</span
+                  >
+                </td>
+                <td>{{ item.cheapestDeal.blue_crystal_cost }}</td>
+                <td>{{ item.cheapestDeal.goldCost.toFixed(0) }}</td>
+                <td>{{ item.cheapestDeal.unitGoldCost.toFixed(2) }}</td>
+              </tr>
+              <tr v-if="expandedRows.has(item.item_name) && item.deals.length > 1">
+                <td :colspan="4" style="padding: 0; border: 0">
+                  <n-table
+                    :bordered="false"
+                    :single-line="false"
+                    style="background-color: transparent"
+                  >
+                    <colgroup>
+                      <col style="width: 45%" />
+                      <col style="width: 20%" />
+                      <col style="width: 20%" />
+                      <col style="width: 15%" />
+                    </colgroup>
+                    <tbody>
+                      <tr
+                        v-for="deal in item.dealsWithCost.filter(
+                          (d) => d !== item.cheapestDeal
+                        )"
+                        :key="deal.quantity"
+                      >
+                        <td style="display: flex; align-items: center">
+                          <span style="padding-left: 36px"
+                            >{{ item.item_name }} [{{ deal.quantity }}]</span
+                          >
+                        </td>
+                        <td>{{ deal.blue_crystal_cost }}</td>
+                        <td>{{ deal.goldCost.toFixed(0) }}</td>
+                        <td>{{ deal.unitGoldCost.toFixed(2) }}</td>
+                      </tr>
+                    </tbody>
+                  </n-table>
+                </td>
               </tr>
             </template>
           </tbody>
@@ -53,44 +96,73 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import { NCard, NH3, NInputNumber, NTabs, NTabPane, NTable, NButton } from 'naive-ui';
 import mariData from '../../public/data/mari.json';
 
-const exchangeRate = ref(7000);
+const exchangeRate = ref(0);
 const mariShopData = ref({});
 const sortOrder = ref('none'); // 'none', 'asc', 'desc'
-
-const sortedMariShopData = computed(() => {
-  if (sortOrder.value === 'none') {
-    return mariShopData.value;
-  }
-
-  const sortedData = {};
-  for (const category in mariShopData.value) {
-    sortedData[category] = [...mariShopData.value[category]].sort((a, b) => {
-      const nameA = a.item_name.toUpperCase();
-      const nameB = b.item_name.toUpperCase();
-      if (nameA < nameB) {
-        return sortOrder.value === 'asc' ? -1 : 1;
-      }
-      if (nameA > nameB) {
-        return sortOrder.value === 'asc' ? 1 : -1;
-      }
-      return 0;
-    });
-  }
-  return sortedData;
-});
-
-onMounted(() => {
-  mariShopData.value = mariData;
-});
+const expandedRows = ref(new Set());
 
 const calculateGoldCost = (blueCrystalCost) => {
   if (!exchangeRate.value) return 0;
-  return Math.round((blueCrystalCost / 95) * exchangeRate.value);
+  return (blueCrystalCost / 95) * exchangeRate.value;
 };
+
+const processedMariShopData = computed(() => {
+  const data = { ...mariShopData.value };
+  const processed = {};
+
+  for (const category in data) {
+    let items = data[category];
+
+    if (sortOrder.value !== 'none') {
+      items = [...items].sort((a, b) => {
+        const nameA = a.item_name.toUpperCase();
+        const nameB = b.item_name.toUpperCase();
+        if (nameA < nameB) return sortOrder.value === 'asc' ? -1 : 1;
+        if (nameA > nameB) return sortOrder.value === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+
+    processed[category] = items.map((item) => {
+      if (!item.deals || item.deals.length === 0) {
+        return { ...item, cheapestDeal: null, dealsWithCost: [] };
+      }
+
+      const dealsWithCost = item.deals.map((deal) => {
+        const goldCost = calculateGoldCost(deal.blue_crystal_cost);
+        const unitGoldCost = goldCost / deal.quantity;
+        return { ...deal, goldCost, unitGoldCost };
+      });
+
+      const cheapestDeal = dealsWithCost.reduce((cheapest, current) => {
+        return current.unitGoldCost < cheapest.unitGoldCost ? current : cheapest;
+      });
+
+      return {
+        ...item,
+        dealsWithCost,
+        cheapestDeal,
+      };
+    });
+  }
+  return processed;
+});
+
+onMounted(() => {
+  const savedExchangeRate = localStorage.getItem('exchangeRate');
+  if (savedExchangeRate) {
+    exchangeRate.value = JSON.parse(savedExchangeRate);
+  }
+  mariShopData.value = mariData;
+});
+
+watch(exchangeRate, (newValue) => {
+  localStorage.setItem('exchangeRate', JSON.stringify(newValue));
+});
 
 const formatCategoryName = (name) => {
   return name
@@ -104,6 +176,14 @@ const toggleSort = () => {
     sortOrder.value = 'desc';
   } else {
     sortOrder.value = 'asc';
+  }
+};
+
+const toggleRow = (itemName) => {
+  if (expandedRows.value.has(itemName)) {
+    expandedRows.value.delete(itemName);
+  } else {
+    expandedRows.value.add(itemName);
   }
 };
 </script>
