@@ -26,7 +26,17 @@
               <n-collapse :default-expanded-names="['1']">
                 <n-collapse-item name="1">
                   <template #header>
-                    <span style="font-size: 1.2em; font-weight: bold;">Crafting Reductions</span>
+                    <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                      <span style="font-size: 1.2em; font-weight: bold;">Crafting Reductions</span>
+                      <n-switch v-model:value="useLowestPrice" @click.stop>
+                        <template #checked>
+                          Use Lowest Price
+                        </template>
+                        <template #unchecked>
+                          Use Market Price
+                        </template>
+                      </n-switch>
+                    </div>
                   </template>
                   <div class="reduction-inputs">
                     <div class="category-group">
@@ -81,6 +91,7 @@
               :recipes="recipes"
               :materials="materials"
               :crafting-reductions="craftingReductions"
+              :use-lowest-price="useLowestPrice"
               style="margin-bottom: 20px;"
             />
           </div>
@@ -95,7 +106,7 @@
 
 <script setup>
 import { ref, onMounted, reactive, watch } from 'vue';
-import { NLayout, NLayoutHeader, NLayoutContent, NLayoutSider, NMenu, NConfigProvider, darkTheme, NInputNumber, NCard, NCollapse, NCollapseItem } from 'naive-ui';
+import { NLayout, NLayoutHeader, NLayoutContent, NLayoutSider, NMenu, NConfigProvider, darkTheme, NInputNumber, NCard, NCollapse, NCollapseItem, NSwitch } from 'naive-ui';
 import CraftingCalculator from './components/CraftingCalculator.vue';
 import MaterialsPage from './components/MaterialsPage.vue';
 import MariCalculator from './components/MariCalculator.vue';
@@ -104,6 +115,7 @@ import StrongholdExchangeCalculator from './components/StrongholdExchangeCalcula
 const currentTool = ref('crafting');
 const recipes = ref([]);
 const materials = ref([]);
+const useLowestPrice = ref(false);
 const craftingReductions = reactive({
   general: { cost: 0, time: 0 },
   battleItems: { cost: 0, time: 0 },

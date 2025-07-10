@@ -25,15 +25,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="exchange in filteredExchanges" :key="exchange.path">
+          <tr v-for="exchange in filteredExchanges" :key="exchange.pathString">
             <td>
               <div class="exchange-path">
-                <template v-for="(item, index) in exchange.items" :key="item.id">
+                <template v-for="(item, index) in exchange.path" :key="item.id">
                   <div class="exchange-item">
                     <img :src="getIconUrl(item.id)" :alt="item.name" class="material-icon" />
                     <span>{{ item.name }}</span>
                   </div>
-                  <n-icon v-if="index < exchange.items.length - 1" class="arrow-icon">
+                  <n-icon v-if="index < exchange.path.length - 1" class="arrow-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.01 11H4v2h12.01v3L20 12l-3.99-4z" fill="currentColor"></path></svg>
                   </n-icon>
                 </template>
@@ -55,17 +55,15 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
-import { NCard, NTable, NInputNumber, NSwitch, NIcon } from 'naive-ui';
+import { ref, computed, onMounted } from 'vue';
+import { NCard, NTable, NSwitch, NIcon } from 'naive-ui';
 import { materialCosts } from '../store';
 
-const strongholdExchanges = ref([]);
 const materials = ref([]);
+const strongholdExchanges = ref([]);
 const showOnlyProfitable = ref(true);
 
-const getIconUrl = (id) => {
-    return `/icons/${id}.webp`;
-}
+const getIconUrl = (id) => `/icons/${id}.webp`;
 
 const allMaterials = computed(() => {
     const powderNames = {
@@ -80,83 +78,54 @@ const allMaterials = computed(() => {
     return [...materials.value, ...powders];
 });
 
-const getMaterialName = (id) => {
-    return allMaterials.value.find(m => m.id === id)?.name || id;
-}
+const getMaterialName = (id) => allMaterials.value.find(m => m.id === id)?.name || id;
 
 const calculatedExchanges = computed(() => {
-  const exchanges = [];
-  const taxRate = 0.05;
+    const exchanges = [];
+    const taxRate = 0.05;
 
-  // One-step exchanges
-  for (const exchange of strongholdExchanges.value) {
-    if (exchange.output.id.endsWith('_powder')) {
-        continue;
+    if (strongholdExchanges.value.length === 0 || Object.keys(materialCosts.materials).length === 0) {
+        return [];
     }
-    const scalingFactor = 100 / exchange.output.quantity;
-    const inputCost = (materialCosts.materials[exchange.input.id] || 0) / 100 * exchange.input.quantity * scalingFactor;
-    const outputPricePer100 = materialCosts.materials[exchange.output.id] || 0;
-    
-    if (inputCost > 0) {
-        const taxPer100 = Math.ceil(outputPricePer100 * taxRate);
-        const profit = outputPricePer100 - taxPer100 - inputCost;
+
+    for (const exchange of strongholdExchanges.value) {
+        const inputMat = materialCosts.materials[exchange.input.id];
+        const outputMat = materialCosts.materials[exchange.output.id];
+
+        if (!inputMat || !outputMat) continue;
+        
+        const outputMarketPrice = outputMat.marketPrice;
+        if (outputMarketPrice === Infinity || outputMarketPrice === 0) continue;
+
+        const inputEffectivePrice = inputMat.effectivePrice;
+        if (inputEffectivePrice === Infinity || inputEffectivePrice === 0) continue;
+
+        // Calculate the cost of inputs required to produce 100 units of the output material.
+        // Prices are already for 100 units, so we scale based on the exchange ratio.
+        const totalInputCost = (inputEffectivePrice * exchange.input.quantity) / exchange.output.quantity;
+        
+        // The market value of 100 units of the output material.
+        const totalOutputValue = outputMarketPrice;
+
+        const tax = Math.ceil(totalOutputValue * taxRate);
+        const totalProfit = totalOutputValue - tax - totalInputCost;
+        
+        const fullPath = [...(inputMat.path || [exchange.input.id]), exchange.output.id];
+        const percentProfit = totalInputCost > 0 ? (totalProfit / totalInputCost) * 100 : Infinity;
+
         exchanges.push({
-            path: `${exchange.input.id} -> ${exchange.output.id}`,
-            items: [
-                { id: exchange.input.id, name: getMaterialName(exchange.input.id) },
-                { id: exchange.output.id, name: getMaterialName(exchange.output.id) }
-            ],
-            inputCost,
-            outputValue: outputPricePer100,
-            profit,
-            percentProfit: profit / inputCost * 100,
+            pathString: fullPath.join(' -> '),
+            path: fullPath.map(id => ({ id, name: getMaterialName(id) })),
+            inputCost: totalInputCost,
+            outputValue: totalOutputValue,
+            profit: totalProfit,
+            percentProfit: percentProfit,
         });
     }
-  }
 
-  // Two-step exchanges (via powder)
-  const toPowderExchanges = strongholdExchanges.value.filter(e => e.output.id.endsWith('_powder'));
-  const fromPowderExchanges = strongholdExchanges.value.filter(e => e.input.id.endsWith('_powder'));
-
-  for (const toPowder of toPowderExchanges) {
-    for (const fromPowder of fromPowderExchanges) {
-      if (toPowder.output.id === fromPowder.input.id) {
-        if (toPowder.input.id === fromPowder.output.id) {
-            continue;
-        }
-        
-        const inputPricePer1 = (materialCosts.materials[toPowder.input.id] || 0) / 100;
-        const finalOutputPricePer100 = materialCosts.materials[fromPowder.output.id] || 0;
-
-        if (inputPricePer1 > 0 && finalOutputPricePer100 > 0) {
-            const scalingFactor = 100 / fromPowder.output.quantity;
-            const powderNeeded = fromPowder.input.quantity * scalingFactor;
-            const initialInputNeeded = toPowder.input.quantity * (powderNeeded / toPowder.output.quantity);
-            
-            const initialInputCost = inputPricePer1 * initialInputNeeded;
-            
-            const taxPer100 = Math.ceil(finalOutputPricePer100 * taxRate);
-            const profit = finalOutputPricePer100 - taxPer100 - initialInputCost;
-
-            exchanges.push({
-                path: `${toPowder.input.id} -> ${toPowder.output.id} -> ${fromPowder.output.id}`,
-                items: [
-                    { id: toPowder.input.id, name: getMaterialName(toPowder.input.id) },
-                    { id: toPowder.output.id, name: getMaterialName(toPowder.output.id) },
-                    { id: fromPowder.output.id, name: getMaterialName(fromPowder.output.id) }
-                ],
-                inputCost: initialInputCost,
-                outputValue: finalOutputPricePer100,
-                profit,
-                percentProfit: profit / initialInputCost * 100,
-            });
-        }
-      }
-    }
-  }
-
-  return exchanges.sort((a, b) => b.percentProfit - a.percentProfit);
+    return exchanges.sort((a, b) => b.percentProfit - a.percentProfit);
 });
+
 
 const filteredExchanges = computed(() => {
     if (showOnlyProfitable.value) {
@@ -166,10 +135,11 @@ const filteredExchanges = computed(() => {
 });
 
 onMounted(async () => {
-  const strongholdResponse = await fetch('/data/stronghold.json');
-  strongholdExchanges.value = await strongholdResponse.json();
   const materialsResponse = await fetch('/data/materials.json');
   materials.value = (await materialsResponse.json()).materials;
+  
+  const strongholdResponse = await fetch('/data/stronghold.json');
+  strongholdExchanges.value = await strongholdResponse.json();
 });
 </script>
 

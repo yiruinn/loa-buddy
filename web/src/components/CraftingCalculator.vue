@@ -67,6 +67,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  useLowestPrice: {
+    type: Boolean,
+    required: true,
+  }
 });
 
 const selectedCategories = ref([]);
@@ -85,7 +89,8 @@ const getAdjustedCraftingTime = (recipe) => {
 
 const calculateMaterialCost = (items) => {
   return items.reduce((sum, item) => {
-    const cost = materialCosts.materials[item.id] || 0;
+    const priceKey = props.useLowestPrice ? 'effectivePrice' : 'marketPrice';
+    const cost = materialCosts.materials[item.id]?.[priceKey] || 0;
     return sum + (item.quantity * cost) / 100;
   }, 0);
 };
@@ -143,7 +148,7 @@ const initializeCategories = () => {
 };
 
 onMounted(initializeCategories);
-watch(() => [props.recipes, props.craftingReductions], initializeCategories, { deep: true });
+watch(() => [props.recipes, props.craftingReductions, props.useLowestPrice], initializeCategories, { deep: true });
 
 </script>
 

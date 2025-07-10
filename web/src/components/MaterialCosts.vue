@@ -32,12 +32,30 @@
                   <img :src="`/icons/${item.id}.webp`" :alt="item.name" class="material-icon" />
                   <span>{{ item.name }}</span>
                 </div>
-                <n-input-number
-                  v-model:value="materialCosts.materials[item.id]"
-                  :min="0"
-                  :show-button="false"
-                  :style="{ width: '100px' }"
-                />
+                <div class="price-input-container">
+                  <n-input-number
+                    v-if="materialCosts.materials[item.id]"
+                    v-model:value="materialCosts.materials[item.id].marketPrice"
+                    @update:value="onPriceUpdate"
+                    :min="0"
+                    :show-button="false"
+                    :style="{ width: '100px' }"
+                  />
+                  <n-tooltip trigger="hover" :disabled="!isExchangeCheaper(item.id)">
+                    <template #trigger>
+                      <div class="source-indicator" :class="getIndicatorClass(item.id)"></div>
+                    </template>
+                    <div v-if="isExchangeCheaper(item.id)" class="tooltip-content">
+                        <div>{{ materialCosts.materials[item.id].effectivePrice.toFixed(2) }}g</div>
+                        <div class="tooltip-path">
+                            <template v-for="(pathId, index) in materialCosts.materials[item.id].path" :key="pathId">
+                                <img :src="`/icons/${pathId}.webp`" class="tooltip-icon" />
+                                <span v-if="index < materialCosts.materials[item.id].path.length - 1" class="arrow-icon">→</span>
+                            </template>
+                        </div>
+                    </div>
+                  </n-tooltip>
+                </div>
               </div>
             </div>
           </div>
@@ -52,12 +70,30 @@
                   <img :src="`/icons/${item.id}.webp`" :alt="item.name" class="material-icon" />
                   <span>{{ item.name }}</span>
                 </div>
-                <n-input-number
-                  v-model:value="materialCosts.materials[item.id]"
-                  :min="0"
-                  :show-button="false"
-                  :style="{ width: '100px' }"
-                />
+                <div class="price-input-container">
+                  <n-input-number
+                    v-if="materialCosts.materials[item.id]"
+                    v-model:value="materialCosts.materials[item.id].marketPrice"
+                    @update:value="onPriceUpdate"
+                    :min="0"
+                    :show-button="false"
+                    :style="{ width: '100px' }"
+                  />
+                  <n-tooltip trigger="hover" :disabled="!isExchangeCheaper(item.id)">
+                    <template #trigger>
+                      <div class="source-indicator" :class="getIndicatorClass(item.id)"></div>
+                    </template>
+                    <div v-if="isExchangeCheaper(item.id)" class="tooltip-content">
+                        <div>{{ materialCosts.materials[item.id].effectivePrice.toFixed(2) }}g</div>
+                        <div class="tooltip-path">
+                            <template v-for="(pathId, index) in materialCosts.materials[item.id].path" :key="pathId">
+                                <img :src="`/icons/${pathId}.webp`" class="tooltip-icon" />
+                                <span v-if="index < materialCosts.materials[item.id].path.length - 1" class="arrow-icon">→</span>
+                            </template>
+                        </div>
+                    </div>
+                  </n-tooltip>
+                </div>
               </div>
             </div>
           </div>
@@ -69,8 +105,8 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { NCard, NInputNumber, NCollapse, NCollapseItem, NButton, NSelect } from 'naive-ui';
-import { materialCosts, updateAllPrices, saveMaterialCosts } from '../store';
+import { NCard, NInputNumber, NCollapse, NCollapseItem, NButton, NSelect, NTooltip } from 'naive-ui';
+import { materialCosts, updateAllPrices, saveMaterialCosts, recalculateEffectiveCosts } from '../store';
 
 const props = defineProps({
   materials: {
@@ -86,9 +122,25 @@ const regionOptions = [
   { label: 'EUC', value: 'euc' },
 ];
 
+const isExchangeCheaper = (itemId) => {
+    const mat = materialCosts.materials[itemId];
+    return mat && mat.source === 'exchange';
+};
+
+const getIndicatorClass = (itemId) => {
+    if (isExchangeCheaper(itemId)) {
+        return 'source-exchange-available'; // Yellow
+    }
+    return 'source-lowest'; // Green
+};
+
+const onPriceUpdate = () => {
+    recalculateEffectiveCosts();
+};
+
 watch(
   () => materialCosts.materials,
-  (newVal, oldVal) => {
+  () => {
     saveMaterialCosts();
   },
   { deep: true }
@@ -217,5 +269,49 @@ const getCategoryIcon = (category) => {
 .material-icon {
   width: 24px;
   height: 24px;
+}
+
+.price-input-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.source-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.source-lowest {
+  background-color: #63e2b7; /* Green */
+}
+
+.source-exchange-available {
+  background-color: #e2d463; /* Yellow */
+  cursor: help;
+}
+
+.tooltip-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.tooltip-path {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tooltip-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.arrow-icon {
+    font-size: 16px;
+    color: #fff;
 }
 </style>
