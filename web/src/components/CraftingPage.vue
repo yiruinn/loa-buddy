@@ -66,7 +66,7 @@
       </n-collapse>
     </n-card>
     <CraftingCalculator
-      :recipes="recipes"
+      :recipes="localRecipes"
       :materials="materials"
       :crafting-reductions="craftingReductions"
       :use-lowest-price="useLowestPrice"
@@ -79,7 +79,7 @@ import { ref, reactive, watch, onMounted } from 'vue';
 import { NInputNumber, NCard, NCollapse, NCollapseItem, NSwitch } from 'naive-ui';
 import CraftingCalculator from './CraftingCalculator.vue';
 
-defineProps({
+const props = defineProps({
   recipes: Array,
   materials: Array,
 });
@@ -91,6 +91,34 @@ const craftingReductions = reactive({
   cooking: { cost: 0, time: 0 },
   special: { cost: 0, time: 0 },
 });
+
+const localRecipes = ref([]);
+
+const loadSellingPrices = (recipeData) => {
+  const savedPrices = JSON.parse(localStorage.getItem('sellingPrices') || '{}');
+  return recipeData.map(recipe => ({
+    ...recipe,
+    sellingPrice: savedPrices[recipe.name] || 0,
+  }));
+};
+
+const saveSellingPrices = () => {
+  const pricesToSave = {};
+  localRecipes.value.forEach(recipe => {
+    if (recipe.sellingPrice !== null && recipe.sellingPrice !== undefined) {
+      pricesToSave[recipe.name] = recipe.sellingPrice;
+    }
+  });
+  localStorage.setItem('sellingPrices', JSON.stringify(pricesToSave));
+};
+
+watch(() => props.recipes, (newRecipes) => {
+  if (newRecipes && newRecipes.length > 0) {
+    localRecipes.value = loadSellingPrices(newRecipes);
+  }
+}, { immediate: true });
+
+watch(localRecipes, saveSellingPrices, { deep: true });
 
 watch(craftingReductions, (newValue) => {
   localStorage.setItem('craftingReductions', JSON.stringify(newValue));

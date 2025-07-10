@@ -4,7 +4,6 @@
     "type": "special",
     "craftingCost": 400,
     "quantity": 10,
-    "sellingPrice": 0,
     "craftingTime": 60,
     "materialOptions": [
       {
@@ -62,7 +61,6 @@
     "type": "special",
     "craftingCost": 300,
     "quantity": 15,
-    "sellingPrice": 0,
     "craftingTime": 75,
     "materialOptions": [
       {
@@ -97,7 +95,6 @@
     "type": "special",
     "craftingCost": 250,
     "quantity": 20,
-    "sellingPrice": 0,
     "craftingTime": 60,
     "materialOptions": [
       {
@@ -131,7 +128,6 @@
     "type": "special",
     "craftingCost": 205,
     "quantity": 30,
-    "sellingPrice": 0,
     "craftingTime": 45,
     "materialOptions": [
       {
@@ -165,7 +161,6 @@
     "type": "battle",
     "craftingCost": 30,
     "quantity": 3,
-    "sellingPrice": 0,
     "craftingTime": 60,
     "materialOptions": [
       {
@@ -183,7 +178,6 @@
     "type": "battle",
     "craftingCost": 15,
     "quantity": 3,
-    "sellingPrice": 0,
     "craftingTime": 30,
     "materialOptions": [
       {
@@ -201,7 +195,6 @@
     "type": "battle",
     "craftingCost": 15,
     "quantity": 3,
-    "sellingPrice": 0,
     "craftingTime": 30,
     "materialOptions": [
       {
@@ -220,7 +213,6 @@
     "quantity": 1,
     "craftingTime": 45,
     "craftingCost": 35,
-    "sellingPrice": 0,
     "materialOptions": [
       {
         "category": "default",
@@ -241,7 +233,6 @@
     "quantity": 1,
     "craftingTime": 60,
     "craftingCost": 50,
-    "sellingPrice": 0,
     "materialOptions": [
       {
         "category": "default",

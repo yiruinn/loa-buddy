@@ -188,7 +188,12 @@ const renderSelectTag = (recipe, option) => {
 };
 
 onMounted(initializeCategories);
-watch(() => [props.recipes, props.craftingReductions, props.useLowestPrice], initializeCategories, { deep: true });
+
+watch(() => [
+  props.recipes,
+  props.craftingReductions,
+  props.useLowestPrice,
+], initializeCategories, { deep: true });
 
 </script>
 
