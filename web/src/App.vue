@@ -2,7 +2,9 @@
   <n-config-provider :theme="darkTheme">
     <n-layout style="height: 100vh">
       <n-layout-header bordered style="height: 64px; padding: 16px">
-        <h1 style="margin: 0">LOA Buddy</h1>
+        <router-link :to="{ name: 'home' }" style="text-decoration: none; color: inherit;">
+          <h1 style="margin: 0">LOA Buddy</h1>
+        </router-link>
       </n-layout-header>
 
       <n-layout has-sider style="height: calc(100vh - 64px)">
@@ -15,8 +17,8 @@
         >
           <n-menu
             :options="menuOptions"
-            :default-value="currentTool"
-            @update:value="handleMenuSelect"
+            :value="currentTool"
+            :default-expanded-keys="['tools']"
           />
         </n-layout-sider>
 
@@ -87,17 +89,14 @@
                 </n-collapse-item>
               </n-collapse>
             </n-card>
-            <CraftingCalculator
-              :recipes="recipes"
-              :materials="materials"
-              :crafting-reductions="craftingReductions"
-              :use-lowest-price="useLowestPrice"
-              style="margin-bottom: 20px;"
-            />
           </div>
-          <MariCalculator v-if="currentTool === 'market'" />
-          <MaterialsPage v-if="currentTool === 'materials'" />
-          <StrongholdExchangeCalculator v-if="currentTool === 'stronghold'" />
+          <router-view
+            :recipes="recipes"
+            :materials="materials"
+            :crafting-reductions="craftingReductions"
+            :use-lowest-price="useLowestPrice"
+            style="margin-bottom: 20px;"
+          />
         </n-layout-content>
       </n-layout>
     </n-layout>
@@ -105,14 +104,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, watch } from 'vue';
+import { ref, onMounted, reactive, watch, h, computed } from 'vue';
+import { RouterLink, useRoute } from 'vue-router';
 import { NLayout, NLayoutHeader, NLayoutContent, NLayoutSider, NMenu, NConfigProvider, darkTheme, NInputNumber, NCard, NCollapse, NCollapseItem, NSwitch } from 'naive-ui';
-import CraftingCalculator from './components/CraftingCalculator.vue';
-import MaterialsPage from './components/MaterialsPage.vue';
-import MariCalculator from './components/MariCalculator.vue';
-import StrongholdExchangeCalculator from './components/StrongholdExchangeCalculator.vue';
 
-const currentTool = ref('crafting');
+const route = useRoute();
+const currentTool = computed(() => route.name);
+
 const recipes = ref([]);
 const materials = ref([]);
 const useLowestPrice = ref(false);
@@ -133,32 +131,28 @@ const menuOptions = [
     key: 'tools',
     children: [
       {
-        label: 'Crafting Calculator',
+        label: () => h(RouterLink, { to: { name: 'crafting' } }, { default: () => 'Crafting Calculator' }),
         key: 'crafting'
       },
       {
-        label: "Mari's Shop Calculator",
-        key: 'market'
+        label: () => h(RouterLink, { to: { name: 'mari' } }, { default: () => "Mari's Shop Calculator" }),
+        key: 'mari'
       },
       {
-        label: 'Material Prices',
-        key: 'materials'
-      },
-      {
-        label: 'Stronghold Arbitrage',
+        label: () => h(RouterLink, { to: { name: 'stronghold' } }, { default: () => 'Stronghold Arbitrage' }),
         key: 'stronghold'
+      },
+      {
+        label: () => h(RouterLink, { to: { name: 'materials' } }, { default: () => 'Material Prices' }),
+        key: 'materials'
       }
     ]
   },
   {
-    label: 'Blacklist',
+    label: () => h(RouterLink, { to: { name: 'blacklist' } }, { default: () => 'Blacklist' }),
     key: 'blacklist'
   }
 ];
-
-const handleMenuSelect = (key) => {
-  currentTool.value = key;
-};
 
 onMounted(async () => {
   const savedReductions = localStorage.getItem('craftingReductions');

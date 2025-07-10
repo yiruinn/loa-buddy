@@ -165,6 +165,7 @@ export const mari = reactive([]);
 fetch('/data/mari.json')
     .then(response => response.json())
     .then(data => {
-        mari.push(...data);
+        const allItems = Object.values(data).flat();
+        mari.push(...allItems);
     });
 
