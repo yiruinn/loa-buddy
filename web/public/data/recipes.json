@@ -159,5 +159,101 @@
         ]
       }
     ]
+  },
+  {
+    "name": "Elemental HP Potion",
+    "type": "battle",
+    "craftingCost": 30,
+    "quantity": 3,
+    "sellingPrice": 0,
+    "craftingTime": 60,
+    "materialOptions": [
+      {
+        "category": "default",
+        "items": [
+            { "id": "bright_wild_flower", "quantity": 8 },
+            { "id": "shy_wild_flower", "quantity": 25 },
+            { "id": "wild_flower", "quantity": 33 }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Dark Grenade",
+    "type": "battle",
+    "craftingCost": 15,
+    "quantity": 3,
+    "sellingPrice": 0,
+    "craftingTime": 30,
+    "materialOptions": [
+      {
+        "category": "default",
+        "items": [
+            { "id": "sturdy_timber", "quantity": 4 },
+            { "id": "tender_timber", "quantity": 12 },
+            { "id": "timber", "quantity": 17 }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Sacred Charm",
+    "type": "battle",
+    "craftingCost": 15,
+    "quantity": 3,
+    "sellingPrice": 0,
+    "craftingTime": 30,
+    "materialOptions": [
+      {
+        "category": "default",
+        "items": [
+            { "id": "strong_iron_ore", "quantity": 4 },
+            { "id": "heavy_iron_ore", "quantity": 14 },
+            { "id": "iron_ore", "quantity": 28 }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "[Masterwork] Master's Chewy Grilled Skewers",
+    "type": "cooking",
+    "quantity": 1,
+    "craftingTime": 45,
+    "craftingCost": 35,
+    "sellingPrice": 0,
+    "materialOptions": [
+      {
+        "category": "default",
+        "items": [
+          { "id": "oreha_thick_meat", "quantity": 6 },
+          { "id": "oreha_solar_carp", "quantity": 7 },
+          { "id": "treated_meat", "quantity": 22 },
+          { "id": "redflesh_fish", "quantity": 26 },
+          { "id": "thick_raw_meat", "quantity": 45 },
+          { "id": "fish", "quantity": 53 }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "[Masterwork] Master's Herb Steak Meal",
+    "type": "cooking",
+    "quantity": 1,
+    "craftingTime": 60,
+    "craftingCost": 50,
+    "sellingPrice": 0,
+    "materialOptions": [
+      {
+        "category": "default",
+        "items": [
+          { "id": "oreha_thick_meat", "quantity": 12 },
+          { "id": "oreha_solar_carp", "quantity": 13 },
+          { "id": "treated_meat", "quantity": 44 },
+          { "id": "redflesh_fish", "quantity": 50 },
+          { "id": "thick_raw_meat", "quantity": 88 },
+          { "id": "fish", "quantity": 100 }
+        ]
+      }
+    ]
   }
 ]

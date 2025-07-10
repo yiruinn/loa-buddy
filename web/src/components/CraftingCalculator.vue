@@ -1,56 +1,64 @@
 <template>
   <n-card>
-    <div class="table-container">
-      <n-table :bordered="false" :single-line="false" class="custom-table">
-        <thead>
-          <tr>
-            <th>Recipe</th>
-            <th>Gold</th>
-            <th>Total Cost</th>
-            <th>Selling Price</th>
-            <th>Unit Price</th>
-            <th>Unit Profit</th>
-            <th>Craft Time</th>
-            <th>Profit/Hour</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(recipe, index) in recipes" :key="recipe.name">
-            <td>
-              <n-select
-                :value="selectedCategories[index]"
-                :options="getSortedMaterialOptions(recipe)"
-                @update:value="category => updateMaterial(index, category)"
-                placeholder="Select Material"
-                class="material-select"
-                :render-tag="({ option }) => `${recipe.name} (${option.value})`"
-              />
-            </td>
-            <td>{{ getAdjustedCraftingCost(recipe).toFixed(2) }}</td>
-            <td>{{ getTotalCost(recipe, index).toFixed(2) }}</td>
-            <td>
-              <n-input-number
-                v-model:value="recipe.sellingPrice"
-                :min="0"
-                :show-button="false"
-                :style="{ width: '100px' }"
-              />
-            </td>
-            <td>{{ getUnitPrice(recipe, index) }}</td>
-            <td>{{ getProfit(recipe, index) }}</td>
-            <td>{{ getAdjustedCraftingTime(recipe) }}</td>
-            <td>{{ getProfitPerHour(recipe, index) }}</td>
-          </tr>
-        </tbody>
-      </n-table>
-    </div>
+    <n-collapse :default-expanded-names="['special', 'battle', 'cooking']">
+      <n-collapse-item v-for="(group, type) in groupedRecipes" :key="type" :name="type">
+        <template #header>
+          <h2 class="group-header-title">{{ type.charAt(0).toUpperCase() + type.slice(1) }}</h2>
+        </template>
+        <div class="table-container">
+          <n-table :bordered="false" :single-line="false" class="custom-table">
+            <thead>
+              <tr>
+                <th style="width: 320px">Recipe</th>
+                <th style="width: 100px">Gold</th>
+                <th style="width: 120px">Total Cost</th>
+                <th style="width: 120px">Selling Price</th>
+                <th style="width: 120px">Unit Price</th>
+                <th style="width: 120px">Unit Profit</th>
+                <th style="width: 120px">Craft Time</th>
+                <th style="width: 120px">Profit/Hour</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="recipe in group" :key="recipe.name">
+                <td>
+                  <n-select
+                    :value="selectedCategories[getRecipeIndex(recipe)]"
+                    :options="getSortedMaterialOptions(recipe)"
+                    @update:value="category => updateMaterial(getRecipeIndex(recipe), category)"
+                    placeholder="Select Material"
+                    class="material-select"
+                    :disabled="recipe.materialOptions.length <= 1"
+                    :render-tag="({ option }) => renderSelectTag(recipe, option)"
+                  />
+                </td>
+                <td>{{ getAdjustedCraftingCost(recipe) }}</td>
+                <td>{{ getTotalCost(recipe, getRecipeIndex(recipe)).toFixed(2) }}</td>
+                <td>
+                  <n-input-number
+                    v-model:value="recipe.sellingPrice"
+                    :min="0"
+                    :show-button="false"
+                    :style="{ width: '100px' }"
+                  />
+                </td>
+                <td>{{ getUnitPrice(recipe, getRecipeIndex(recipe)) }}</td>
+                <td>{{ getProfit(recipe, getRecipeIndex(recipe)) }}</td>
+                <td>{{ getAdjustedCraftingTime(recipe) }}</td>
+                <td>{{ getProfitPerHour(recipe, getRecipeIndex(recipe)) }}</td>
+              </tr>
+            </tbody>
+          </n-table>
+        </div>
+      </n-collapse-item>
+    </n-collapse>
   </n-card>
 </template>
 
 <script setup>
 import { ref, watch, onMounted, computed } from 'vue';
 import {
-  NCard, NTable, NInputNumber, NSelect
+  NCard, NTable, NInputNumber, NSelect, NCollapse, NCollapseItem
 } from 'naive-ui';
 import { materialCosts } from '../store';
 
@@ -75,10 +83,35 @@ const props = defineProps({
 
 const selectedCategories = ref([]);
 
+const groupedRecipes = computed(() => {
+  const groupOrder = ['special', 'battle', 'cooking', 'uncategorized'];
+  const groups = props.recipes.reduce((acc, recipe) => {
+    const type = recipe.type || 'uncategorized';
+    if (!acc[type]) {
+      acc[type] = [];
+    }
+    acc[type].push(recipe);
+    return acc;
+  }, {});
+
+  const orderedGroups = {};
+  for (const type of groupOrder) {
+    if (groups[type]) {
+      orderedGroups[type] = groups[type];
+    }
+  }
+
+  return orderedGroups;
+});
+
+const getRecipeIndex = (recipe) => {
+  return props.recipes.findIndex(r => r.name === recipe.name);
+};
+
 const getAdjustedCraftingCost = (recipe) => {
   const categoryReduction = props.craftingReductions[recipe.type]?.cost || 0;
   const totalReduction = props.craftingReductions.general.cost + categoryReduction;
-  return recipe.craftingCost * (1 - totalReduction / 100);
+  return Math.floor(recipe.craftingCost * (1 - totalReduction / 100));
 };
 
 const getAdjustedCraftingTime = (recipe) => {
@@ -147,14 +180,36 @@ const initializeCategories = () => {
   });
 };
 
+const renderSelectTag = (recipe, option) => {
+  if (recipe.materialOptions.length === 1) {
+    return recipe.name;
+  }
+  return `${recipe.name} (${option.value})`;
+};
+
 onMounted(initializeCategories);
 watch(() => [props.recipes, props.craftingReductions, props.useLowestPrice], initializeCategories, { deep: true });
 
 </script>
 
 <style scoped>
+.group-header-title {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: bold;
+}
 .material-select {
   width: 300px;
+}
+
+.material-select:deep(.n-base-selection.n-base-selection--disabled) {
+  opacity: 1;
+  background-color: #2d2d30;
+  cursor: default;
+}
+
+.material-select:deep(.n-base-selection.n-base-selection--disabled .n-base-selection-input) {
+  color: #fff !important;
 }
 
 .table-container {
