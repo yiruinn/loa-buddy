@@ -20,79 +20,81 @@
             </div>
           </div>
         </template>
-        <div class="material-costs-grid">
-          <div class="material-row">
-            <div v-for="group in topRowGroups" :key="group.category" class="material-group">
-              <div class="category-header">
-                <img :src="getCategoryIcon(group.category)" :alt="group.category" class="category-icon" />
-                <h3>{{ group.category }}</h3>
-              </div>
-              <div v-for="item in group.items" :key="item.id" class="material-cost-item">
-                <div class="material-info">
-                  <img :src="`/icons/${item.id}.webp`" :alt="item.name" class="material-icon" />
-                  <span>{{ item.name }}</span>
+        <div class="table-container">
+          <div class="material-costs-grid">
+            <div class="material-row">
+              <div v-for="group in topRowGroups" :key="group.category" class="material-group">
+                <div class="category-header">
+                  <img :src="getCategoryIcon(group.category)" :alt="group.category" class="category-icon" />
+                  <h3>{{ group.category }}</h3>
                 </div>
-                <div class="price-input-container">
-                  <n-input-number
-                    v-if="materialCosts.materials[item.id]"
-                    v-model:value="materialCosts.materials[item.id].marketPrice"
-                    @update:value="onPriceUpdate"
-                    :min="0"
-                    :show-button="false"
-                    :style="{ width: '100px' }"
-                  />
-                  <n-tooltip trigger="hover" :disabled="!isExchangeCheaper(item.id)">
-                    <template #trigger>
-                      <div class="source-indicator" :class="getIndicatorClass(item.id)"></div>
-                    </template>
-                    <div v-if="isExchangeCheaper(item.id)" class="tooltip-content">
-                        <div>{{ materialCosts.materials[item.id].effectivePrice.toFixed(2) }}g</div>
-                        <div class="tooltip-path">
-                            <template v-for="(pathId, index) in materialCosts.materials[item.id].path" :key="pathId">
-                                <img :src="`/icons/${pathId}.webp`" class="tooltip-icon" />
-                                <span v-if="index < materialCosts.materials[item.id].path.length - 1" class="arrow-icon">→</span>
-                            </template>
-                        </div>
-                    </div>
-                  </n-tooltip>
+                <div v-for="item in group.items" :key="item.id" class="material-cost-item">
+                  <div class="material-info">
+                    <img :src="`/icons/${item.id}.webp`" :alt="item.name" class="material-icon" />
+                    <span>{{ item.name }}</span>
+                  </div>
+                  <div class="price-input-container">
+                    <n-input-number
+                      v-if="materialCosts.materials[item.id]"
+                      v-model:value="materialCosts.materials[item.id].marketPrice"
+                      @update:value="onPriceUpdate"
+                      :min="0"
+                      :show-button="false"
+                      :style="{ width: '100px' }"
+                    />
+                    <n-tooltip trigger="hover" :disabled="!isExchangeCheaper(item.id)">
+                      <template #trigger>
+                        <div class="source-indicator" :class="getIndicatorClass(item.id)"></div>
+                      </template>
+                      <div v-if="isExchangeCheaper(item.id)" class="tooltip-content">
+                          <div>{{ materialCosts.materials[item.id].effectivePrice.toFixed(2) }}g</div>
+                          <div class="tooltip-path">
+                              <template v-for="(pathId, index) in materialCosts.materials[item.id].path" :key="pathId">
+                                  <img :src="`/icons/${pathId}.webp`" class="tooltip-icon" />
+                                  <span v-if="index < materialCosts.materials[item.id].path.length - 1" class="arrow-icon">→</span>
+                              </template>
+                          </div>
+                      </div>
+                    </n-tooltip>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="material-row">
-            <div v-for="group in bottomRowGroups" :key="group.category" class="material-group">
-              <div class="category-header">
-                <img :src="getCategoryIcon(group.category)" :alt="group.category" class="category-icon" />
-                <h3>{{ group.category }}</h3>
-              </div>
-              <div v-for="item in group.items" :key="item.id" class="material-cost-item">
-                <div class="material-info">
-                  <img :src="`/icons/${item.id}.webp`" :alt="item.name" class="material-icon" />
-                  <span>{{ item.name }}</span>
+            <div class="material-row">
+              <div v-for="group in bottomRowGroups" :key="group.category" class="material-group">
+                <div class="category-header">
+                  <img :src="getCategoryIcon(group.category)" :alt="group.category" class="category-icon" />
+                  <h3>{{ group.category }}</h3>
                 </div>
-                <div class="price-input-container">
-                  <n-input-number
-                    v-if="materialCosts.materials[item.id]"
-                    v-model:value="materialCosts.materials[item.id].marketPrice"
-                    @update:value="onPriceUpdate"
-                    :min="0"
-                    :show-button="false"
-                    :style="{ width: '100px' }"
-                  />
-                  <n-tooltip trigger="hover" :disabled="!isExchangeCheaper(item.id)">
-                    <template #trigger>
-                      <div class="source-indicator" :class="getIndicatorClass(item.id)"></div>
-                    </template>
-                    <div v-if="isExchangeCheaper(item.id)" class="tooltip-content">
-                        <div>{{ materialCosts.materials[item.id].effectivePrice.toFixed(2) }}g</div>
-                        <div class="tooltip-path">
-                            <template v-for="(pathId, index) in materialCosts.materials[item.id].path" :key="pathId">
-                                <img :src="`/icons/${pathId}.webp`" class="tooltip-icon" />
-                                <span v-if="index < materialCosts.materials[item.id].path.length - 1" class="arrow-icon">→</span>
-                            </template>
-                        </div>
-                    </div>
-                  </n-tooltip>
+                <div v-for="item in group.items" :key="item.id" class="material-cost-item">
+                  <div class="material-info">
+                    <img :src="`/icons/${item.id}.webp`" :alt="item.name" class="material-icon" />
+                    <span>{{ item.name }}</span>
+                  </div>
+                  <div class="price-input-container">
+                    <n-input-number
+                      v-if="materialCosts.materials[item.id]"
+                      v-model:value="materialCosts.materials[item.id].marketPrice"
+                      @update:value="onPriceUpdate"
+                      :min="0"
+                      :show-button="false"
+                      :style="{ width: '100px' }"
+                    />
+                    <n-tooltip trigger="hover" :disabled="!isExchangeCheaper(item.id)">
+                      <template #trigger>
+                        <div class="source-indicator" :class="getIndicatorClass(item.id)"></div>
+                      </template>
+                      <div v-if="isExchangeCheaper(item.id)" class="tooltip-content">
+                          <div>{{ materialCosts.materials[item.id].effectivePrice.toFixed(2) }}g</div>
+                          <div class="tooltip-path">
+                              <template v-for="(pathId, index) in materialCosts.materials[item.id].path" :key="pathId">
+                                  <img :src="`/icons/${pathId}.webp`" class="tooltip-icon" />
+                                  <span v-if="index < materialCosts.materials[item.id].path.length - 1" class="arrow-icon">→</span>
+                              </template>
+                          </div>
+                      </div>
+                    </n-tooltip>
+                  </div>
                 </div>
               </div>
             </div>
@@ -216,24 +218,25 @@ const getCategoryIcon = (category) => {
 </script>
 
 <style scoped>
+.table-container {
+  overflow-x: auto;
+}
+
 .material-costs-grid {
   padding: 16px;
+  min-width: 900px; /* Reduced from 1100px */
 }
 
 .material-row {
   display: flex;
   justify-content: space-between;
+  gap: 16px;
   margin-bottom: 16px;
 }
 
 .material-group {
   flex: 1;
-  padding: 0 12px;
-}
-
-.material-group h3 {
-  margin-bottom: 12px;
-  font-size: 16px;
+  min-width: 300px; /* Reduced from 350px */
 }
 
 .category-header {
@@ -258,6 +261,7 @@ const getCategoryIcon = (category) => {
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
+  white-space: nowrap;
 }
 
 .material-info {

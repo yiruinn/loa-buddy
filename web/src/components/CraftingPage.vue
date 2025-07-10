@@ -16,49 +16,51 @@
               </n-switch>
             </div>
           </template>
-          <div class="reduction-inputs">
-            <div class="category-group">
-              <h3>General</h3>
-              <div class="input-group">
-                <span>Cost Reduction (%)</span>
-                <n-input-number v-model:value="craftingReductions.general.cost" :min="0" :max="30" :show-button="false" />
+          <div class="scrollable-container">
+            <div class="reduction-inputs">
+              <div class="category-group">
+                <h3>General</h3>
+                <div class="input-group">
+                  <span>Cost Reduction (%)</span>
+                  <n-input-number v-model:value="craftingReductions.general.cost" :min="0" :max="30" :show-button="false" />
+                </div>
+                <div class="input-group">
+                  <span>Time Reduction (%)</span>
+                  <n-input-number v-model:value="craftingReductions.general.time" :min="0" :max="30" :show-button="false" />
+                </div>
               </div>
-              <div class="input-group">
-                <span>Time Reduction (%)</span>
-                <n-input-number v-model:value="craftingReductions.general.time" :min="0" :max="30" :show-button="false" />
+              <div class="category-group">
+                <h3>Battle Items</h3>
+                <div class="input-group">
+                  <span>Cost Reduction (%)</span>
+                  <n-input-number v-model:value="craftingReductions.battle.cost" :min="0" :max="10" :show-button="false" />
+                </div>
+                <div class="input-group">
+                  <span>Time Reduction (%)</span>
+                  <n-input-number v-model:value="craftingReductions.battle.time" :min="0" :max="10" :show-button="false" />
+                </div>
               </div>
-            </div>
-            <div class="category-group">
-              <h3>Battle Items</h3>
-              <div class="input-group">
-                <span>Cost Reduction (%)</span>
-                <n-input-number v-model:value="craftingReductions.battle.cost" :min="0" :max="10" :show-button="false" />
+              <div class="category-group">
+                <h3>Cooking</h3>
+                <div class="input-group">
+                  <span>Cost Reduction (%)</span>
+                  <n-input-number v-model:value="craftingReductions.cooking.cost" :min="0" :max="10" :show-button="false" />
+                </div>
+                <div class="input-group">
+                  <span>Time Reduction (%)</span>
+                  <n-input-number v-model:value="craftingReductions.cooking.time" :min="0" :max="10" :show-button="false" />
+                </div>
               </div>
-              <div class="input-group">
-                <span>Time Reduction (%)</span>
-                <n-input-number v-model:value="craftingReductions.battle.time" :min="0" :max="10" :show-button="false" />
-              </div>
-            </div>
-            <div class="category-group">
-              <h3>Cooking</h3>
-              <div class="input-group">
-                <span>Cost Reduction (%)</span>
-                <n-input-number v-model:value="craftingReductions.cooking.cost" :min="0" :max="10" :show-button="false" />
-              </div>
-              <div class="input-group">
-                <span>Time Reduction (%)</span>
-                <n-input-number v-model:value="craftingReductions.cooking.time" :min="0" :max="10" :show-button="false" />
-              </div>
-            </div>
-            <div class="category-group">
-              <h3>Special</h3>
-              <div class="input-group">
-                <span>Cost Reduction (%)</span>
-                <n-input-number v-model:value="craftingReductions.special.cost" :min="0" :max="10" :show-button="false" />
-              </div>
-              <div class="input-group">
-                <span>Time Reduction (%)</span>
-                <n-input-number v-model:value="craftingReductions.special.time" :min="0" :max="10" :show-button="false" />
+              <div class="category-group">
+                <h3>Special</h3>
+                <div class="input-group">
+                  <span>Cost Reduction (%)</span>
+                  <n-input-number v-model:value="craftingReductions.special.cost" :min="0" :max="10" :show-button="false" />
+                </div>
+                <div class="input-group">
+                  <span>Time Reduction (%)</span>
+                  <n-input-number v-model:value="craftingReductions.special.time" :min="0" :max="10" :show-button="false" />
+                </div>
               </div>
             </div>
           </div>
@@ -133,12 +135,19 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.reduction-inputs {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+.scrollable-container {
+  overflow-x: auto;
 }
+
+.reduction-inputs {
+  display: flex;
+  gap: 20px;
+  min-width: 900px;
+}
+
 .category-group {
+  flex: 1;
+  min-width: 200px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -153,6 +162,7 @@ onMounted(() => {
 }
 .input-group span {
   flex-basis: 60%;
+  white-space: nowrap;
 }
 .input-group .n-input-number {
   flex-basis: 40%;

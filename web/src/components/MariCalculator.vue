@@ -7,89 +7,91 @@
         <span class="suffix-text">gold per 95 blue crystals</span>
       </div>
     </div>
-    <n-tabs type="segment" default-value="t4_honing">
+    <n-tabs type="segment" default-value="t2_honing">
       <n-tab-pane
         v-for="(items, category) in processedMariShopData"
         :key="category"
         :name="category"
         :tab="formatCategoryName(category)"
       >
-        <n-table :bordered="false" :single-line="false" style="table-layout: fixed; width: 100%">
-          <colgroup>
-            <col style="width: 45%" />
-            <col style="width: 20%" />
-            <col style="width: 20%" />
-            <col style="width: 15%" />
-          </colgroup>
-          <thead>
-            <tr>
-              <th @click="toggleSort" style="cursor: pointer">
-                Item
-                <span v-if="sortOrder === 'asc'">▲</span>
-                <span v-if="sortOrder === 'desc'">▼</span>
-              </th>
-              <th>Blue Crystal Cost</th>
-              <th>Total Gold Cost</th>
-              <th>Unit Gold Cost</th>
-            </tr>
-          </thead>
-          <tbody>
-            <template v-for="item in items" :key="item.item_name">
-              <tr v-if="item.cheapestDeal">
-                <td style="display: flex; align-items: center">
-                  <n-button
-                    text
-                    size="tiny"
-                    @click="toggleRow(item.item_name)"
-                    style="margin-right: 8px"
-                    :disabled="item.deals.length <= 1"
-                  >
-                    {{ expandedRows.has(item.item_name) ? '-' : '+' }}
-                  </n-button>
-                  <span
-                    >{{ item.item_name }} [{{ item.cheapestDeal.quantity }}]</span
-                  >
-                </td>
-                <td>{{ item.cheapestDeal.blue_crystal_cost }}</td>
-                <td>{{ item.cheapestDeal.goldCost.toFixed(0) }}</td>
-                <td>{{ item.cheapestDeal.unitGoldCost.toFixed(2) }}</td>
+        <div class="table-container">
+          <n-table :bordered="false" :single-line="false" class="custom-table">
+            <colgroup>
+              <col style="width: 45%" />
+              <col style="width: 20%" />
+              <col style="width: 20%" />
+              <col style="width: 15%" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th @click="toggleSort" style="cursor: pointer">
+                  Item
+                  <span v-if="sortOrder === 'asc'">▲</span>
+                  <span v-if="sortOrder === 'desc'">▼</span>
+                </th>
+                <th>Blue Crystal Cost</th>
+                <th>Total Gold Cost</th>
+                <th>Unit Gold Cost</th>
               </tr>
-              <tr v-if="expandedRows.has(item.item_name) && item.deals.length > 1">
-                <td :colspan="4" style="padding: 0; border: 0">
-                  <n-table
-                    :bordered="false"
-                    :single-line="false"
-                    style="background-color: transparent"
-                  >
-                    <colgroup>
-                      <col style="width: 45%" />
-                      <col style="width: 20%" />
-                      <col style="width: 20%" />
-                      <col style="width: 15%" />
-                    </colgroup>
-                    <tbody>
-                      <tr
-                        v-for="deal in item.dealsWithCost.filter(
-                          (d) => d !== item.cheapestDeal
-                        )"
-                        :key="deal.quantity"
-                      >
-                        <td style="display: flex; align-items: center">
-                          <span style="padding-left: 36px"
-                            >{{ item.item_name }} [{{ deal.quantity }}]</span
-                          >
-                        </td>
-                        <td>{{ deal.blue_crystal_cost }}</td>
-                        <td>{{ deal.goldCost.toFixed(0) }}</td>
-                        <td>{{ deal.unitGoldCost.toFixed(2) }}</td>
-                      </tr>
-                    </tbody>
-                  </n-table>
-                </td>
-              </tr>
-            </template>
-          </tbody>
-        </n-table>
+            </thead>
+            <tbody>
+              <template v-for="item in items" :key="item.item_name">
+                <tr v-if="item.cheapestDeal">
+                  <td style="display: flex; align-items: center">
+                    <n-button
+                      text
+                      size="tiny"
+                      @click="toggleRow(item.item_name)"
+                      style="margin-right: 8px"
+                      :disabled="item.deals.length <= 1"
+                    >
+                      {{ expandedRows.has(item.item_name) ? '-' : '+' }}
+                    </n-button>
+                    <span
+                      >{{ item.item_name }} [{{ item.cheapestDeal.quantity }}]</span
+                    >
+                  </td>
+                  <td>{{ item.cheapestDeal.blue_crystal_cost }}</td>
+                  <td>{{ item.cheapestDeal.goldCost.toFixed(0) }}</td>
+                  <td>{{ item.cheapestDeal.unitGoldCost.toFixed(2) }}</td>
+                </tr>
+                <tr v-if="expandedRows.has(item.item_name) && item.deals.length > 1">
+                  <td :colspan="4" style="padding: 0; border: 0">
+                    <n-table
+                      :bordered="false"
+                      :single-line="false"
+                      style="background-color: transparent"
+                    >
+                      <colgroup>
+                        <col style="width: 45%" />
+                        <col style="width: 20%" />
+                        <col style="width: 20%" />
+                        <col style="width: 15%" />
+                      </colgroup>
+                      <tbody>
+                        <tr
+                          v-for="deal in item.dealsWithCost.filter(
+                            (d) => d !== item.cheapestDeal
+                          )"
+                          :key="deal.quantity"
+                        >
+                          <td style="display: flex; align-items: center">
+                            <span style="padding-left: 36px"
+                              >{{ item.item_name }} [{{ deal.quantity }}]</span
+                            >
+                          </td>
+                          <td>{{ deal.blue_crystal_cost }}</td>
+                          <td>{{ deal.goldCost.toFixed(0) }}</td>
+                          <td>{{ deal.unitGoldCost.toFixed(2) }}</td>
+                        </tr>
+                      </tbody>
+                    </n-table>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </n-table>
+        </div>
       </n-tab-pane>
     </n-tabs>
   </n-card>
@@ -111,10 +113,13 @@ const calculateGoldCost = (blueCrystalCost) => {
 };
 
 const processedMariShopData = computed(() => {
-  const data = { ...mariShopData.value };
+  const data = mariShopData.value;
   const processed = {};
+  const categoryOrder = ['t2_honing', 't3_honing', 't4_honing', 'life_skill', 'etc'];
 
-  for (const category in data) {
+  for (const category of categoryOrder) {
+    if (!data[category]) continue;
+
     let items = data[category];
 
     if (sortOrder.value !== 'none') {
@@ -211,5 +216,15 @@ const toggleRow = (itemName) => {
 
 .suffix-text {
   margin-left: 5px;
+}
+
+.table-container {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.custom-table th,
+.custom-table td {
+  white-space: nowrap;
 }
 </style>

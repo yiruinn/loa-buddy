@@ -12,9 +12,9 @@
                 <th style="width: 320px">Recipe</th>
                 <th style="width: 100px">Gold</th>
                 <th style="width: 120px">Total Cost</th>
-                <th style="width: 120px">Selling Price</th>
                 <th style="width: 120px">Unit Price</th>
-                <th style="width: 120px">Unit Profit</th>
+                <th style="width: 120px">Selling Price</th>
+                <th style="width: 120px">Unit Profit (taxed)</th>
                 <th style="width: 120px">Craft Time</th>
                 <th style="width: 120px">Profit/Hour</th>
               </tr>
@@ -34,6 +34,7 @@
                 </td>
                 <td>{{ getAdjustedCraftingCost(recipe) }}</td>
                 <td>{{ getTotalCost(recipe, getRecipeIndex(recipe)).toFixed(2) }}</td>
+                <td>{{ getUnitPrice(recipe, getRecipeIndex(recipe)) }}</td>
                 <td>
                   <n-input-number
                     v-model:value="recipe.sellingPrice"
@@ -42,7 +43,6 @@
                     :style="{ width: '100px' }"
                   />
                 </td>
-                <td>{{ getUnitPrice(recipe, getRecipeIndex(recipe)) }}</td>
                 <td>{{ getProfit(recipe, getRecipeIndex(recipe)) }}</td>
                 <td>{{ getAdjustedCraftingTime(recipe) }}</td>
                 <td>{{ getProfitPerHour(recipe, getRecipeIndex(recipe)) }}</td>
