@@ -161,7 +161,7 @@ const itemCategoryMapping = {
   'oreha_solar_carp': 'Fishing',
   'meat': 'Hunting',
   'treated_meat': 'Hunting',
-  'abidos_thick_meat': 'Hunting',
+  'abidos_thick_raw_meat': 'Hunting',
   'oreha_thick_meat': 'Hunting',
   'thick_raw_meat': 'Hunting',
   'ancient_relic': 'Excavating',

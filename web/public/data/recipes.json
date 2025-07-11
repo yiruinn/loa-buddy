@@ -19,7 +19,7 @@
         "items": [
           { "id": "thick_raw_meat", "quantity": 86 },
           { "id": "treated_meat", "quantity": 45 },
-          { "id": "abidos_thick_meat", "quantity": 33 }
+          { "id": "abidos_thick_raw_meat", "quantity": 33 }
         ]
       },
       {

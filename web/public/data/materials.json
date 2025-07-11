@@ -15,7 +15,7 @@
     { "id": "thick_raw_meat", "name": "Thick Raw Meat" },
     { "id": "treated_meat", "name": "Treated Meat" },
     { "id": "oreha_thick_meat", "name": "Oreha Thick Meat" },
-    { "id": "abidos_thick_meat", "name": "Abidos Thick Raw Meat" },
+    { "id": "abidos_thick_raw_meat", "name": "Abidos Thick Raw Meat" },
     { "id": "timber", "name": "Timber" },
     { "id": "tender_timber", "name": "Tender Timber" },
     { "id": "sturdy_timber", "name": "Sturdy Timber" },
