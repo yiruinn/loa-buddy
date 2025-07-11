@@ -2,9 +2,14 @@
   <n-config-provider :theme="darkTheme">
     <n-layout style="height: 100vh">
       <n-layout-header bordered style="height: 64px; padding: 16px">
-        <router-link :to="{ name: 'home' }" style="text-decoration: none; color: inherit;">
-          <h1 style="margin: 0">LOA Buddy</h1>
-        </router-link>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <router-link :to="{ name: 'home' }" style="text-decoration: none; color: inherit;">
+            <h1 style="margin: 0">LOA Buddy</h1>
+          </router-link>
+          <a href="https://www.buymeacoffee.com/zyrdev" target="_blank">
+            <img src="https://cdn.buymeacoffee.com/buttons/v2/default-white.png" alt="Buy Me A Coffee" style="height: 36px !important;width: 130px !important;" >
+          </a>
+        </div>
       </n-layout-header>
 
       <n-layout has-sider style="height: calc(100vh - 64px)">
