@@ -6,6 +6,7 @@ import MariCalculator from './components/MariCalculator.vue';
 import MaterialsPage from './components/MaterialsPage.vue';
 import StrongholdExchangeCalculator from './components/StrongholdExchangeCalculator.vue';
 import BlacklistPage from './components/BlacklistPage.vue';
+import MarketTracker from './components/MarketTracker.vue';
 
 const routes = [
   { path: '/', component: HomePage, name: 'home' },
@@ -14,6 +15,7 @@ const routes = [
   { path: '/materials', component: MaterialsPage, name: 'materials' },
   { path: '/stronghold', component: StrongholdExchangeCalculator, name: 'stronghold' },
   { path: '/blacklist', component: BlacklistPage, name: 'blacklist' },
+  { path: '/market', component: MarketTracker, name: 'market-tracker' },
 ];
 
 const router = createRouter({
