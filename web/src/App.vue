@@ -23,11 +23,7 @@
         </n-layout-sider>
 
         <n-layout-content style="padding: 24px;">
-          <router-view
-            :recipes="recipes"
-            :materials="materials"
-            style="margin-bottom: 20px;"
-          />
+          <router-view style="margin-bottom: 20px;" />
         </n-layout-content>
       </n-layout>
     </n-layout>
@@ -35,15 +31,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted, h, computed } from 'vue';
+import { onMounted, h, computed } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 import { NLayout, NLayoutHeader, NLayoutContent, NLayoutSider, NMenu, NConfigProvider, darkTheme } from 'naive-ui';
+import { init } from './store';
 
 const route = useRoute();
 const currentTool = computed(() => route.name);
-
-const recipes = ref([]);
-const materials = ref([]);
 
 const menuOptions = [
   {
@@ -74,22 +68,7 @@ const menuOptions = [
   }
 ];
 
-onMounted(async () => {
-  try {
-    const [recipesResponse, materialsResponse] = await Promise.all([
-      fetch('/data/recipes.json'),
-      fetch('/data/materials.json')
-    ]);
-    const recipesData = await recipesResponse.json();
-    const materialsData = await materialsResponse.json();
-    
-    materials.value = materialsData.materials;
-    recipes.value = recipesData;
-
-  } catch (error) {
-    console.error('Failed to load data:', error);
-  }
-});
+onMounted(init);
 </script>
 
 <style>

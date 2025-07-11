@@ -100,12 +100,12 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { NCard, NH3, NInputNumber, NTabs, NTabPane, NTable, NButton } from 'naive-ui';
-import mariData from '../../public/data/mari.json';
+import { mari } from '../store';
 
 const exchangeRate = ref(0);
-const mariShopData = ref({});
 const sortOrder = ref('none'); // 'none', 'asc', 'desc'
 const expandedRows = ref(new Set());
+
 
 const calculateGoldCost = (blueCrystalCost) => {
   if (!exchangeRate.value) return 0;
@@ -113,7 +113,7 @@ const calculateGoldCost = (blueCrystalCost) => {
 };
 
 const processedMariShopData = computed(() => {
-  const data = mariShopData.value;
+  const data = mari;
   const processed = {};
   const categoryOrder = ['t2_honing', 't3_honing', 't4_honing', 'life_skill', 'etc'];
 
@@ -162,7 +162,6 @@ onMounted(() => {
   if (savedExchangeRate) {
     exchangeRate.value = JSON.parse(savedExchangeRate);
   }
-  mariShopData.value = mariData;
 });
 
 watch(exchangeRate, (newValue) => {

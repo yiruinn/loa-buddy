@@ -55,12 +55,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { NCard, NTable, NSwitch, NIcon } from 'naive-ui';
-import { materialCosts } from '../store';
+import { materialCosts, materialsList, stronghold } from '../store';
 
-const materials = ref([]);
-const strongholdExchanges = ref([]);
 const showOnlyProfitable = ref(true);
 
 const getIconUrl = (id) => `/icons/${id}.webp`;
@@ -75,20 +73,22 @@ const allMaterials = computed(() => {
         'excavating_powder': 'Excavating Powder',
     };
     const powders = Object.entries(powderNames).map(([id, name]) => ({ id, name }));
-    return [...materials.value, ...powders];
+    return [...materialsList, ...powders];
 });
 
 const getMaterialName = (id) => allMaterials.value.find(m => m.id === id)?.name || id;
+
+
 
 const calculatedExchanges = computed(() => {
     const exchanges = [];
     const taxRate = 0.05;
 
-    if (strongholdExchanges.value.length === 0 || Object.keys(materialCosts.materials).length === 0) {
+    if (stronghold.length === 0 || Object.keys(materialCosts.materials).length === 0) {
         return [];
     }
 
-    for (const exchange of strongholdExchanges.value) {
+    for (const exchange of stronghold) {
         const inputMat = materialCosts.materials[exchange.input.id];
         const outputMat = materialCosts.materials[exchange.output.id];
 
@@ -134,13 +134,6 @@ const filteredExchanges = computed(() => {
     return calculatedExchanges.value;
 });
 
-onMounted(async () => {
-  const materialsResponse = await fetch('/data/materials.json');
-  materials.value = (await materialsResponse.json()).materials;
-  
-  const strongholdResponse = await fetch('/data/stronghold.json');
-  strongholdExchanges.value = await strongholdResponse.json();
-});
 </script>
 
 <style scoped>

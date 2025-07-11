@@ -108,14 +108,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { NCard, NInputNumber, NCollapse, NCollapseItem, NButton, NSelect, NTooltip } from 'naive-ui';
-import { materialCosts, updateAllPrices, saveMaterialCosts, recalculateEffectiveCosts } from '../store';
-
-const props = defineProps({
-  materials: {
-    type: Array,
-    required: true,
-  },
-});
+import { materialCosts, updateAllPrices, saveMaterialCosts, recalculateEffectiveCosts, materialsList } from '../store';
 
 const selectedRegion = ref(materialCosts.region);
 const regionOptions = [
@@ -195,7 +188,7 @@ const groupedItems = computed(() => {
     'Excavating': { category: 'Excavating', items: [] },
   };
   
-  props.materials.forEach(item => {
+  materialsList.forEach(item => {
     const category = itemCategoryMapping[item.id];
     if (category && groups[category]) {
       groups[category].items.push(item);

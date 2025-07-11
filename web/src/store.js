@@ -6,6 +6,11 @@ export const materialCosts = reactive({
   region: 'naw'
 });
 
+export const recipes = reactive([]);
+export const mari = reactive({});
+export const stronghold = reactive([]);
+export const materialsList = reactive([]);
+
 export function saveMaterialCosts() {
   localStorage.setItem('materialCosts', JSON.stringify(materialCosts));
 }
@@ -149,23 +154,41 @@ async function initializeMaterials() {
     }
 }
 
-initializeMaterials();
+async function loadRecipes() {
+  const response = await fetch('/data/recipes.json');
+  const data = await response.json();
+  recipes.push(...data);
+}
 
+async function loadMari() {
+  const response = await fetch('/data/mari.json');
+  const data = await response.json();
+  Object.assign(mari, data);
+}
 
-export const recipes = reactive([]);
+async function loadStronghold() {
+  const response = await fetch('/data/stronghold.json');
+  const data = await response.json();
+  stronghold.push(...data);
+}
 
-fetch('/data/recipes.json')
-  .then(response => response.json())
-  .then(data => {
-    recipes.push(...data);
-  });
+async function loadMaterials() {
+  const response = await fetch('/data/materials.json');
+  const data = await response.json();
+  materialsList.push(...data.materials);
+}
 
-export const mari = reactive([]);
+let isInitialized = false;
+export async function init() {
+  if (isInitialized) return;
+  isInitialized = true;
 
-fetch('/data/mari.json')
-    .then(response => response.json())
-    .then(data => {
-        const allItems = Object.values(data).flat();
-        mari.push(...allItems);
-    });
+  await Promise.all([
+    initializeMaterials(),
+    loadRecipes(),
+    loadMari(),
+    loadStronghold(),
+    loadMaterials()
+  ]);
+}
 

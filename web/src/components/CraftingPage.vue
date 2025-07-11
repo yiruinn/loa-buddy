@@ -69,7 +69,7 @@
     </n-card>
     <CraftingCalculator
       :recipes="localRecipes"
-      :materials="materials"
+      :materials="materialCosts.materials"
       :crafting-reductions="craftingReductions"
       :use-lowest-price="useLowestPrice"
     />
@@ -80,11 +80,7 @@
 import { ref, reactive, watch, onMounted } from 'vue';
 import { NInputNumber, NCard, NCollapse, NCollapseItem, NSwitch } from 'naive-ui';
 import CraftingCalculator from './CraftingCalculator.vue';
-
-const props = defineProps({
-  recipes: Array,
-  materials: Array,
-});
+import { recipes, materialCosts } from '../store';
 
 const useLowestPrice = ref(false);
 const craftingReductions = reactive({
@@ -114,11 +110,11 @@ const saveSellingPrices = () => {
   localStorage.setItem('sellingPrices', JSON.stringify(pricesToSave));
 };
 
-watch(() => props.recipes, (newRecipes) => {
+watch(recipes, (newRecipes) => {
   if (newRecipes && newRecipes.length > 0) {
     localRecipes.value = loadSellingPrices(newRecipes);
   }
-}, { immediate: true });
+}, { immediate: true, deep: true });
 
 watch(localRecipes, saveSellingPrices, { deep: true });
 
