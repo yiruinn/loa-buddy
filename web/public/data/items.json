@@ -1,0 +1,243 @@
+{
+  "trade_skill": {
+    "foraging": [
+      { "id": "abidos_wild_flower", "name": "Abidos Wild Flower", "slug": "abidos-wild-flower" },
+      { "id": "bright_wild_flower", "name": "Bright Wild Flower", "slug": "bright-wild-flower" },
+      { "id": "shy_wild_flower", "name": "Shy Wild Flower", "slug": "shy-wild-flower" },
+      { "id": "wild_flower", "name": "Wild Flower", "slug": "wild-flower" }
+    ],
+    "logging": [
+      { "id": "abidos_timber", "name": "Abidos Timber", "slug": "abidos-timber" },
+      { "id": "sturdy_timber", "name": "Sturdy Timber", "slug": "sturdy-timber" },
+      { "id": "tender_timber", "name": "Tender Timber", "slug": "tender-timber" },
+      { "id": "timber", "name": "Timber", "slug": "timber" }
+    ],
+    "mining": [
+      { "id": "abidos_iron_ore", "name": "Abidos Iron Ore", "slug": "abidos-iron-ore" },
+      { "id": "heavy_iron_ore", "name": "Heavy Iron Ore", "slug": "heavy-iron-ore" },
+      { "id": "iron_ore", "name": "Iron Ore", "slug": "iron-ore" },
+      { "id": "strong_iron_ore", "name": "Strong Iron Ore", "slug": "strong-iron-ore" }
+    ],
+    "hunting": [
+      { "id": "abidos_thick_raw_meat", "name": "Abidos Thick Raw Meat", "slug": "abidos-thick-raw-meat" },
+      { "id": "crystallized_hunting_bauble", "name": "Crystallized Hunting Bauble", "slug": "crystallized-hunting-bauble" },
+      { "id": "exotic_leather", "name": "Exotic Leather", "slug": "exotic-leather" },
+      { "id": "oreha_thick_meat", "name": "Oreha Thick Meat", "slug": "oreha-thick-meat" },
+      { "id": "thick_raw_meat", "name": "Thick Raw Meat", "slug": "thick-raw-meat" },
+      { "id": "treated_meat", "name": "Treated Meat", "slug": "treated-meat" }
+    ],
+    "fishing": [
+      { "id": "abidos_solar_carp", "name": "Abidos Solar Carp", "slug": "abidos-solar-carp" },
+      { "id": "crystallized_fishing_bauble", "name": "Crystallized Fishing Bauble", "slug": "crystallized-fishing-bauble" },
+      { "id": "fish", "name": "Fish", "slug": "fish" },
+      { "id": "oreha_solar_carp", "name": "Oreha Solar Carp", "slug": "oreha-solar-carp" },
+      { "id": "redflesh_fish", "name": "Redflesh Fish", "slug": "redflesh-fish" }
+    ],
+    "excavating": [
+      { "id": "abidos_relic", "name": "Abidos Relic", "slug": "abidos-relic" },
+      { "id": "ancient_relic", "name": "Ancient Relic", "slug": "ancient-relic" },
+      { "id": "crystallized_excavating_bauble", "name": "Crystallized Excavating Bauble", "slug": "crystallized-excavating-bauble" },
+      { "id": "exotic_relic", "name": "Exotic Relic", "slug": "exotic-relic" },
+      { "id": "oreha_relic", "name": "Oreha Relic", "slug": "oreha-relic" },
+      { "id": "rare_relic", "name": "Rare Relic", "slug": "rare-relic" }
+    ],
+    "other": [
+      { "id": "adept_craft_kit", "name": "Adept Craft Kit", "slug": "adept-craft-kit" },
+      { "id": "apprentice_craft_kit", "name": "Apprentice Craft Kit", "slug": "apprentice-craft-kit" },
+      { "id": "expert_craft_kit", "name": "Expert Craft Kit", "slug": "expert-craft-kit" },
+      { "id": "master_craft_kit", "name": "Master Craft Kit", "slug": "master-craft-kit" },
+      { "id": "tool_crafting_part", "name": "Tool Crafting Part", "slug": "tool-crafting-part" }
+    ]
+  },
+  "cooking": {
+    "all": [
+      { "id": "artisans_garlic_steak", "name": "[Masterwork] Artisan's Garlic Steak Meal", "slug": "artisans-garlic-steak" },
+      { "id": "artisans_omelet", "name": "[Masterwork] Artisan's Omelet", "slug": "artisans-omelet" },
+      { "id": "artisans_spicy_stew", "name": "[Masterwork] Artisan's Spicy Stew", "slug": "artisans-spicy-stew" },
+      { "id": "expert_butter_steak", "name": "[Masterwork] Expert Butter Steak Meal", "slug": "expert-butter-steak" },
+      { "id": "masters_chewy_grilled", "name": "[Masterwork] Master's Chewy Grilled Skewers", "slug": "masters-chewy-grilled" },
+      { "id": "masters_herb_steak", "name": "[Masterwork] Master's Herb Steak Meal", "slug": "masters-herb-steak" },
+      { "id": "masters_moist_omelet", "name": "[Masterwork] Master's Moist Omelet", "slug": "masters-moist-omelet" },
+      { "id": "specialist_beef", "name": "[Masterwork] Specialist Beef Tenderloin Steak Meal", "slug": "specialist-beef" },
+      { "id": "specialist_traditional_omelet", "name": "[Masterwork] Specialist Traditional Omelet", "slug": "specialist-traditional-omelet" },
+      { "id": "virtuoso_special_stew", "name": "[Masterwork] Virtuoso Special Stew", "slug": "virtuoso-special-stew" },
+      { "id": "virtuoso_striploin", "name": "[Masterwork] Virtuoso Striploin Steak Meal", "slug": "virtuoso-striploin" }
+    ]
+  },
+  "combat_supplies": {
+    "recovery": [
+      { "id": "elemental_hp_potion", "name": "Elemental HP Potion", "slug": "elemental-hp-potion" },
+      { "id": "hp_potion", "name": "HP Potion", "slug": "hp-potion" },
+      { "id": "major_hp_potion", "name": "Major HP Potion", "slug": "major-hp-potion" },
+      { "id": "splendid_elemental_hp_potion", "name": "Splendid Elemental HP Potion", "slug": "splendid-elemental-hp-potion" }
+    ],
+    "offense": [
+      { "id": "corrosive_bomb", "name": "Corrosive Bomb", "slug": "corrosive-bomb" },
+      { "id": "dark_grenade", "name": "Dark Grenade", "slug": "dark-grenade" },
+      { "id": "destruction_bomb", "name": "Destruction Bomb", "slug": "destruction-bomb" },
+      { "id": "electric_grenade", "name": "Electric Grenade", "slug": "electric-grenade" },
+      { "id": "flame_grenade", "name": "Flame Grenade", "slug": "flame-grenade" },
+      { "id": "flash_grenade", "name": "Flash Grenade", "slug": "flash-grenade" },
+      { "id": "sacred_bomb", "name": "Sacred Bomb", "slug": "sacred-bomb" },
+      { "id": "sleep_bomb", "name": "Sleep Bomb", "slug": "sleep-bomb" },
+      { "id": "splendid_corrosive_bomb", "name": "Splendid Corrosive Bomb", "slug": "splendid-corrosive-bomb" },
+      { "id": "splendid_dark_grenade", "name": "Splendid Dark Grenade", "slug": "splendid-dark-grenade" },
+      { "id": "splendid_destruction_bomb", "name": "Splendid Destruction Bomb", "slug": "splendid-destruction-bomb" },
+      { "id": "splendid_electric_grenade", "name": "Splendid Electric Grenade", "slug": "splendid-electric-grenade" },
+      { "id": "splendid_sacred_bomb", "name": "Splendid Sacred Bomb", "slug": "splendid-sacred-bomb" },
+      { "id": "splendid_sleep_bomb", "name": "Splendid Sleep Bomb", "slug": "splendid-sleep-bomb" },
+      { "id": "splendid_whirlwind_grenade", "name": "Splendid Whirlwind Grenade", "slug": "splendid-whirlwind-grenade" },
+      { "id": "whirlwind_grenade", "name": "Whirlwind Grenade", "slug": "whirlwind-grenade" }
+    ],
+    "utility": [
+      { "id": "camouflage_robe", "name": "Camouflage Robe", "slug": "camouflage-robe" },
+      { "id": "campfire", "name": "Campfire", "slug": "campfire" },
+      { "id": "flare", "name": "Flare", "slug": "flare" },
+      { "id": "flame_magick_scroll", "name": "Flame Magick Scroll", "slug": "flame-magick-scroll" },
+      { "id": "luteras_horn", "name": "Lutera's Horn", "slug": "luteras-horn" },
+      { "id": "panacea", "name": "Panacea", "slug": "panacea" },
+      { "id": "pheromone_essence", "name": "Pheromone Essence", "slug": "pheromone-essence" },
+      { "id": "sacred_charm", "name": "Sacred Charm", "slug": "sacred-charm" },
+      { "id": "special_corruption_neutralizer", "name": "Special Corruption Neutralizer", "slug": "special-corruption-neutralizer" },
+      { "id": "splendid_camouflage_robe", "name": "Splendid Camouflage Robe", "slug": "splendid-camouflage-robe" },
+      { "id": "splendid_campfire", "name": "Splendid Campfire", "slug": "splendid-campfire" },
+      { "id": "splendid_panacea", "name": "Splendid Panacea", "slug": "splendid-panacea" },
+      { "id": "splendid_sacred_charm", "name": "Splendid Sacred Charm", "slug": "splendid-sacred-charm" },
+      { "id": "splendid_stealth_robe", "name": "Splendid Stealth Robe", "slug": "splendid-stealth-robe" },
+      { "id": "stealth_robe", "name": "Stealth Robe", "slug": "stealth-robe" },
+      { "id": "taunting_scarecrow", "name": "Taunting Scarecrow", "slug": "taunting-scarecrow" },
+      { "id": "time_stop_potion", "name": "Time Stop Potion", "slug": "time-stop-potion" }
+    ],
+    "buff": [
+      { "id": "atropine_potion", "name": "Atropine Potion", "slug": "atropine-potion" },
+      { "id": "marching_flag", "name": "Marching Flag", "slug": "marching-flag" },
+      { "id": "protective_potion", "name": "Protective Potion", "slug": "protective-potion" },
+      { "id": "splendid_marching_flag", "name": "Splendid Marching Flag", "slug": "splendid-marching-flag" },
+      { "id": "splendid_sprinters_robe", "name": "Splendid Sprinter's Robe", "slug": "splendid-sprinters-robe" },
+      { "id": "stimulant", "name": "Stimulant", "slug": "stimulant" }
+    ]
+  },
+  "engraving_recipe": {
+    "all": [
+      { "id": "adrenaline", "name": "Adrenaline Engraving Recipe", "slug": "adrenaline" },
+      { "id": "all_out_attack", "name": "All-Out Attack Engraving Recipe", "slug": "all-out-attack" },
+      { "id": "ambush_master", "name": "Ambush Master Engraving Recipe", "slug": "ambush-master" },
+      { "id": "awakening", "name": "Awakening Engraving Recipe", "slug": "awakening" },
+      { "id": "barricade", "name": "Barricade Engraving Recipe", "slug": "barricade" },
+      { "id": "broken_bone", "name": "Broken Bone Engraving Recipe", "slug": "broken-bone" },
+      { "id": "contender", "name": "Contender Engraving Recipe", "slug": "contender" },
+      { "id": "crisis_evasion", "name": "Crisis Evasion Engraving Recipe", "slug": "crisis-evasion" },
+      { "id": "crushing_fist", "name": "Crushing Fist Engraving Recipe", "slug": "crushing-fist" },
+      { "id": "cursed_doll", "name": "Cursed Doll Engraving Recipe", "slug": "cursed-doll" },
+      { "id": "disrespect", "name": "Disrespect Engraving Recipe", "slug": "disrespect" },
+      { "id": "divine_protection", "name": "Divine Protection Engraving Recipe", "slug": "divine-protection" },
+      { "id": "drops_of_ether", "name": "Drops of Ether Engraving Recipe", "slug": "drops-of-ether" },
+      { "id": "emergency_rescue", "name": "Emergency Rescue Engraving Recipe", "slug": "emergency-rescue" },
+      { "id": "enhanced_shield", "name": "Enhanced Shield Engraving Recipe", "slug": "enhanced-shield" },
+      { "id": "ether_predator", "name": "Ether Predator Engraving Recipe", "slug": "ether-predator" },
+      { "id": "expert", "name": "Expert Engraving Recipe", "slug": "expert" },
+      { "id": "explosive_expert", "name": "Explosive Expert Engraving Recipe", "slug": "explosive-expert" },
+      { "id": "fortitude", "name": "Fortitude Engraving Recipe", "slug": "fortitude" },
+      { "id": "grudge", "name": "Grudge Engraving Recipe", "slug": "grudge" },
+      { "id": "heavy_armor", "name": "Heavy Armor Engraving Recipe", "slug": "heavy-armor" },
+      { "id": "hit_master", "name": "Hit Master Engraving Recipe", "slug": "hit-master" },
+      { "id": "keen_blunt_weapon", "name": "Keen Blunt Weapon Engraving Recipe", "slug": "keen-blunt-weapon" },
+      { "id": "lightning_fury", "name": "Lightning Fury Engraving Recipe", "slug": "lightning-fury" },
+      { "id": "magick_stream", "name": "Magick Stream Engraving Recipe", "slug": "magick-stream" },
+      { "id": "mass_increase", "name": "Mass Increase Engraving Recipe", "slug": "mass-increase" },
+      { "id": "master_brawler", "name": "Master Brawler Engraving Recipe", "slug": "master-brawler" },
+      { "id": "master_of_escape", "name": "Master of Escape Engraving Recipe", "slug": "master-of-escape" },
+      { "id": "masters_tenacity", "name": "Master's Tenacity Engraving Recipe", "slug": "masters-tenacity" },
+      { "id": "max_mp_increase", "name": "Max MP Increase Engraving Recipe", "slug": "max-mp-increase" },
+      { "id": "mp_efficiency_increase", "name": "MP Efficiency Increase Engraving Recipe", "slug": "mp-efficiency-increase" },
+      { "id": "necromancy", "name": "Necromancy Engraving Recipe", "slug": "necromancy" },
+      { "id": "precise_dagger", "name": "Precise Dagger Engraving Recipe", "slug": "precise-dagger" },
+      { "id": "preemptive_strike", "name": "Preemptive Strike Engraving Recipe", "slug": "preemptive-strike" },
+      { "id": "propulsion", "name": "Propulsion Engraving Recipe", "slug": "propulsion" },
+      { "id": "raid_captain", "name": "Raid Captain Engraving Recipe", "slug": "raid-captain" },
+      { "id": "shield_piercing", "name": "Shield Piercing Engraving Recipe", "slug": "shield-piercing" },
+      { "id": "sight_focus", "name": "Sight Focus Engraving Recipe", "slug": "sight-focus" },
+      { "id": "spirit_absorption", "name": "Spirit Absorption Engraving Recipe", "slug": "spirit-absorption" },
+      { "id": "stabilized_status", "name": "Stabilized Status Engraving Recipe", "slug": "stabilized-status" },
+      { "id": "strong_will", "name": "Strong Will Engraving Recipe", "slug": "strong-will" },
+      { "id": "super_charge", "name": "Super Charge Engraving Recipe", "slug": "super-charge" },
+      { "id": "vital_point_hit", "name": "Vital Point Hit Engraving Recipe", "slug": "vital-point-hit" }
+    ]
+  },
+  "enhancement_material": {
+    "honing_materials": [
+      { "id": "abidos_fusion_material", "name": "Abidos Fusion Material", "slug": "abidos-fusion-material" },
+      { "id": "crystallized_destruction_stone", "name": "Crystallized Destruction Stone", "slug": "crystallized-destruction-stone" },
+      { "id": "crystallized_guardian_stone", "name": "Crystallized Guardian Stone", "slug": "crystallized-guardian-stone" },
+      { "id": "destruction_stone", "name": "Destruction Stone", "slug": "destruction-stone" },
+      { "id": "destruction_stone_fragment", "name": "Destruction Stone Fragment", "slug": "destruction-stone-fragment" },
+      { "id": "destiny_destruction_stone", "name": "Destiny Destruction Stone", "slug": "destiny-destruction-stone" },
+      { "id": "destiny_guardian_stone", "name": "Destiny Guardian Stone", "slug": "destiny-guardian-stone" },
+      { "id": "destiny_leapstone", "name": "Destiny Leapstone", "slug": "destiny-leapstone" },
+      { "id": "destiny_shard_pouch_l", "name": "Destiny Shard Pouch (L)", "slug": "destiny-shard-pouch-l" },
+      { "id": "destiny_shard_pouch_m", "name": "Destiny Shard Pouch (M)", "slug": "destiny-shard-pouch-m" },
+      { "id": "destiny_shard_pouch_s", "name": "Destiny Shard Pouch (S)", "slug": "destiny-shard-pouch-s" },
+      { "id": "great_honor_leapstone", "name": "Great Honor Leapstone", "slug": "great-honor-leapstone" },
+      { "id": "guardian_stone", "name": "Guardian Stone", "slug": "guardian-stone" },
+      { "id": "guardian_stone_fragment", "name": "Guardian Stone Fragment", "slug": "guardian-stone-fragment" },
+      { "id": "harmony_leapstone", "name": "Harmony Leapstone", "slug": "harmony-leapstone" },
+      { "id": "harmony_shard_pouch_l", "name": "Harmony Shard Pouch (L)", "slug": "harmony-shard-pouch-l" },
+      { "id": "harmony_shard_pouch_m", "name": "Harmony Shard Pouch (M)", "slug": "harmony-shard-pouch-m" },
+      { "id": "harmony_shard_pouch_s", "name": "Harmony Shard Pouch (S)", "slug": "harmony-shard-pouch-s" },
+      { "id": "honor_leapstone", "name": "Honor Leapstone", "slug": "honor-leapstone" },
+      { "id": "honor_shard_pouch_l", "name": "Honor Shard Pouch (L)", "slug": "honor-shard-pouch-l" },
+      { "id": "honor_shard_pouch_m", "name": "Honor Shard Pouch (M)", "slug": "honor-shard-pouch-m" },
+      { "id": "honor_shard_pouch_s", "name": "Honor Shard Pouch (S)", "slug": "honor-shard-pouch-s" },
+      { "id": "life_leapstone", "name": "Life Leapstone", "slug": "life-leapstone" },
+      { "id": "marvelous_honor_leapstone", "name": "Marvelous Honor Leapstone", "slug": "marvelous-honor-leapstone" },
+      { "id": "obliteration_stone", "name": "Obliteration Stone", "slug": "obliteration-stone" },
+      { "id": "oreha_fusion_material", "name": "Oreha Fusion Material", "slug": "oreha-fusion-material" },
+      { "id": "prime_oreha_fusion_material", "name": "Prime Oreha Fusion Material", "slug": "prime-oreha-fusion-material" },
+      { "id": "protection_stone", "name": "Protection Stone", "slug": "protection-stone" },
+      { "id": "radiant_honor_leapstone", "name": "Radiant Honor Leapstone", "slug": "radiant-honor-leapstone" },
+      { "id": "refined_obliteration_stone", "name": "Refined Obliteration Stone", "slug": "refined-obliteration-stone" },
+      { "id": "refined_protection_stone", "name": "Refined Protection Stone", "slug": "refined-protection-stone" },
+      { "id": "superior_oreha_fusion_material", "name": "Superior Oreha Fusion Material", "slug": "superior-oreha-fusion-material" }
+    ],
+    "additional_honing_materials": [
+      { "id": "artisans_metallurgy_level_1", "name": "Artisan's Metallurgy: Level 1", "slug": "artisans-metallurgy-level-1" },
+      { "id": "artisans_metallurgy_level_2", "name": "Artisan's Metallurgy: Level 2", "slug": "artisans-metallurgy-level-2" },
+      { "id": "artisans_tailoring_level_1", "name": "Artisan's Tailoring: Level 1", "slug": "artisans-tailoring-level-1" },
+      { "id": "artisans_tailoring_level_2", "name": "Artisan's Tailoring: Level 2", "slug": "artisans-tailoring-level-2" },
+      { "id": "glaciers_breath", "name": "Glacier's Breath", "slug": "glaciers-breath" },
+      { "id": "lavas_breath", "name": "Lava's Breath", "slug": "lavas-breath" },
+      { "id": "metallurgy_blood_8-10", "name": "Metallurgy: Blood [8-10]", "slug": "metallurgy-blood-8-10" },
+      { "id": "metallurgy_decay_13-15", "name": "Metallurgy: Decay [13-15]", "slug": "metallurgy-decay-13-15" },
+      { "id": "metallurgy_decay_16-19", "name": "Metallurgy: Decay [16-19]", "slug": "metallurgy-decay-16-19" },
+      { "id": "metallurgy_demon_beast_11-15", "name": "Metallurgy: Demon Beast [11-15]", "slug": "metallurgy-demon-beast-11-15" },
+      { "id": "metallurgy_hellfire_11-14", "name": "Metallurgy: Hellfire [11-14]", "slug": "metallurgy-hellfire-11-14" },
+      { "id": "metallurgy_phantom_13-15", "name": "Metallurgy: Phantom [13-15]", "slug": "metallurgy-phantom-13-15" },
+      { "id": "metallurgy_phantom_16-19", "name": "Metallurgy: Phantom [16-19]", "slug": "metallurgy-phantom-16-19" },
+      { "id": "metallurgy_scale_5-7", "name": "Metallurgy: Scale [5-7]", "slug": "metallurgy-scale-5-7" },
+      { "id": "moons_breath", "name": "Moon's Breath", "slug": "moons-breath" },
+      { "id": "solar_blessing", "name": "Solar Blessing", "slug": "solar-blessing" },
+      { "id": "solar_grace", "name": "Solar Grace", "slug": "solar-grace" },
+      { "id": "solar_protection", "name": "Solar Protection", "slug": "solar-protection" },
+      { "id": "stars_breath", "name": "Star's Breath", "slug": "stars-breath" },
+      { "id": "tailoring_basic_design", "name": "Tailoring: Basic Design", "slug": "tailoring-basic-design" },
+      { "id": "tailoring_basic_knots", "name": "Tailoring: Basic Knots", "slug": "tailoring-basic-knots" },
+      { "id": "tailoring_blood_8-10", "name": "Tailoring: Blood [8-10]", "slug": "tailoring-blood-8-10" },
+      { "id": "tailoring_decay_13-15", "name": "Tailoring: Decay [13-15]", "slug": "tailoring-decay-13-15" },
+      { "id": "tailoring_decay_16-19", "name": "Tailoring: Decay [16-19]", "slug": "tailoring-decay-16-19" },
+      { "id": "tailoring_demon_beast_11-15", "name": "Tailoring: Demon Beast [11-15]", "slug": "tailoring-demon-beast-11-15" },
+      { "id": "tailoring_hellfire_11-14", "name": "Tailoring: Hellfire [11-14]", "slug": "tailoring-hellfire-11-14" },
+      { "id": "tailoring_phantom_13-15", "name": "Tailoring: Phantom [13-15]", "slug": "tailoring-phantom-13-15" },
+      { "id": "tailoring_phantom_16-19", "name": "Tailoring: Phantom [16-19]", "slug": "tailoring-phantom-16-19" },
+      { "id": "tailoring_scale_5-7", "name": "Tailoring: Scale [5-7]", "slug": "tailoring-scale-5-7" }
+    ],
+    "other_materials": [
+      { "id": "clear_essence_of_wisdom", "name": "Clear Essence of Wisdom", "slug": "clear-essence-of-wisdom" },
+      { "id": "sage_powder", "name": "Sage Powder", "slug": "sage-powder" },
+      { "id": "soundstone_fragment", "name": "Soundstone Fragment", "slug": "soundstone-fragment" },
+      { "id": "splendid_essence_of_wisdom", "name": "Splendid Essence of Wisdom", "slug": "splendid-essence-of-wisdom" }
+    ],
+    "weapon_evolution_materials": [
+      { "id": "sidereal_energy", "name": "Sidereal Energy", "slug": "sidereal-energy" }
+    ]
+  }
+}

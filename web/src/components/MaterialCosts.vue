@@ -16,7 +16,7 @@
                 style="width: 100px; margin-right: 10px;"
                 @click.stop
               />
-              <n-button @click.stop="updateAllPrices(selectedRegion)" size="small">Refresh</n-button>
+              <n-button @click.stop="updateAllPrices(selectedRegion, displayableMaterials)" size="small">Refresh</n-button>
             </div>
           </div>
         </template>
@@ -117,6 +117,20 @@ const regionOptions = [
   { label: 'EUC', value: 'euc' },
 ];
 
+const displayableItemIds = [
+  'wild_flower', 'shy_wild_flower', 'bright_wild_flower', 'abidos_wild_flower',
+  'timber', 'tender_timber', 'sturdy_timber', 'abidos_timber',
+  'iron_ore', 'heavy_iron_ore', 'strong_iron_ore', 'abidos_iron_ore',
+  'thick_raw_meat', 'treated_meat', 'oreha_thick_meat', 'abidos_thick_raw_meat',
+  'fish', 'redflesh_fish', 'oreha_solar_carp', 'abidos_solar_carp',
+  'ancient_relic', 'rare_relic', 'oreha_relic', 'abidos_relic'
+];
+
+const displayableMaterials = computed(() => 
+  materialsList.filter(item => displayableItemIds.includes(item.id))
+    .sort((a, b) => displayableItemIds.indexOf(a.id) - displayableItemIds.indexOf(b.id))
+);
+
 const isExchangeCheaper = (itemId) => {
     const mat = materialCosts.materials[itemId];
     return mat && mat.source === 'exchange';
@@ -147,62 +161,33 @@ const formattedLastUpdated = computed(() => {
   return date.toLocaleString();
 });
 
-const itemCategoryMapping = {
-  'fish': 'Fishing',
-  'redflesh_fish': 'Fishing',
-  'abidos_solar_carp': 'Fishing',
-  'oreha_solar_carp': 'Fishing',
-  'meat': 'Hunting',
-  'treated_meat': 'Hunting',
-  'abidos_thick_raw_meat': 'Hunting',
-  'oreha_thick_meat': 'Hunting',
-  'thick_raw_meat': 'Hunting',
-  'ancient_relic': 'Excavating',
-  'rare_relic': 'Excavating',
-  'abidos_relic': 'Excavating',
-  'oreha_relic': 'Excavating',
-  'relic': 'Excavating',
-  'wild_flower': 'Foraging',
-  'shy_wild_flower': 'Foraging',
-  'abidos_wild_flower': 'Foraging',
-  'bright_wild_flower': 'Foraging',
-  'flower': 'Foraging',
-  'timber': 'Logging',
-  'tender_timber': 'Logging',
-  'abidos_timber': 'Logging',
-  'sturdy_timber': 'Logging',
-  'iron_ore': 'Mining',
-  'heavy_iron_ore': 'Mining',
-  'abidos_iron_ore': 'Mining',
-  'strong_iron_ore': 'Mining',
-  'ore': 'Mining',
-};
-
 const groupedItems = computed(() => {
-  const groups = {
-    'Logging': { category: 'Logging', items: [] },
-    'Foraging': { category: 'Foraging', items: [] },
-    'Mining': { category: 'Mining', items: [] },
-    'Hunting': { category: 'Hunting', items: [] },
-    'Fishing': { category: 'Fishing', items: [] },
-    'Excavating': { category: 'Excavating', items: [] },
-  };
+  const groups = {};
   
-  materialsList.forEach(item => {
-    const category = itemCategoryMapping[item.id];
-    if (category && groups[category]) {
-      groups[category].items.push(item);
+  displayableMaterials.value.forEach(item => {
+    if (item.mainCategory === 'trade_skill') {
+      const categoryName = item.category.charAt(0).toUpperCase() + item.category.slice(1);
+      if (!groups[categoryName]) {
+        groups[categoryName] = { category: categoryName, items: [] };
+      }
+      groups[categoryName].items.push(item);
     }
   });
+
   return Object.values(groups).filter(group => group.items.length > 0);
 });
 
-const topRowCategories = ['Fishing', 'Hunting', 'Excavating'];
+const topRowCategories = ['Hunting', 'Fishing', 'Excavating'];
+const bottomRowOrder = ['Foraging', 'Logging', 'Mining'];
 const topRowGroups = computed(() => 
-  groupedItems.value.filter(g => topRowCategories.includes(g.category))
+  groupedItems.value
+    .filter(g => topRowCategories.includes(g.category))
+    .sort((a, b) => topRowCategories.indexOf(a.category) - topRowCategories.indexOf(b.category))
 );
 const bottomRowGroups = computed(() => 
-  groupedItems.value.filter(g => !topRowCategories.includes(g.category))
+  groupedItems.value
+    .filter(g => !topRowCategories.includes(g.category))
+    .sort((a, b) => bottomRowOrder.indexOf(a.category) - bottomRowOrder.indexOf(b.category))
 );
 
 const getCategoryIcon = (category) => {

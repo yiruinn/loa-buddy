@@ -63,20 +63,17 @@ const showOnlyProfitable = ref(true);
 
 const getIconUrl = (id) => `/icons/${id}.webp`;
 
-const allMaterials = computed(() => {
-    const powderNames = {
-        'gathering_powder': 'Gathering Powder',
-        'logging_powder': 'Logging Powder',
-        'mining_powder': 'Mining Powder',
-        'hunting_powder': 'Hunting Powder',
-        'fishing_powder': 'Fishing Powder',
-        'excavating_powder': 'Excavating Powder',
-    };
-    const powders = Object.entries(powderNames).map(([id, name]) => ({ id, name }));
-    return [...materialsList, ...powders];
-});
-
-const getMaterialName = (id) => allMaterials.value.find(m => m.id === id)?.name || id;
+const getMaterialName = (id) => {
+  const material = materialsList.find(m => m.id === id);
+  if (material) {
+    return material.name;
+  }
+  // Fallback for items not in the main list (e.g., powders)
+  return id
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
 
 
 

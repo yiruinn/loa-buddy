@@ -88,29 +88,21 @@ export async function recalculateEffectiveCosts() {
 
 export function updateAllPrices(region) {
   materialCosts.region = region;
-  fetch('/data/materials.json')
-    .then(response => response.json())
-    .then(data => {
-      const marketPrices = {};
-      const promises = data.materials.map(material => {
-        const slug = material.id.replace(/_/g, '-');
-        return fetch(`https://marketdata-api.yrzhao1068589.workers.dev/v1/prices/${region}/${slug}`)
-          .then(response => response.json())
-          .then(priceData => {
-            marketPrices[material.id] = priceData.price;
-          });
-      });
-      Promise.all(promises).then(async () => {
-        for (const id in marketPrices) {
-            if (materialCosts.materials[id]) {
-                materialCosts.materials[id].marketPrice = marketPrices[id];
-            }
+  const promises = materialsList.map(material => {
+    return fetch(`https://marketdata-api.yrzhao1068589.workers.dev/v1/prices/${region}/${material.slug}`)
+      .then(response => response.json())
+      .then(priceData => {
+        if (materialCosts.materials[material.id]) {
+          materialCosts.materials[material.id].marketPrice = priceData.price;
         }
-        await recalculateEffectiveCosts();
-        materialCosts.lastUpdated = new Date().toISOString();
-        saveMaterialCosts();
       });
-    });
+  });
+
+  Promise.all(promises).then(async () => {
+    await recalculateEffectiveCosts();
+    materialCosts.lastUpdated = new Date().toISOString();
+    saveMaterialCosts();
+  });
 }
 
 async function initializeMaterials() {
@@ -131,9 +123,7 @@ async function initializeMaterials() {
         allMaterialIds.add(exchange.output.id);
     });
 
-    const materialsResponse = await fetch('/data/materials.json');
-    const materialsData = await materialsResponse.json();
-    materialsData.materials.forEach(m => allMaterialIds.add(m.id));
+    materialsList.forEach(m => allMaterialIds.add(m.id));
 
     const newMaterials = {};
     allMaterialIds.forEach(id => {
@@ -173,9 +163,17 @@ async function loadStronghold() {
 }
 
 async function loadMaterials() {
-  const response = await fetch('/data/materials.json');
+  const response = await fetch('/data/items.json');
   const data = await response.json();
-  materialsList.push(...data.materials);
+  const allItems = [];
+  for (const category in data) {
+    for (const subCategory in data[category]) {
+      data[category][subCategory].forEach(item => {
+        allItems.push({ ...item, category: subCategory, mainCategory: category });
+      });
+    }
+  }
+  materialsList.push(...allItems);
 }
 
 let isInitialized = false;
@@ -183,12 +181,12 @@ export async function init() {
   if (isInitialized) return;
   isInitialized = true;
 
+  await loadMaterials(); // Load materials first
   await Promise.all([
     initializeMaterials(),
     loadRecipes(),
     loadMari(),
-    loadStronghold(),
-    loadMaterials()
+    loadStronghold()
   ]);
 }
 

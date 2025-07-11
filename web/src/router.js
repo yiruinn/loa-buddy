@@ -4,7 +4,7 @@ import HomePage from './components/HomePage.vue';
 import CraftingPage from './components/CraftingPage.vue';
 import MariCalculator from './components/MariCalculator.vue';
 import MaterialsPage from './components/MaterialsPage.vue';
-import StrongholdExchangeCalculator from './components/StrongholdExchangeCalculator.vue';
+import StrongholdCalculator from './components/StrongholdCalculator.vue';
 import BlacklistPage from './components/BlacklistPage.vue';
 import MarketTracker from './components/MarketTracker.vue';
 
@@ -13,7 +13,7 @@ const routes = [
   { path: '/crafting', component: CraftingPage, name: 'crafting' },
   { path: '/mari', component: MariCalculator, name: 'mari' },
   { path: '/materials', component: MaterialsPage, name: 'materials' },
-  { path: '/stronghold', component: StrongholdExchangeCalculator, name: 'stronghold' },
+  { path: '/stronghold', component: StrongholdCalculator, name: 'stronghold' },
   { path: '/blacklist', component: BlacklistPage, name: 'blacklist' },
   { path: '/market', component: MarketTracker, name: 'market-tracker' },
 ];
