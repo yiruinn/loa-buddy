@@ -1,10 +1,10 @@
 <template>
-  <n-card style="margin-bottom: 20px;">
+  <n-card>
     <n-collapse default-expanded-names="1">
       <n-collapse-item name="1">
         <template #header>
           <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-            <span style="font-size: 1.2em; font-weight: bold;">Material Costs</span>
+            <span style="font-size: 1.2em; font-weight: bold;">{{ title }}</span>
             <div style="display: flex; align-items: center;">
               <span v-if="formattedLastUpdated" style="font-size: 0.9em; color: #aaa; margin-right: 15px">
                 Last Updated: {{ formattedLastUpdated }}
@@ -16,84 +16,48 @@
                 style="width: 100px; margin-right: 10px;"
                 @click.stop
               />
-              <n-button @click.stop="updateAllPrices(selectedRegion, displayableMaterials)" size="small">Refresh</n-button>
+              <n-button @click.stop="updateAllPrices(selectedRegion, materials, title)" size="small">Refresh</n-button>
             </div>
           </div>
         </template>
         <div class="table-container">
           <div class="material-costs-grid">
-            <div class="material-row">
-              <div v-for="group in topRowGroups" :key="group.category" class="material-group">
+            <div v-for="(row, rowIndex) in layout" :key="rowIndex" class="material-row">
+              <div v-for="group in row" :key="group.category" class="material-group">
                 <div class="category-header">
                   <img :src="getCategoryIcon(group.category)" :alt="group.category" class="category-icon" />
                   <h3>{{ group.category }}</h3>
                 </div>
-                <div v-for="item in group.items" :key="item.id" class="material-cost-item">
-                  <div class="material-info">
-                    <img :src="`/icons/${item.id}.webp`" :alt="item.name" class="material-icon" />
-                    <span>{{ item.name }}</span>
-                  </div>
-                  <div class="price-input-container">
-                    <n-input-number
-                      v-if="materialCosts.materials[item.id]"
-                      v-model:value="materialCosts.materials[item.id].marketPrice"
-                      @update:value="onPriceUpdate"
-                      :min="0"
-                      :show-button="false"
-                      :style="{ width: '100px' }"
-                    />
-                    <n-tooltip trigger="hover" :disabled="!isExchangeCheaper(item.id)">
-                      <template #trigger>
-                        <div class="source-indicator" :class="getIndicatorClass(item.id)"></div>
-                      </template>
-                      <div v-if="isExchangeCheaper(item.id)" class="tooltip-content">
-                          <div>{{ materialCosts.materials[item.id].effectivePrice.toFixed(2) }}g</div>
-                          <div class="tooltip-path">
-                              <template v-for="(pathId, index) in materialCosts.materials[item.id].path" :key="pathId">
-                                  <img :src="`/icons/${pathId}.webp`" class="tooltip-icon" />
-                                  <span v-if="index < materialCosts.materials[item.id].path.length - 1" class="arrow-icon">→</span>
-                              </template>
-                          </div>
-                      </div>
-                    </n-tooltip>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="material-row">
-              <div v-for="group in bottomRowGroups" :key="group.category" class="material-group">
-                <div class="category-header">
-                  <img :src="getCategoryIcon(group.category)" :alt="group.category" class="category-icon" />
-                  <h3>{{ group.category }}</h3>
-                </div>
-                <div v-for="item in group.items" :key="item.id" class="material-cost-item">
-                  <div class="material-info">
-                    <img :src="`/icons/${item.id}.webp`" :alt="item.name" class="material-icon" />
-                    <span>{{ item.name }}</span>
-                  </div>
-                  <div class="price-input-container">
-                    <n-input-number
-                      v-if="materialCosts.materials[item.id]"
-                      v-model:value="materialCosts.materials[item.id].marketPrice"
-                      @update:value="onPriceUpdate"
-                      :min="0"
-                      :show-button="false"
-                      :style="{ width: '100px' }"
-                    />
-                    <n-tooltip trigger="hover" :disabled="!isExchangeCheaper(item.id)">
-                      <template #trigger>
-                        <div class="source-indicator" :class="getIndicatorClass(item.id)"></div>
-                      </template>
-                      <div v-if="isExchangeCheaper(item.id)" class="tooltip-content">
-                          <div>{{ materialCosts.materials[item.id].effectivePrice.toFixed(2) }}g</div>
-                          <div class="tooltip-path">
-                              <template v-for="(pathId, index) in materialCosts.materials[item.id].path" :key="pathId">
-                                  <img :src="`/icons/${pathId}.webp`" class="tooltip-icon" />
-                                  <span v-if="index < materialCosts.materials[item.id].path.length - 1" class="arrow-icon">→</span>
-                              </template>
-                          </div>
-                      </div>
-                    </n-tooltip>
+                <div class="items-container" :style="group.columns ? { display: 'grid', 'grid-template-columns': `repeat(${group.columns}, 1fr)`, 'gap': '8px' } : {}">
+                  <div v-for="itemId in group.items" :key="itemId" class="material-cost-item">
+                    <div class="material-info">
+                      <img :src="`/icons/${itemId}.webp`" :alt="getMaterial(itemId)?.name" class="material-icon" />
+                      <span>{{ getMaterial(itemId)?.name }}</span>
+                    </div>
+                    <div class="price-input-container">
+                      <n-input-number
+                        v-if="materialCosts.materials[itemId]"
+                        v-model:value="materialCosts.materials[itemId].marketPrice"
+                        @update:value="onPriceUpdate"
+                        :min="0"
+                        :show-button="false"
+                        :style="{ width: '100px' }"
+                      />
+                      <n-tooltip trigger="hover" :disabled="!isExchangeCheaper(itemId)">
+                        <template #trigger>
+                          <div class="source-indicator" :class="getIndicatorClass(itemId)"></div>
+                        </template>
+                        <div v-if="isExchangeCheaper(itemId)" class="tooltip-content">
+                            <div>{{ materialCosts.materials[itemId].effectivePrice.toFixed(2) }}g</div>
+                            <div class="tooltip-path">
+                                <template v-for="(pathId, index) in materialCosts.materials[itemId].path" :key="pathId">
+                                    <img :src="`/icons/${pathId}.webp`" class="tooltip-icon" />
+                                    <span v-if="index < materialCosts.materials[itemId].path.length - 1" class="arrow-icon">→</span>
+                                </template>
+                            </div>
+                        </div>
+                      </n-tooltip>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -110,6 +74,17 @@ import { ref, computed, watch } from 'vue';
 import { NCard, NInputNumber, NCollapse, NCollapseItem, NButton, NSelect, NTooltip } from 'naive-ui';
 import { materialCosts, updateAllPrices, saveMaterialCosts, recalculateEffectiveCosts, materialsList } from '../store';
 
+const props = defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
+  layout: {
+    type: Array,
+    required: true,
+  },
+});
+
 const selectedRegion = ref(materialCosts.region);
 const regionOptions = [
   { label: 'NAW', value: 'naw' },
@@ -117,19 +92,13 @@ const regionOptions = [
   { label: 'EUC', value: 'euc' },
 ];
 
-const displayableItemIds = [
-  'wild_flower', 'shy_wild_flower', 'bright_wild_flower', 'abidos_wild_flower',
-  'timber', 'tender_timber', 'sturdy_timber', 'abidos_timber',
-  'iron_ore', 'heavy_iron_ore', 'strong_iron_ore', 'abidos_iron_ore',
-  'thick_raw_meat', 'treated_meat', 'oreha_thick_meat', 'abidos_thick_raw_meat',
-  'fish', 'redflesh_fish', 'oreha_solar_carp', 'abidos_solar_carp',
-  'ancient_relic', 'rare_relic', 'oreha_relic', 'abidos_relic'
-];
+const allItemIds = computed(() => props.layout.flatMap(row => row.flatMap(group => group.items)));
 
-const displayableMaterials = computed(() => 
-  materialsList.filter(item => displayableItemIds.includes(item.id))
-    .sort((a, b) => displayableItemIds.indexOf(a.id) - displayableItemIds.indexOf(b.id))
+const materials = computed(() =>
+  materialsList.filter(item => allItemIds.value.includes(item.id))
 );
+
+const getMaterial = (id) => materialsList.find(m => m.id === id);
 
 const isExchangeCheaper = (itemId) => {
     const mat = materialCosts.materials[itemId];
@@ -156,42 +125,23 @@ watch(
 );
 
 const formattedLastUpdated = computed(() => {
-  if (!materialCosts.lastUpdated) return '';
-  const date = new Date(materialCosts.lastUpdated);
+  const lastUpdated = materialCosts.lastUpdated[props.title];
+  if (!lastUpdated) return '';
+  const date = new Date(lastUpdated);
   return date.toLocaleString();
 });
 
-const groupedItems = computed(() => {
-  const groups = {};
-  
-  displayableMaterials.value.forEach(item => {
-    if (item.mainCategory === 'trade_skill') {
-      const categoryName = item.category.charAt(0).toUpperCase() + item.category.slice(1);
-      if (!groups[categoryName]) {
-        groups[categoryName] = { category: categoryName, items: [] };
-      }
-      groups[categoryName].items.push(item);
-    }
-  });
-
-  return Object.values(groups).filter(group => group.items.length > 0);
-});
-
-const topRowCategories = ['Hunting', 'Fishing', 'Excavating'];
-const bottomRowOrder = ['Foraging', 'Logging', 'Mining'];
-const topRowGroups = computed(() => 
-  groupedItems.value
-    .filter(g => topRowCategories.includes(g.category))
-    .sort((a, b) => topRowCategories.indexOf(a.category) - topRowCategories.indexOf(b.category))
-);
-const bottomRowGroups = computed(() => 
-  groupedItems.value
-    .filter(g => !topRowCategories.includes(g.category))
-    .sort((a, b) => bottomRowOrder.indexOf(a.category) - bottomRowOrder.indexOf(b.category))
-);
-
 const getCategoryIcon = (category) => {
-  return `/icons/${category.toLowerCase()}.webp`;
+  const validIconCategories = ['foraging', 'logging', 'mining', 'hunting', 'fishing', 'excavating'];
+  const categoryLower = category.toLowerCase();
+  if (validIconCategories.includes(categoryLower)) {
+    return `/icons/${categoryLower}.webp`;
+  }
+  // Fallback to a generated SVG placeholder with the first letter of the category
+  const firstLetter = category.charAt(0).toUpperCase();
+  const bgColor = '%23444'; // Darker grey for the background
+  const textColor = '%23AAA'; // Lighter grey for the text
+  return `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" style="fill: ${bgColor};"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="12" style="fill: ${textColor};">${firstLetter}</text></svg>`;
 };
 </script>
 

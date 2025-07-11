@@ -1,7 +1,7 @@
 import { reactive } from 'vue';
 
 export const materialCosts = reactive({
-  lastUpdated: null,
+  lastUpdated: {},
   materials: {},
   region: 'naw'
 });
@@ -86,9 +86,9 @@ export async function recalculateEffectiveCosts() {
 }
 
 
-export function updateAllPrices(region) {
+export function updateAllPrices(region, materialsToUpdate, title) {
   materialCosts.region = region;
-  const promises = materialsList.map(material => {
+  const promises = materialsToUpdate.map(material => {
     return fetch(`https://marketdata-api.yrzhao1068589.workers.dev/v1/prices/${region}/${material.slug}`)
       .then(response => response.json())
       .then(priceData => {
@@ -100,7 +100,7 @@ export function updateAllPrices(region) {
 
   Promise.all(promises).then(async () => {
     await recalculateEffectiveCosts();
-    materialCosts.lastUpdated = new Date().toISOString();
+    materialCosts.lastUpdated[title] = new Date().toISOString();
     saveMaterialCosts();
   });
 }
@@ -112,7 +112,7 @@ async function initializeMaterials() {
     if (savedCosts) {
         const parsedCosts = JSON.parse(savedCosts);
         loadedMaterials = parsedCosts.materials || {};
-        materialCosts.lastUpdated = parsedCosts.lastUpdated;
+        materialCosts.lastUpdated = parsedCosts.lastUpdated || {};
         materialCosts.region = parsedCosts.region || 'naw';
     }
 
@@ -138,7 +138,8 @@ async function initializeMaterials() {
     materialCosts.materials = newMaterials;
 
     if (!savedCosts) {
-        updateAllPrices(materialCosts.region);
+        updateAllPrices(materialCosts.region, materialsList, 'Trade Skill Material Costs');
+        updateAllPrices(materialCosts.region, materialsList, 'Fusion Material Costs');
     } else {
         recalculateEffectiveCosts();
     }
