@@ -6,14 +6,27 @@
           <template #header>
             <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
               <span style="font-size: 1.2em; font-weight: bold;">Crafting Reductions</span>
-              <n-switch v-model:value="useLowestPrice" @click.stop>
-                <template #checked>
-                  Use Lowest Price
-                </template>
-                <template #unchecked>
-                  Use Market Price
-                </template>
-              </n-switch>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <n-switch v-model:value="useLowestPrice" @click.stop>
+                  <template #checked>
+                    Lowest Price
+                  </template>
+                  <template #unchecked>
+                    Current Price
+                  </template>
+                </n-switch>
+                <n-tooltip trigger="hover" placement="bottom" style="max-width: 200px;">
+                  <template #trigger>
+                    <n-icon size="20" style="cursor: pointer;">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8zm-1-13h2v2h-2v-2zm0 4h2v6h-2v-6z"></path></svg>
+                    </n-icon>
+                  </template>
+                  <div>
+                    <b>Current Price</b>: Use "as-is" price taken from Material Prices.<br>
+                    <b>Lowest Price</b>: Use cheaper of "as-is" price and "exchange" price from Material Prices.
+                  </div>
+                </n-tooltip>
+              </div>
             </div>
           </template>
           <div class="scrollable-container">
@@ -78,7 +91,7 @@
 
 <script setup>
 import { ref, reactive, watch, onMounted } from 'vue';
-import { NInputNumber, NCard, NCollapse, NCollapseItem, NSwitch } from 'naive-ui';
+import { NInputNumber, NCard, NCollapse, NCollapseItem, NSwitch, NTooltip, NIcon } from 'naive-ui';
 import CraftingCalculator from './CraftingCalculator.vue';
 import { recipes, materialCosts } from '../store';
 

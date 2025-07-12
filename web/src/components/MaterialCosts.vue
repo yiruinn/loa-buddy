@@ -4,7 +4,22 @@
       <n-collapse-item name="1">
         <template #header>
           <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-            <span style="font-size: 1.2em; font-weight: bold;">{{ title }}</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.2em; font-weight: bold;">{{ title }}</span>
+              <n-tooltip v-if="title === 'Trade Skill'" trigger="hover" placement="right" style="max-width: 250px;">
+                <template #trigger>
+                  <n-icon size="20" style="cursor: pointer;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8zm-1-13h2v2h-2v-2zm0 4h2v6h-2v-6z"></path></svg>
+                  </n-icon>
+                </template>
+                <div>
+                  Enter or refresh prices.<br>
+                  <b>Green Dot</b>: current price is cheapest<br>
+                  <b>Yellow Dot</b>: exchange price is cheapest.<br>
+                  Hover over the yellow dot to see the cheapest price and exchange path.
+                </div>
+              </n-tooltip>
+            </div>
             <div style="display: flex; align-items: center;">
               <span v-if="formattedLastUpdated" style="font-size: 0.9em; color: #aaa; margin-right: 15px">
                 Last Refreshed: {{ formattedLastUpdated }}
@@ -71,7 +86,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { NCard, NInputNumber, NCollapse, NCollapseItem, NButton, NSelect, NTooltip } from 'naive-ui';
+import { NCard, NInputNumber, NCollapse, NCollapseItem, NButton, NSelect, NTooltip, NIcon } from 'naive-ui';
 import { materialCosts, updateAllPrices, saveMaterialCosts, recalculateEffectiveCosts, materialsList } from '../store';
 
 const props = defineProps({
