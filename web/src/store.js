@@ -6,6 +6,48 @@ export const materialCosts = reactive({
   region: 'naw'
 });
 
+export const marketTrackerControls = reactive({
+  region: 'naw',
+  selectedCategory: null,
+  item: null,
+  selectedRange: '7d',
+});
+
+export function saveMarketTrackerControls() {
+  localStorage.setItem('marketTrackerControls', JSON.stringify(marketTrackerControls));
+}
+
+function initializeMarketTrackerControls() {
+  const savedControls = localStorage.getItem('marketTrackerControls');
+  if (savedControls) {
+    const parsedControls = JSON.parse(savedControls);
+    Object.assign(marketTrackerControls, parsedControls);
+  }
+}
+
+export const marketDataCache = reactive({});
+
+export function getCachedMarketData(key) {
+  const cached = marketDataCache[key];
+  if (!cached) {
+    return null;
+  }
+
+  const isStale = (new Date().getTime() - new Date(cached.timestamp).getTime()) > (60 * 60 * 1000); // 1 hour
+  if (isStale) {
+    delete marketDataCache[key];
+    return null;
+  }
+  return cached.data;
+}
+
+export function setCachedMarketData(key, data) {
+  marketDataCache[key] = {
+    timestamp: new Date().toISOString(),
+    data: data
+  };
+}
+
 export const recipes = reactive([]);
 export const mari = reactive({});
 export const stronghold = reactive([]);
@@ -203,6 +245,8 @@ let isInitialized = false;
 export async function init() {
   if (isInitialized) return;
   isInitialized = true;
+
+  initializeMarketTrackerControls();
 
   await loadMaterials(); // Load materials first
   await Promise.all([

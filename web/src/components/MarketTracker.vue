@@ -4,7 +4,7 @@
       <h1>Market Tracker</h1>
       <n-form>
         <n-form-item>
-          <n-radio-group v-model:value="selectedRange" name="radiogroup" class="time-range-group">
+          <n-radio-group v-model:value="marketTrackerControls.selectedRange" name="radiogroup" class="time-range-group">
             <n-radio-button
               v-for="range in timeRanges"
               :key="range.value"
@@ -16,20 +16,20 @@
         </n-form-item>
         <n-form-item label="Region">
           <n-select
-            v-model:value="region"
+            v-model:value="marketTrackerControls.region"
             :options="regionOptions"
           />
         </n-form-item>
         <n-form-item label="Category">
           <n-select
-            v-model:value="selectedCategory"
+            v-model:value="marketTrackerControls.selectedCategory"
             :options="categoryOptions"
             @update:value="onCategoryChange"
           />
         </n-form-item>
         <n-form-item label="Item">
           <n-select
-            v-model:value="item"
+            v-model:value="marketTrackerControls.item"
             filterable
             :options="itemOptions"
           />
@@ -57,6 +57,7 @@ import {
   PointElement,
   Filler,
 } from 'chart.js';
+import { getCachedMarketData, setCachedMarketData, marketTrackerControls, saveMarketTrackerControls } from '../store';
 
 ChartJS.register(
   Title,
@@ -69,11 +70,7 @@ ChartJS.register(
   Filler
 );
 
-const region = ref('naw');
-const item = ref(null);
 const allItems = ref({});
-const selectedCategory = ref(null);
-const selectedRange = ref('7d');
 
 const timeRanges = [
   { label: '7d', value: '7d' },
@@ -97,10 +94,10 @@ const categoryOptions = computed(() => {
 });
 
 const itemOptions = computed(() => {
-  if (!selectedCategory.value || !allItems.value[selectedCategory.value]) {
+  if (!marketTrackerControls.selectedCategory || !allItems.value[marketTrackerControls.selectedCategory]) {
     return [];
   }
-  const subCategories = allItems.value[selectedCategory.value];
+  const subCategories = allItems.value[marketTrackerControls.selectedCategory];
   const options = [];
   const sortedSubCategoryKeys = Object.keys(subCategories).sort((a, b) => a.localeCompare(b));
 
@@ -128,28 +125,30 @@ function onCategoryChange(newCategory) {
     const sortedSubCategoryKeys = Object.keys(subCategories).sort((a, b) => a.localeCompare(b));
     const firstSubCategoryKey = sortedSubCategoryKeys[0];
     if (firstSubCategoryKey && subCategories[firstSubCategoryKey].length > 0) {
-      item.value = subCategories[firstSubCategoryKey][0].slug;
+      marketTrackerControls.item = subCategories[firstSubCategoryKey][0].slug;
     } else {
-      item.value = null;
+      marketTrackerControls.item = null;
     }
   } else {
-    item.value = null;
+    marketTrackerControls.item = null;
   }
 }
 
 onMounted(async () => {
   const response = await fetch('/data/items.json');
   allItems.value = await response.json();
-  if (Object.keys(allItems.value).length > 0) {
+  if (Object.keys(allItems.value).length > 0 && !marketTrackerControls.selectedCategory) {
     const sortedCategories = Object.keys(allItems.value).sort((a, b) => a.localeCompare(b));
-    selectedCategory.value = sortedCategories[0];
-    onCategoryChange(selectedCategory.value);
+    marketTrackerControls.selectedCategory = sortedCategories[0];
+    onCategoryChange(marketTrackerControls.selectedCategory);
   }
-});
-
-watch([region, item, selectedRange], () => {
   fetchData();
 });
+
+watch(marketTrackerControls, () => {
+  saveMarketTrackerControls();
+  fetchData();
+}, { deep: true });
 
 const chartData = ref(null);
 const chartOptions = ref({
@@ -202,95 +201,102 @@ function createGradient(context, color1, color2) {
   return gradient;
 }
 
+function processDataForChart(data, start, end) {
+  const dataMap = new Map(data.map(d => [d.day, d]));
+  const labels = [];
+  const minPrices = [];
+  const maxPrices = [];
+  const avgPrices = [];
+  const minPricePointRadius = [];
+  const maxPricePointRadius = [];
+  const avgPricePointRadius = [];
+  let lastKnown = { min_price: null, max_price: null, avg_price: null };
+
+  for (let day = new Date(start); day <= end; day.setDate(day.getDate() + 1)) {
+    const dayString = day.toISOString().split('T')[0];
+    labels.push(dayString);
+
+    if (dataMap.has(dayString)) {
+      const pointData = dataMap.get(dayString);
+      minPrices.push(pointData.min_price);
+      maxPrices.push(pointData.max_price);
+      avgPrices.push(pointData.avg_price);
+      minPricePointRadius.push(3);
+      maxPricePointRadius.push(3);
+      avgPricePointRadius.push(3);
+      lastKnown = pointData;
+    } else {
+      minPrices.push(lastKnown.min_price);
+      maxPrices.push(lastKnown.max_price);
+      avgPrices.push(lastKnown.avg_price);
+      minPricePointRadius.push(0);
+      maxPricePointRadius.push(0);
+      avgPricePointRadius.push(0);
+    }
+  }
+
+  chartData.value = {
+    labels,
+    datasets: [
+      {
+        label: 'Min Price',
+        data: minPrices,
+        borderColor: '#c0392b',
+        backgroundColor: (context) => createGradient(context, 'rgba(231, 76, 60, 0.1)', 'rgba(231, 76, 60, 0.5)'),
+        pointRadius: minPricePointRadius,
+        spanGaps: true,
+        fill: true,
+        tension: 0.3,
+      },
+      {
+        label: 'Max Price',
+        data: maxPrices,
+        borderColor: '#27ae60',
+        backgroundColor: (context) => createGradient(context, 'rgba(39, 174, 96, 0.1)', 'rgba(39, 174, 96, 0.5)'),
+        pointRadius: maxPricePointRadius,
+        spanGaps: true,
+        fill: true,
+        tension: 0.3,
+      },
+      {
+        label: 'Avg Price',
+        data: avgPrices,
+        borderColor: '#2980b9',
+        backgroundColor: (context) => createGradient(context, 'rgba(52, 152, 219, 0.1)', 'rgba(52, 152, 219, 0.5)'),
+        pointRadius: avgPricePointRadius,
+        spanGaps: true,
+        fill: true,
+        tension: 0.3,
+      },
+    ],
+  };
+}
+
 async function fetchData() {
-  if (!item.value) return;
+  if (!marketTrackerControls.item) return;
 
   const end = new Date();
   const start = new Date();
-  const days = parseInt(selectedRange.value.replace('d', ''));
+  const days = parseInt(marketTrackerControls.selectedRange.replace('d', ''));
   start.setDate(end.getDate() - days);
+
+  const cacheKey = `${marketTrackerControls.region}-${marketTrackerControls.item}-${marketTrackerControls.selectedRange}`;
+  const cachedData = getCachedMarketData(cacheKey);
+
+  if (cachedData) {
+    processDataForChart(cachedData, start, end);
+    return;
+  }
 
   const startDateString = start.toISOString().split('T')[0];
   const endDateString = end.toISOString().split('T')[0];
-  const url = `https://marketdata-api.yrzhao1068589.workers.dev/v1/prices/historical/${region.value}/${item.value}?start_date=${startDateString}&end_date=${endDateString}`;
+  const url = `https://marketdata-api.yrzhao1068589.workers.dev/v1/prices/historical/${marketTrackerControls.region}/${marketTrackerControls.item}?start_date=${startDateString}&end_date=${endDateString}`;
 
   try {
     const response = await fetch(url);
     const data = await response.json();
-    const dataMap = new Map(data.map(d => [d.day, d]));
-
-    const labels = [];
-    const minPrices = [];
-    const maxPrices = [];
-    const avgPrices = [];
-    
-    const minPricePointRadius = [];
-    const maxPricePointRadius = [];
-    const avgPricePointRadius = [];
-
-    let lastKnown = { min_price: null, max_price: null, avg_price: null };
-
-    for (let day = new Date(start); day <= end; day.setDate(day.getDate() + 1)) {
-      const dayString = day.toISOString().split('T')[0];
-      labels.push(dayString);
-
-      if (dataMap.has(dayString)) {
-        const pointData = dataMap.get(dayString);
-        minPrices.push(pointData.min_price);
-        maxPrices.push(pointData.max_price);
-        avgPrices.push(pointData.avg_price);
-        
-        minPricePointRadius.push(3);
-        maxPricePointRadius.push(3);
-        avgPricePointRadius.push(3);
-
-        lastKnown = pointData;
-      } else {
-        minPrices.push(lastKnown.min_price);
-        maxPrices.push(lastKnown.max_price);
-        avgPrices.push(lastKnown.avg_price);
-
-        minPricePointRadius.push(0);
-        maxPricePointRadius.push(0);
-        avgPricePointRadius.push(0);
-      }
-    }
-    
-    chartData.value = {
-      labels,
-      datasets: [
-        {
-          label: 'Min Price',
-          data: minPrices,
-          borderColor: '#c0392b',
-          backgroundColor: (context) => createGradient(context, 'rgba(231, 76, 60, 0.1)', 'rgba(231, 76, 60, 0.5)'),
-          pointRadius: minPricePointRadius,
-          spanGaps: true,
-          fill: true,
-          tension: 0.3,
-        },
-        {
-          label: 'Max Price',
-          data: maxPrices,
-          borderColor: '#27ae60',
-          backgroundColor: (context) => createGradient(context, 'rgba(39, 174, 96, 0.1)', 'rgba(39, 174, 96, 0.5)'),
-          pointRadius: maxPricePointRadius,
-          spanGaps: true,
-          fill: true,
-          tension: 0.3,
-        },
-        {
-          label: 'Avg Price',
-          data: avgPrices,
-          borderColor: '#2980b9',
-          backgroundColor: (context) => createGradient(context, 'rgba(52, 152, 219, 0.1)', 'rgba(52, 152, 219, 0.5)'),
-          pointRadius: avgPricePointRadius,
-          spanGaps: true,
-          fill: true,
-          tension: 0.3,
-        },
-      ],
-    };
+    setCachedMarketData(cacheKey, data);
+    processDataForChart(data, start, end);
   } catch (error) {
     console.error('Error fetching data:', error);
     chartData.value = null;
