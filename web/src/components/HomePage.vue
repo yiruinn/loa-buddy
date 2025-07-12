@@ -53,6 +53,10 @@
         </router-link>
       </n-gi>
     </n-grid>
+
+    <div style="text-align: center; margin-top: 20px;">
+      <p>Feedback? Bugs? Feature Requests? <a href="https://discord.gg/m7BfkP5AF8" target="_blank">Join the Discord!</a></p>
+    </div>
   </n-card>
 </template>
 

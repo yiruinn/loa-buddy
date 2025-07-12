@@ -23,7 +23,7 @@
           <n-menu
             :options="menuOptions"
             :value="currentTool"
-            :default-expanded-keys="['tools']"
+            :default-expanded-keys="['tools', 'market']"
           />
         </n-layout-sider>
 
@@ -60,16 +60,22 @@ const menuOptions = [
       {
         label: () => h(RouterLink, { to: { name: 'stronghold' } }, { default: () => 'Stronghold Arbitrage' }),
         key: 'stronghold'
-      },
-      {
-        label: () => h(RouterLink, { to: { name: 'materials' } }, { default: () => 'Material Prices' }),
-        key: 'materials'
       }
     ]
   },
   {
-    label: () => h(RouterLink, { to: { name: 'blacklist' } }, { default: () => 'Blacklist' }),
-    key: 'blacklist'
+    label: 'Market',
+    key: 'market',
+    children: [
+      {
+        label: () => h(RouterLink, { to: { name: 'materials' } }, { default: () => 'Material Prices' }),
+        key: 'materials'
+      },
+      {
+        label: () => h(RouterLink, { to: { name: 'market-tracker' } }, { default: () => 'Market Tracker' }),
+        key: 'market-tracker'
+      }
+    ]
   }
 ];
 
