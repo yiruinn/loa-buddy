@@ -58,6 +58,7 @@ import {
   Filler,
 } from 'chart.js';
 import { getCachedMarketData, setCachedMarketData, marketTrackerControls, saveMarketTrackerControls } from '../store';
+import itemsData from '@/data/items.json';
 
 ChartJS.register(
   Title,
@@ -134,9 +135,8 @@ function onCategoryChange(newCategory) {
   }
 }
 
-onMounted(async () => {
-  const response = await fetch('/data/items.json');
-  allItems.value = await response.json();
+onMounted(() => {
+  allItems.value = itemsData;
   if (Object.keys(allItems.value).length > 0 && !marketTrackerControls.selectedCategory) {
     const sortedCategories = Object.keys(allItems.value).sort((a, b) => a.localeCompare(b));
     marketTrackerControls.selectedCategory = sortedCategories[0];

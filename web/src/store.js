@@ -1,4 +1,8 @@
 import { reactive } from 'vue';
+import strongholdData from '@/data/stronghold.json';
+import recipesData from '@/data/recipes.json';
+import mariData from '@/data/mari.json';
+import itemsData from '@/data/items.json';
 
 export const materialCosts = reactive({
   lastUpdated: {},
@@ -57,13 +61,12 @@ export function saveMaterialCosts() {
   localStorage.setItem('materialCosts', JSON.stringify(materialCosts));
 }
 
-async function getStrongholdExchanges() {
-  const response = await fetch('/data/stronghold.json');
-  return await response.json();
+function getStrongholdExchanges() {
+  return strongholdData;
 }
 
 export async function recalculateEffectiveCosts() {
-    const strongholdExchanges = await getStrongholdExchanges();
+    const strongholdExchanges = getStrongholdExchanges();
     const allMaterialIds = Object.keys(materialCosts.materials);
 
     const costs = {};
@@ -180,7 +183,7 @@ async function initializeMaterials() {
         materialCosts.region = parsedCosts.region || 'naw';
     }
 
-    const strongholdExchanges = await getStrongholdExchanges();
+    const strongholdExchanges = getStrongholdExchanges();
     const allMaterialIds = new Set(Object.keys(loadedMaterials));
     strongholdExchanges.forEach(exchange => {
         allMaterialIds.add(exchange.input.id);
@@ -209,31 +212,23 @@ async function initializeMaterials() {
     }
 }
 
-async function loadRecipes() {
-  const response = await fetch('/data/recipes.json');
-  const data = await response.json();
-  recipes.push(...data);
+function loadRecipes() {
+  recipes.push(...recipesData);
 }
 
-async function loadMari() {
-  const response = await fetch('/data/mari.json');
-  const data = await response.json();
-  Object.assign(mari, data);
+function loadMari() {
+  Object.assign(mari, mariData);
 }
 
-async function loadStronghold() {
-  const response = await fetch('/data/stronghold.json');
-  const data = await response.json();
-  stronghold.push(...data);
+function loadStronghold() {
+  stronghold.push(...strongholdData);
 }
 
-async function loadMaterials() {
-  const response = await fetch('/data/items.json');
-  const data = await response.json();
+function loadMaterials() {
   const allItems = [];
-  for (const category in data) {
-    for (const subCategory in data[category]) {
-      data[category][subCategory].forEach(item => {
+  for (const category in itemsData) {
+    for (const subCategory in itemsData[category]) {
+      itemsData[category][subCategory].forEach(item => {
         allItems.push({ ...item, category: subCategory, mainCategory: category });
       });
     }
@@ -248,7 +243,7 @@ export async function init() {
 
   initializeMarketTrackerControls();
 
-  await loadMaterials(); // Load materials first
+  loadMaterials(); // Load materials first
   await Promise.all([
     initializeMaterials(),
     loadRecipes(),
