@@ -202,8 +202,8 @@ async function initializeMaterials() {
     materialCosts.materials = newMaterials;
 
     if (!savedCosts) {
-        updateAllPrices(materialCosts.region, materialsList, 'Trade Skill Material Costs');
-        updateAllPrices(materialCosts.region, materialsList, 'Fusion Material Costs');
+        updateAllPrices(materialCosts.region, materialsList, 'Trade Skill');
+        // updateAllPrices(materialCosts.region, materialsList, 'Fusion Material Costs');
     } else {
         recalculateEffectiveCosts();
     }

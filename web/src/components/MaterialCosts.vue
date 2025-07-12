@@ -7,7 +7,7 @@
             <span style="font-size: 1.2em; font-weight: bold;">{{ title }}</span>
             <div style="display: flex; align-items: center;">
               <span v-if="formattedLastUpdated" style="font-size: 0.9em; color: #aaa; margin-right: 15px">
-                Last Updated: {{ formattedLastUpdated }}
+                Last Refreshed: {{ formattedLastUpdated }}
               </span>
               <n-select
                 v-model:value="selectedRegion"
