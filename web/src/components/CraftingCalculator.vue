@@ -43,9 +43,9 @@
                     :style="{ width: '100px' }"
                   />
                 </td>
-                <td>{{ getProfit(recipe, getRecipeIndex(recipe)) }}</td>
+                <td :class="getProfitClass(recipe, getRecipeIndex(recipe))">{{ getProfit(recipe, getRecipeIndex(recipe)) }}</td>
                 <td>{{ getAdjustedCraftingTime(recipe) }}</td>
-                <td>{{ getProfitPerHour(recipe, getRecipeIndex(recipe)) }}</td>
+                <td :class="getProfitClass(recipe, getRecipeIndex(recipe))">{{ getProfitPerHour(recipe, getRecipeIndex(recipe)) }}</td>
               </tr>
             </tbody>
           </n-table>
@@ -173,6 +173,16 @@ const getProfitPerHour = (recipe, index) => {
   return ((profitValue * recipe.quantity) / timeInHours).toFixed(2);
 };
 
+const getProfitClass = (recipe, index) => {
+  const profit = parseFloat(getProfit(recipe, index));
+  if (profit > 0) {
+    return 'profit';
+  } else if (profit < 0) {
+    return 'loss';
+  }
+  return '';
+};
+
 const initializeCategories = () => {
   selectedCategories.value = props.recipes.map(recipe => {
     const sortedOptions = getSortedMaterialOptions(recipe);
@@ -230,5 +240,13 @@ watch(() => [
 
 .n-input-number {
   width: 100px;
+}
+
+.profit {
+  color: #63e2b7;
+}
+
+.loss {
+  color: #e88080;
 }
 </style>
