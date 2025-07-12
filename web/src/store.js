@@ -86,23 +86,45 @@ export async function recalculateEffectiveCosts() {
 }
 
 
-export function updateAllPrices(region, materialsToUpdate, title) {
+export async function updateAllPrices(region, materialsToUpdate, title) {
   materialCosts.region = region;
-  const promises = materialsToUpdate.map(material => {
-    return fetch(`https://marketdata-api.yrzhao1068589.workers.dev/v1/prices/${region}/${material.slug}`)
-      .then(response => response.json())
-      .then(priceData => {
-        if (materialCosts.materials[material.id]) {
-          materialCosts.materials[material.id].marketPrice = priceData.price;
-        }
-      });
-  });
+  const itemSlugs = materialsToUpdate.map(material => material.slug);
+  const slugToId = materialsToUpdate.reduce((acc, material) => {
+    acc[material.slug] = material.id;
+    return acc;
+  }, {});
 
-  Promise.all(promises).then(async () => {
+  try {
+    const response = await fetch(`https://marketdata-api.yrzhao1068589.workers.dev/v1/prices/latest`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        region_slug: region,
+        item_slugs: itemSlugs,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const prices = await response.json();
+
+    prices.forEach(priceData => {
+      const materialId = slugToId[priceData.item_slug];
+      if (materialId && materialCosts.materials[materialId]) {
+        materialCosts.materials[materialId].marketPrice = priceData.price;
+      }
+    });
+
     await recalculateEffectiveCosts();
     materialCosts.lastUpdated[title] = new Date().toISOString();
     saveMaterialCosts();
-  });
+  } catch (error) {
+    console.error("Failed to update prices:", error);
+  }
 }
 
 async function initializeMaterials() {
