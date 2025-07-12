@@ -1,30 +1,50 @@
 <template>
-  <div>
-    <h1>Market Tracker</h1>
-    <n-form @submit.prevent="fetchData">
-      <n-form-item label="Server">
-        <n-input v-model:value="server" />
-      </n-form-item>
-      <n-form-item label="Item">
-        <n-input v-model:value="item" />
-      </n-form-item>
-      <n-form-item label="Start Date">
-        <n-date-picker v-model:value="startDate" type="date" />
-      </n-form-item>
-      <n-form-item label="End Date">
-        <n-date-picker v-model:value="endDate" type="date" />
-      </n-form-item>
-      <n-button type="primary" @click="fetchData">Fetch Data</n-button>
-    </n-form>
-    <div style="height: 400px">
+  <div class="market-tracker-container">
+    <div class="controls">
+      <h1>Market Tracker</h1>
+      <n-form>
+        <n-form-item>
+          <n-radio-group v-model:value="selectedRange" name="radiogroup" class="time-range-group">
+            <n-radio-button
+              v-for="range in timeRanges"
+              :key="range.value"
+              :value="range.value"
+              :label="range.label"
+              class="time-range-button"
+            />
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item label="Region">
+          <n-select
+            v-model:value="region"
+            :options="regionOptions"
+          />
+        </n-form-item>
+        <n-form-item label="Category">
+          <n-select
+            v-model:value="selectedCategory"
+            :options="categoryOptions"
+            @update:value="onCategoryChange"
+          />
+        </n-form-item>
+        <n-form-item label="Item">
+          <n-select
+            v-model:value="item"
+            filterable
+            :options="itemOptions"
+          />
+        </n-form-item>
+      </n-form>
+    </div>
+    <div class="chart-container">
       <Line v-if="chartData" :data="chartData" :options="chartOptions" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { NForm, NFormItem, NInput, NDatePicker, NButton } from 'naive-ui';
+import { ref, onMounted, computed, watch } from 'vue';
+import { NForm, NFormItem, NSelect, NRadioGroup, NRadioButton } from 'naive-ui';
 import { Line } from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -35,6 +55,7 @@ import {
   CategoryScale,
   LinearScale,
   PointElement,
+  Filler,
 } from 'chart.js';
 
 ChartJS.register(
@@ -44,13 +65,91 @@ ChartJS.register(
   LineElement,
   CategoryScale,
   LinearScale,
-  PointElement
+  PointElement,
+  Filler
 );
 
-const server = ref('naw');
-const item = ref('fish');
-const startDate = ref(new Date('2025-07-01').getTime());
-const endDate = ref(new Date('2025-07-10').getTime());
+const region = ref('naw');
+const item = ref(null);
+const allItems = ref({});
+const selectedCategory = ref(null);
+const selectedRange = ref('7d');
+
+const timeRanges = [
+  { label: '7d', value: '7d' },
+  { label: '14d', value: '14d' },
+  { label: '30d', value: '30d' },
+];
+
+const regionOptions = [
+  { label: 'North America West', value: 'naw' },
+  { label: 'North America East', value: 'nae' },
+  { label: 'Europe Central', value: 'euc' },
+];
+
+const categoryOptions = computed(() => {
+  return Object.keys(allItems.value)
+    .sort((a, b) => a.localeCompare(b))
+    .map(category => ({
+      label: category.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      value: category
+    }));
+});
+
+const itemOptions = computed(() => {
+  if (!selectedCategory.value || !allItems.value[selectedCategory.value]) {
+    return [];
+  }
+  const subCategories = allItems.value[selectedCategory.value];
+  const options = [];
+  const sortedSubCategoryKeys = Object.keys(subCategories).sort((a, b) => a.localeCompare(b));
+
+  for (const subCategoryKey of sortedSubCategoryKeys) {
+    const subCategoryName = subCategoryKey.charAt(0).toUpperCase() + subCategoryKey.slice(1);
+    const items = [...subCategories[subCategoryKey]].sort((a, b) => a.name.localeCompare(b.name));
+
+    if (subCategoryKey === 'all') {
+      options.push(...items.map(i => ({ label: i.name, value: i.slug })));
+    } else {
+      options.push({
+        type: 'group',
+        label: subCategoryName,
+        key: subCategoryKey,
+        children: items.map(i => ({ label: i.name, value: i.slug }))
+      });
+    }
+  }
+  return options;
+});
+
+function onCategoryChange(newCategory) {
+  if (newCategory && allItems.value[newCategory]) {
+    const subCategories = allItems.value[newCategory];
+    const sortedSubCategoryKeys = Object.keys(subCategories).sort((a, b) => a.localeCompare(b));
+    const firstSubCategoryKey = sortedSubCategoryKeys[0];
+    if (firstSubCategoryKey && subCategories[firstSubCategoryKey].length > 0) {
+      item.value = subCategories[firstSubCategoryKey][0].slug;
+    } else {
+      item.value = null;
+    }
+  } else {
+    item.value = null;
+  }
+}
+
+onMounted(async () => {
+  const response = await fetch('/data/items.json');
+  allItems.value = await response.json();
+  if (Object.keys(allItems.value).length > 0) {
+    const sortedCategories = Object.keys(allItems.value).sort((a, b) => a.localeCompare(b));
+    selectedCategory.value = sortedCategories[0];
+    onCategoryChange(selectedCategory.value);
+  }
+});
+
+watch([region, item, selectedRange], () => {
+  fetchData();
+});
 
 const chartData = ref(null);
 const chartOptions = ref({
@@ -61,7 +160,11 @@ const chartOptions = ref({
       labels: {
         color: 'rgba(255, 255, 255, 0.85)'
       }
-    }
+    },
+    tooltip: {
+      mode: 'index',
+      intersect: false,
+    },
   },
   scales: {
     x: {
@@ -80,15 +183,36 @@ const chartOptions = ref({
         color: 'rgba(255, 255, 255, 0.2)'
       }
     }
-  }
+  },
+  interaction: {
+    intersect: false,
+    mode: 'index',
+  },
 });
 
+function createGradient(context, color1, color2) {
+  const chart = context.chart;
+  const {ctx, chartArea} = chart;
+  if (!chartArea) {
+    return null;
+  }
+  const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+  gradient.addColorStop(0, color1);
+  gradient.addColorStop(1, color2);
+  return gradient;
+}
+
 async function fetchData() {
-  const start = new Date(startDate.value);
-  const end = new Date(endDate.value);
+  if (!item.value) return;
+
+  const end = new Date();
+  const start = new Date();
+  const days = parseInt(selectedRange.value.replace('d', ''));
+  start.setDate(end.getDate() - days);
+
   const startDateString = start.toISOString().split('T')[0];
   const endDateString = end.toISOString().split('T')[0];
-  const url = `https://marketdata-api.yrzhao1068589.workers.dev/v1/prices/historical/${server.value}/${item.value}?start_date=${startDateString}&end_date=${endDateString}`;
+  const url = `https://marketdata-api.yrzhao1068589.workers.dev/v1/prices/historical/${region.value}/${item.value}?start_date=${startDateString}&end_date=${endDateString}`;
 
   try {
     const response = await fetch(url);
@@ -139,25 +263,31 @@ async function fetchData() {
           label: 'Min Price',
           data: minPrices,
           borderColor: '#c0392b',
-          backgroundColor: 'rgba(231, 76, 60, 0.5)',
+          backgroundColor: (context) => createGradient(context, 'rgba(231, 76, 60, 0.1)', 'rgba(231, 76, 60, 0.5)'),
           pointRadius: minPricePointRadius,
           spanGaps: true,
+          fill: true,
+          tension: 0.3,
         },
         {
           label: 'Max Price',
           data: maxPrices,
           borderColor: '#27ae60',
-          backgroundColor: 'rgba(39, 174, 96, 0.5)',
+          backgroundColor: (context) => createGradient(context, 'rgba(39, 174, 96, 0.1)', 'rgba(39, 174, 96, 0.5)'),
           pointRadius: maxPricePointRadius,
           spanGaps: true,
+          fill: true,
+          tension: 0.3,
         },
         {
           label: 'Avg Price',
           data: avgPrices,
           borderColor: '#2980b9',
-          backgroundColor: 'rgba(52, 152, 219, 0.5)',
+          backgroundColor: (context) => createGradient(context, 'rgba(52, 152, 219, 0.1)', 'rgba(52, 152, 219, 0.5)'),
           pointRadius: avgPricePointRadius,
           spanGaps: true,
+          fill: true,
+          tension: 0.3,
         },
       ],
     };
@@ -167,3 +297,24 @@ async function fetchData() {
   }
 }
 </script>
+<style scoped>
+.market-tracker-container {
+  display: flex;
+  gap: 20px;
+}
+.controls {
+  width: 300px;
+}
+.chart-container {
+  flex: 1;
+  height: 600px;
+}
+.time-range-group {
+  width: 100%;
+  display: flex;
+}
+.time-range-button {
+  flex: 1;
+  text-align: center;
+}
+</style>
