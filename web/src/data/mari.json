@@ -178,6 +178,15 @@
           "blue_crystal_cost": 56
         }
       ]
+    },
+    {
+      "item_name": "Solar Protection (Bound)",
+      "deals": [
+        {
+          "quantity": 100,
+          "blue_crystal_cost": 90
+        }
+      ]
     }
   ],
   "t2_honing": [
@@ -198,6 +207,10 @@
         {
           "quantity": 10,
           "blue_crystal_cost": 230
+        },
+        {
+          "quantity": 15,
+          "blue_crystal_cost": 330
         }
       ]
     },
