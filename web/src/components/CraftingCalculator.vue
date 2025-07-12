@@ -170,7 +170,7 @@ const getProfit = (recipe, index) => {
 const getProfitPerHour = (recipe, index) => {
   const profitValue = parseFloat(getProfit(recipe, index));
   const timeInHours = parseFloat(getAdjustedCraftingTime(recipe)) / 60;
-  return (profitValue / timeInHours).toFixed(2);
+  return ((profitValue * recipe.quantity) / timeInHours).toFixed(2);
 };
 
 const initializeCategories = () => {
