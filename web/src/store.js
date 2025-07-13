@@ -161,6 +161,7 @@ export async function updateAllPrices(region, materialsToUpdate, title) {
       const materialId = slugToId[priceData.item_slug];
       if (materialId && materialCosts.materials[materialId]) {
         materialCosts.materials[materialId].marketPrice = priceData.price;
+        materialCosts.materials[materialId].lastUpdated = priceData.timestamp;
       }
     });
 
@@ -199,7 +200,8 @@ async function initializeMaterials() {
             marketPrice: existing?.marketPrice ?? Infinity,
             effectivePrice: existing?.effectivePrice ?? Infinity,
             source: existing?.source ?? 'market',
-            path: existing?.path ?? [id]
+            path: existing?.path ?? [id],
+            lastUpdated: existing?.lastUpdated ?? null
         };
     });
     materialCosts.materials = newMaterials;

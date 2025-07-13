@@ -45,10 +45,17 @@
                 </div>
                 <div class="items-container" :style="group.columns ? { display: 'grid', 'grid-template-columns': `repeat(${group.columns}, 1fr)`, 'gap': '8px' } : {}">
                   <div v-for="itemId in group.items" :key="itemId" class="material-cost-item">
-                    <div class="material-info">
-                      <img :src="`/icons/${itemId}.webp`" :alt="getMaterial(itemId)?.name" class="material-icon" />
-                      <span>{{ getMaterial(itemId)?.name }}</span>
-                    </div>
+                    <n-tooltip trigger="hover" :disabled="!materialCosts.materials[itemId] || !materialCosts.materials[itemId].lastUpdated">
+                      <template #trigger>
+                        <div class="material-info">
+                          <img :src="`/icons/${itemId}.webp`" :alt="getMaterial(itemId)?.name" class="material-icon" />
+                          <span>{{ getMaterial(itemId)?.name }}</span>
+                        </div>
+                      </template>
+                      <span v-if="materialCosts.materials[itemId] && materialCosts.materials[itemId].lastUpdated">
+                        Last updated: {{ formatLastUpdated(materialCosts.materials[itemId].lastUpdated) }}
+                      </span>
+                    </n-tooltip>
                     <div class="price-input-container">
                       <n-input-number
                         v-if="materialCosts.materials[itemId]"
@@ -129,6 +136,13 @@ const getIndicatorClass = (itemId) => {
 
 const onPriceUpdate = () => {
     recalculateEffectiveCosts();
+};
+
+const formatLastUpdated = (timestamp) => {
+  if (!timestamp) return '';
+  // The timestamp from the API is in seconds, but Date expects milliseconds.
+  const date = new Date(timestamp * 1000);
+  return date.toLocaleString();
 };
 
 watch(
