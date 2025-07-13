@@ -78,6 +78,10 @@ const props = defineProps({
   useLowestPrice: {
     type: Boolean,
     required: true,
+  },
+  enableGreatSuccess: {
+    type: Boolean,
+    required: true,
   }
 });
 
@@ -120,6 +124,18 @@ const getAdjustedCraftingTime = (recipe) => {
   return (recipe.craftingTime * (1 - totalReduction / 100)).toFixed(2);
 };
 
+const getGreatSuccessChance = (recipe) => {
+  if (!props.enableGreatSuccess) {
+    return 0;
+  }
+  const BASE_RATE = 5;
+  const generalBonus = props.craftingReductions.general.greatSuccess || 0;
+  const categoryBonus = props.craftingReductions[recipe.type]?.greatSuccess || 0;
+  
+  const finalChance = BASE_RATE * (1 + (generalBonus / 100) + (categoryBonus / 100));
+  return finalChance;
+}
+
 const calculateMaterialCost = (items) => {
   return items.reduce((sum, item) => {
     const priceKey = props.useLowestPrice ? 'effectivePrice' : 'marketPrice';
@@ -157,8 +173,11 @@ const getTotalCost = (recipe, index) => {
   return itemsCost + getAdjustedCraftingCost(recipe);
 };
 
-const getUnitPrice = (recipe, index) =>
-  (getTotalCost(recipe, index) / recipe.quantity).toFixed(2);
+const getUnitPrice = (recipe, index) => {
+  const greatSuccessChance = getGreatSuccessChance(recipe) / 100;
+  const effectiveQuantity = recipe.quantity * (1 + greatSuccessChance);
+  return (getTotalCost(recipe, index) / effectiveQuantity).toFixed(2);
+}
 
 const calculateTax = (sellingPrice) => Math.ceil(sellingPrice * 0.05);
 
@@ -214,8 +233,8 @@ watch(() => [
   props.recipes,
   props.craftingReductions,
   props.useLowestPrice,
+  props.enableGreatSuccess,
 ], initializeCategories, { deep: true });
-
 </script>
 
 <style scoped>

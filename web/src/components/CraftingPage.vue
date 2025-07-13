@@ -41,6 +41,33 @@
                   <span>Time Reduction (%)</span>
                   <n-input-number v-model:value="craftingReductions.general.time" :min="0" :max="30" :show-button="false" />
                 </div>
+                <div class="input-group">
+                  <span style="display: flex; align-items: center; gap: 4px;">
+                    Great Success (%)
+                    <n-tooltip trigger="hover" placement="bottom" style="max-width: 200px;">
+                      <template #trigger>
+                        <n-icon size="20" style="cursor: pointer;">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8zm-1-13h2v2h-2v-2zm0 4h2v6h-2v-6z"></path></svg>
+                        </n-icon>
+                      </template>
+                      <div>
+                        Great Success Chance (GSC) is:<br>
+                        <b>5 * (1 + additionalGSC / 100)</b><br>
+                        Expected Yield (EY) is:<br>
+                        <b>quantity * (1 + GSC / 100)</b><br>
+                        Unit Price is calculated as:<br>
+                        <b>totalCost / EY</b>
+                      </div>
+                    </n-tooltip>
+                  </span>
+                  <n-input-number v-model:value="craftingReductions.general.greatSuccess" :min="0" :max="30" :show-button="false" :disabled="!enableGreatSuccess">
+                    <template #suffix>
+                      <n-button @click="enableGreatSuccess = !enableGreatSuccess" size="tiny" :style="{ backgroundColor: enableGreatSuccess ? '#63e2b7' : '#e88080', width: '10px', height: '10px', padding: 0, borderRadius: '50%' }">
+                        &nbsp;
+                      </n-button>
+                    </template>
+                  </n-input-number>
+                </div>
               </div>
               <div class="category-group">
                 <h3>Battle Items</h3>
@@ -51,6 +78,10 @@
                 <div class="input-group">
                   <span>Time Reduction (%)</span>
                   <n-input-number v-model:value="craftingReductions.battle.time" :min="0" :max="10" :show-button="false" />
+                </div>
+                <div class="input-group">
+                  <span>Great Success (%)</span>
+                  <n-input-number v-model:value="craftingReductions.battle.greatSuccess" :min="0" :max="10" :show-button="false" :disabled="!enableGreatSuccess" />
                 </div>
               </div>
               <div class="category-group">
@@ -63,6 +94,10 @@
                   <span>Time Reduction (%)</span>
                   <n-input-number v-model:value="craftingReductions.cooking.time" :min="0" :max="10" :show-button="false" />
                 </div>
+                <div class="input-group">
+                  <span>Great Success (%)</span>
+                  <n-input-number v-model:value="craftingReductions.cooking.greatSuccess" :min="0" :max="10" :show-button="false" :disabled="!enableGreatSuccess" />
+                </div>
               </div>
               <div class="category-group">
                 <h3>Special</h3>
@@ -73,6 +108,10 @@
                 <div class="input-group">
                   <span>Time Reduction (%)</span>
                   <n-input-number v-model:value="craftingReductions.special.time" :min="0" :max="10" :show-button="false" />
+                </div>
+                <div class="input-group">
+                  <span>Great Success (%)</span>
+                  <n-input-number v-model:value="craftingReductions.special.greatSuccess" :min="0" :max="10" :show-button="false" :disabled="!enableGreatSuccess" />
                 </div>
               </div>
             </div>
@@ -85,22 +124,25 @@
       :materials="materialCosts.materials"
       :crafting-reductions="craftingReductions"
       :use-lowest-price="useLowestPrice"
+      :enable-great-success="enableGreatSuccess"
     />
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, watch, onMounted } from 'vue';
-import { NInputNumber, NCard, NCollapse, NCollapseItem, NSwitch, NTooltip, NIcon } from 'naive-ui';
+import { NInputNumber, NCard, NCollapse, NCollapseItem, NSwitch, NTooltip, NIcon, NButton } from 'naive-ui';
 import CraftingCalculator from './CraftingCalculator.vue';
 import { recipes, materialCosts } from '../store';
 
 const useLowestPrice = ref(false);
+const enableGreatSuccess = ref(false);
+
 const craftingReductions = reactive({
-  general: { cost: 0, time: 0 },
-  battle: { cost: 0, time: 0 },
-  cooking: { cost: 0, time: 0 },
-  special: { cost: 0, time: 0 },
+  general: { cost: 0, time: 0, greatSuccess: 0 },
+  battle: { cost: 0, time: 0, greatSuccess: 0 },
+  cooking: { cost: 0, time: 0, greatSuccess: 0 },
+  special: { cost: 0, time: 0, greatSuccess: 0 },
 });
 
 const localRecipes = ref([]);
@@ -131,6 +173,10 @@ watch(recipes, (newRecipes) => {
 
 watch(localRecipes, saveSellingPrices, { deep: true });
 
+watch(enableGreatSuccess, (newValue) => {
+  localStorage.setItem('enableGreatSuccess', JSON.stringify(newValue));
+});
+
 watch(craftingReductions, (newValue) => {
   localStorage.setItem('craftingReductions', JSON.stringify(newValue));
 });
@@ -138,7 +184,16 @@ watch(craftingReductions, (newValue) => {
 onMounted(() => {
   const savedReductions = localStorage.getItem('craftingReductions');
   if (savedReductions) {
-    Object.assign(craftingReductions, JSON.parse(savedReductions));
+    const parsedReductions = JSON.parse(savedReductions);
+    for (const category in craftingReductions) {
+      if (parsedReductions[category]) {
+        Object.assign(craftingReductions[category], parsedReductions[category]);
+      }
+    }
+  }
+  const savedEnable = localStorage.getItem('enableGreatSuccess');
+  if (savedEnable !== null) {
+    enableGreatSuccess.value = JSON.parse(savedEnable);
   }
 });
 </script>
