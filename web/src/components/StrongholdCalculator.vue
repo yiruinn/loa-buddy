@@ -18,10 +18,11 @@
         <thead>
           <tr>
             <th>Exchange Path</th>
-            <th>Input Cost</th>
-            <th>Output Value</th>
-            <th>Profit (Taxed)</th>
-            <th>Profit %</th>
+            <th style="width: 80px">Input Cost</th>
+            <th style="width: 80px">Output Value</th>
+            <th style="width: 80px">Net Gain</th>
+            <th style="width: 80px">Profit (Taxed)</th>
+            <th style="width: 90px">Profit %</th>
           </tr>
         </thead>
         <tbody>
@@ -41,6 +42,9 @@
             </td>
             <td>{{ exchange.inputCost.toFixed(2) }}g</td>
             <td>{{ exchange.outputValue.toFixed(2) }}g</td>
+            <td :class="{ 'profit': exchange.netGain > 0, 'loss': exchange.netGain < 0 }">
+              {{ exchange.netGain.toFixed(2) }}g
+            </td>
             <td :class="{ 'profit': exchange.profit > 0, 'loss': exchange.profit < 0 }">
               {{ exchange.profit.toFixed(2) }}g
             </td>
@@ -104,8 +108,9 @@ const calculatedExchanges = computed(() => {
         // The market value of 100 units of the output material.
         const totalOutputValue = outputMarketPrice;
 
+        const netGain = totalOutputValue - totalInputCost;
         const tax = Math.ceil(totalOutputValue * taxRate);
-        const totalProfit = totalOutputValue - tax - totalInputCost;
+        const totalProfit = netGain - tax;
         
         const fullPath = [...(inputMat.path || [exchange.input.id]), exchange.output.id];
         const percentProfit = totalInputCost > 0 ? (totalProfit / totalInputCost) * 100 : Infinity;
@@ -115,6 +120,7 @@ const calculatedExchanges = computed(() => {
             path: fullPath.map(id => ({ id, name: getMaterialName(id) })),
             inputCost: totalInputCost,
             outputValue: totalOutputValue,
+            netGain: netGain,
             profit: totalProfit,
             percentProfit: percentProfit,
         });
