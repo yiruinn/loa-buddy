@@ -34,7 +34,7 @@
                 </td>
                 <td>{{ getAdjustedCraftingCost(recipe) }}</td>
                 <td>{{ getTotalCost(recipe, getRecipeIndex(recipe)).toFixed(2) }}</td>
-                <td>{{ getUnitPrice(recipe, getRecipeIndex(recipe)) }}</td>
+                <td :class="getUnitPriceClass(recipe, getRecipeIndex(recipe))">{{ getUnitPrice(recipe, getRecipeIndex(recipe)) }}</td>
                 <td>
                   <n-input-number
                     v-model:value="recipe.sellingPrice"
@@ -178,6 +178,17 @@ const getProfitClass = (recipe, index) => {
   if (profit > 0) {
     return 'profit';
   } else if (profit < 0) {
+    return 'loss';
+  }
+  return '';
+};
+
+const getUnitPriceClass = (recipe, index) => {
+  const unitPrice = parseFloat(getUnitPrice(recipe, index));
+  const sellingPrice = recipe.sellingPrice;
+  if (unitPrice < sellingPrice) {
+    return 'profit';
+  } else if (unitPrice > sellingPrice) {
     return 'loss';
   }
   return '';
