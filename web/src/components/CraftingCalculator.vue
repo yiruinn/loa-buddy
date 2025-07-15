@@ -3,7 +3,18 @@
     <n-collapse :default-expanded-names="['special', 'battle', 'cooking']">
       <n-collapse-item v-for="(group, type) in groupedRecipes" :key="type" :name="type">
         <template #header>
-          <h2 class="group-header-title">{{ type.charAt(0).toUpperCase() + type.slice(1) }}</h2>
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <h2 class="group-header-title">{{ type.charAt(0).toUpperCase() + type.slice(1) }}</h2>
+            <div v-if="type === 'special'" style="display: flex; align-items: center;" @click.stop>
+              <span style="margin-right: 10px;">Row Multiplier:</span>
+              <n-select
+                v-model:value="craftingSlots"
+                :options="craftingSlotOptions"
+                size="small"
+                :style="{ width: '80px' }"
+              />
+            </div>
+          </div>
         </template>
         <div class="table-container">
           <n-table :bordered="false" :single-line="false" class="custom-table">
@@ -85,6 +96,13 @@ const props = defineProps({
   }
 });
 
+const craftingSlots = ref(1);
+const craftingSlotOptions = [
+  { label: '1', value: 1 },
+  { label: '2', value: 2 },
+  { label: '3', value: 3 },
+  { label: '4', value: 4 },
+];
 const selectedCategories = ref([]);
 
 const groupedRecipes = computed(() => {
@@ -189,7 +207,9 @@ const getProfit = (recipe, index) => {
 const getProfitPerHour = (recipe, index) => {
   const profitValue = parseFloat(getProfit(recipe, index));
   const timeInHours = parseFloat(getAdjustedCraftingTime(recipe)) / 60;
-  return ((profitValue * recipe.quantity) / timeInHours).toFixed(2);
+  const greatSuccessChance = getGreatSuccessChance(recipe) / 100;
+  const effectiveQuantity = recipe.quantity * (1 + greatSuccessChance);
+  return ((profitValue * effectiveQuantity * craftingSlots.value) / timeInHours).toFixed(2);
 };
 
 const getProfitClass = (recipe, index) => {
@@ -227,7 +247,17 @@ const renderSelectTag = (recipe, option) => {
   return `${recipe.name} (${option.value})`;
 };
 
-onMounted(initializeCategories);
+onMounted(() => {
+  initializeCategories();
+  const savedCraftingSlots = localStorage.getItem('craftingSlots');
+  if (savedCraftingSlots) {
+    craftingSlots.value = JSON.parse(savedCraftingSlots);
+  }
+});
+
+watch(craftingSlots, (newValue) => {
+  localStorage.setItem('craftingSlots', JSON.stringify(newValue));
+});
 
 watch(() => [
   props.recipes,
