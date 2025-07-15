@@ -173,6 +173,10 @@ watch(recipes, (newRecipes) => {
 
 watch(localRecipes, saveSellingPrices, { deep: true });
 
+watch(useLowestPrice, (newValue) => {
+  localStorage.setItem('useLowestPrice', JSON.stringify(newValue));
+});
+
 watch(enableGreatSuccess, (newValue) => {
   localStorage.setItem('enableGreatSuccess', JSON.stringify(newValue));
 });
@@ -194,6 +198,10 @@ onMounted(() => {
   const savedEnable = localStorage.getItem('enableGreatSuccess');
   if (savedEnable !== null) {
     enableGreatSuccess.value = JSON.parse(savedEnable);
+  }
+  const savedUseLowestPrice = localStorage.getItem('useLowestPrice');
+  if (savedUseLowestPrice !== null) {
+    useLowestPrice.value = JSON.parse(savedUseLowestPrice);
   }
 });
 </script>
