@@ -21,8 +21,8 @@
               </n-tooltip>
             </div>
             <div style="display: flex; align-items: center;">
-              <span v-if="formattedLastUpdated" style="font-size: 0.9em; color: #aaa; margin-right: 15px">
-                Last Refreshed: {{ formattedLastUpdated }}
+              <span v-if="formattedLatestMaterialUpdate" style="font-size: 0.9em; color: #aaa; margin-right: 15px;">
+                Last Updated: {{ formattedLatestMaterialUpdate }}
               </span>
               <n-select
                 v-model:value="selectedRegion"
@@ -31,7 +31,14 @@
                 style="width: 100px; margin-right: 10px;"
                 @click.stop
               />
-              <n-button @click.stop="updateAllPrices(selectedRegion, materials, title)" size="small">Refresh</n-button>
+              <n-tooltip trigger="hover" :disabled="!lastRefreshedRelative">
+                <template #trigger>
+                  <n-button @click.stop="updateAllPrices(selectedRegion, materials, title)" size="small">Refresh</n-button>
+                </template>
+                <span>
+                  Last Refreshed: <span style="font-weight: bold;">{{ lastRefreshedRelative }}</span>
+                </span>
+              </n-tooltip>
             </div>
           </div>
         </template>
@@ -45,17 +52,18 @@
                 </div>
                 <div class="items-container" :style="group.columns ? { display: 'grid', 'grid-template-columns': `repeat(${group.columns}, 1fr)`, 'gap': '8px' } : {}">
                   <div v-for="itemId in group.items" :key="itemId" class="material-cost-item">
-                    <n-tooltip trigger="hover" :disabled="!materialCosts.materials[itemId] || !materialCosts.materials[itemId].lastUpdated">
-                      <template #trigger>
-                        <div class="material-info">
-                          <img :src="`/icons/${itemId}.webp`" :alt="getMaterial(itemId)?.name" class="material-icon" />
-                          <span>{{ getMaterial(itemId)?.name }}</span>
-                        </div>
-                      </template>
-                      <span v-if="materialCosts.materials[itemId] && materialCosts.materials[itemId].lastUpdated">
-                        Last updated: {{ formatLastUpdated(materialCosts.materials[itemId].lastUpdated) }}
-                      </span>
-                    </n-tooltip>
+                    <div class="material-info">
+                      <img :src="`/icons/${itemId}.webp`" :alt="getMaterial(itemId)?.name" class="material-icon" />
+                      <span>{{ getMaterial(itemId)?.name }}</span>
+                      <n-tooltip v-if="isOutdated(itemId)" trigger="hover">
+                        <template #trigger>
+                          <n-icon size="16" :color="'#d9534f'" style="margin-left: 4px; cursor: help;">
+                            <Warning />
+                          </n-icon>
+                        </template>
+                        <span>Last updated: {{ formatLastUpdated(materialCosts.materials[itemId].lastUpdated) }}</span>
+                      </n-tooltip>
+                    </div>
                     <div class="price-input-container">
                       <InputNumber
                         v-if="materialCosts.materials[itemId]"
@@ -92,10 +100,12 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { NCard, NCollapse, NCollapseItem, NButton, NSelect, NTooltip, NIcon } from 'naive-ui';
 import InputNumber from './InputNumber.vue';
 import { materialCosts, updateAllPrices, saveMaterialCosts, recalculateEffectiveCosts, materialsList } from '../store';
+
+import { Warning } from '@vicons/ionicons5';
 
 const props = defineProps({
   title: {
@@ -135,6 +145,15 @@ const getIndicatorClass = (itemId) => {
     return 'source-lowest'; // Green
 };
 
+const isOutdated = (itemId) => {
+  const itemTimestamp = materialCosts.materials[itemId]?.lastUpdated;
+  if (!itemTimestamp || !latestMaterialUpdate.value) {
+    return false;
+  }
+  // Compare timestamps, ensuring we don't flag items that are updated at the same time
+  return itemTimestamp < latestMaterialUpdate.value;
+};
+
 const onPriceUpdate = () => {
     recalculateEffectiveCosts();
 };
@@ -154,10 +173,66 @@ watch(
   { deep: true }
 );
 
-const formattedLastUpdated = computed(() => {
+const currentTime = ref(Date.now());
+
+onMounted(() => {
+  const interval = setInterval(() => {
+    currentTime.value = Date.now();
+  }, 1000); // Update every second
+
+  onUnmounted(() => {
+    clearInterval(interval);
+  });
+});
+
+const formatTimeAgo = (timestamp) => {
+  if (!timestamp) return '';
+  const now = currentTime.value;
+  const date = new Date(timestamp);
+  const seconds = Math.floor((now - date) / 1000);
+
+  if (seconds < 5) {
+    return "just now";
+  }
+
+  if (seconds < 60) {
+    return `${seconds} seconds ago`;
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) {
+    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  }
+
+  const days = Math.floor(hours / 24);
+  return `${days} day${days > 1 ? 's' : ''} ago`;
+};
+
+const lastRefreshedRelative = computed(() => {
   const lastUpdated = materialCosts.lastUpdated[props.title];
   if (!lastUpdated) return '';
-  const date = new Date(lastUpdated);
+  // By depending on currentTime, this computed property will re-evaluate every second
+  return formatTimeAgo(lastUpdated, currentTime.value);
+});
+
+const latestMaterialUpdate = computed(() => {
+  const timestamps = allItemIds.value
+    .map(id => materialCosts.materials[id]?.lastUpdated)
+    .filter(Boolean);
+  if (timestamps.length === 0) return null;
+  // The timestamps are in seconds, so we can use Math.max directly.
+  return Math.max(...timestamps);
+});
+
+const formattedLatestMaterialUpdate = computed(() => {
+  if (!latestMaterialUpdate.value) return '';
+  // The timestamp from the API is in seconds, but Date expects milliseconds.
+  const date = new Date(latestMaterialUpdate.value * 1000);
   return date.toLocaleString();
 });
 
