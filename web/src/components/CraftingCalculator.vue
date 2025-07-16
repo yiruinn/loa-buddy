@@ -24,7 +24,16 @@
                 <th style="width: 100px">Gold</th>
                 <th style="width: 120px">Total Cost</th>
                 <th style="width: 120px">Unit Price</th>
-                <th style="width: 120px">Selling Price</th>
+                <th style="width: 120px">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    Selling Price
+                    <n-button text @click="pullPrices(group)">
+                      <template #icon>
+                        <n-icon :component="ArrowUpload24Regular" />
+                      </template>
+                    </n-button>
+                  </div>
+                </th>
                 <th style="width: 120px">Net Profit (taxed)</th>
                 <th style="width: 120px">Craft Time</th>
                 <th style="width: 120px">Profit/Hour</th>
@@ -100,9 +109,10 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import InputNumber from './InputNumber.vue';
 import {
-  NCard, NTable, NSelect, NCollapse, NCollapseItem, NTooltip
+  NCard, NTable, NSelect, NCollapse, NCollapseItem, NTooltip, NButton, NIcon
 } from 'naive-ui';
-import { materialCosts, materialsList } from '../store';
+import { ArrowUpload24Regular } from '@vicons/fluent';
+import { materialCosts } from '../store';
 
 const props = defineProps({
   recipes: {
@@ -156,6 +166,18 @@ const groupedRecipes = computed(() => {
 
   return orderedGroups;
 });
+
+const pullPrices = (recipesToUpdate) => {
+  recipesToUpdate.forEach(recipe => {
+    const materialId = recipe.id;
+    if (materialId && materialCosts.materials[materialId]) {
+      const marketPrice = materialCosts.materials[materialId].marketPrice;
+      if (marketPrice && marketPrice !== Infinity) {
+        recipe.sellingPrice = marketPrice;
+      }
+    }
+  });
+};
 
 const getRecipeIndex = (recipe) => {
   return props.recipes.findIndex(r => r.name === recipe.name);

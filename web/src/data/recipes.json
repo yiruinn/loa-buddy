@@ -1,5 +1,6 @@
 [
   {
+    "id": "abidos_fusion_material",
     "name": "Abidos Fusion Material",
     "type": "special",
     "craftingCost": 400,
@@ -57,6 +58,7 @@
     ]
   },
   {
+    "id": "prime_oreha_fusion_material",
     "name": "Prime Oreha Fusion Material",
     "type": "special",
     "craftingCost": 300,
@@ -91,6 +93,7 @@
     ]
   },
   {
+    "id": "superior_oreha_fusion_material",
     "name": "Superior Oreha Fusion Material",
     "type": "special",
     "craftingCost": 250,
@@ -124,6 +127,7 @@
     ]
   },
   {
+    "id": "oreha_fusion_material",
     "name": "Oreha Fusion Material",
     "type": "special",
     "craftingCost": 205,
@@ -157,6 +161,7 @@
     ]
   },
   {
+    "id": "elemental_hp_potion",
     "name": "Elemental HP Potion",
     "type": "battle",
     "craftingCost": 30,
@@ -174,6 +179,7 @@
     ]
   },
   {
+    "id": "dark_grenade",
     "name": "Dark Grenade",
     "type": "battle",
     "craftingCost": 15,
@@ -191,6 +197,7 @@
     ]
   },
   {
+    "id": "sacred_charm",
     "name": "Sacred Charm",
     "type": "battle",
     "craftingCost": 15,
@@ -208,6 +215,7 @@
     ]
   },
   {
+    "id": "masters_chewy_grilled",
     "name": "[Masterwork] Master's Chewy Grilled Skewers",
     "type": "cooking",
     "quantity": 1,
@@ -228,6 +236,7 @@
     ]
   },
   {
+    "id": "masters_herb_steak",
     "name": "[Masterwork] Master's Herb Steak Meal",
     "type": "cooking",
     "quantity": 1,
