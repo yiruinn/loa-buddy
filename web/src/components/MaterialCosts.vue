@@ -57,7 +57,7 @@
                       </span>
                     </n-tooltip>
                     <div class="price-input-container">
-                      <n-input-number
+                      <InputNumber
                         v-if="materialCosts.materials[itemId]"
                         v-model:value="materialCosts.materials[itemId].marketPrice"
                         @update:value="onPriceUpdate"
@@ -93,7 +93,8 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { NCard, NInputNumber, NCollapse, NCollapseItem, NButton, NSelect, NTooltip, NIcon } from 'naive-ui';
+import { NCard, NCollapse, NCollapseItem, NButton, NSelect, NTooltip, NIcon } from 'naive-ui';
+import InputNumber from './InputNumber.vue';
 import { materialCosts, updateAllPrices, saveMaterialCosts, recalculateEffectiveCosts, materialsList } from '../store';
 
 const props = defineProps({

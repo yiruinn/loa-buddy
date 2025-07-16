@@ -77,7 +77,7 @@
                 </td>
                 <td :class="getUnitPriceClass(recipe, getRecipeIndex(recipe))">{{ getUnitPrice(recipe, getRecipeIndex(recipe)) }}</td>
                 <td>
-                  <n-input-number
+                  <InputNumber
                     v-model:value="recipe.sellingPrice"
                     :min="0"
                     :show-button="false"
@@ -98,8 +98,9 @@
 
 <script setup>
 import { ref, watch, onMounted, computed } from 'vue';
+import InputNumber from './InputNumber.vue';
 import {
-  NCard, NTable, NInputNumber, NSelect, NCollapse, NCollapseItem, NTooltip
+  NCard, NTable, NSelect, NCollapse, NCollapseItem, NTooltip
 } from 'naive-ui';
 import { materialCosts, materialsList } from '../store';
 

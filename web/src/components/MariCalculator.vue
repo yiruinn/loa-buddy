@@ -3,7 +3,7 @@
     <div class="exchange-rate-input">
       <n-h3>Exchange Rate:</n-h3>
       <div class="input-group">
-        <n-input-number v-model:value="exchangeRate" :min="0" :step="100" :show-button="false" />
+        <InputNumber v-model:value="exchangeRate" :min="0" :step="100" :show-button="false" />
         <span class="suffix-text">gold per 95 blue crystals</span>
       </div>
     </div>
@@ -99,7 +99,8 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
-import { NCard, NH3, NInputNumber, NTabs, NTabPane, NTable, NButton } from 'naive-ui';
+import { NCard, NH3, NTabs, NTabPane, NTable, NButton } from 'naive-ui';
+import InputNumber from './InputNumber.vue';
 import { mari } from '../store';
 
 const exchangeRate = ref(0);

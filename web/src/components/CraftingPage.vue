@@ -35,11 +35,11 @@
                 <h3>General</h3>
                 <div class="input-group">
                   <span>Cost Reduction (%)</span>
-                  <n-input-number v-model:value="craftingReductions.general.cost" :min="0" :max="30" :show-button="false" />
+                  <InputNumber v-model:value="craftingReductions.general.cost" :min="0" :max="30" :show-button="false" />
                 </div>
                 <div class="input-group">
                   <span>Time Reduction (%)</span>
-                  <n-input-number
+                  <InputNumber
                     v-model:value="generalTimeForInput"
                     @focus="handleGeneralTimeFocus"
                     @blur="handleGeneralTimeBlur"
@@ -52,7 +52,7 @@
                         <img src="/icons/aura.webp" alt="Aura" :style="{ width: '24px', height: '24px', filter: timeReductionBonus ? 'none' : 'grayscale(100%)' }">
                       </div>
                     </template>
-                  </n-input-number>
+                  </InputNumber>
                 </div>
                 <div class="input-group">
                   <span style="display: flex; align-items: center; gap: 4px;">
@@ -75,7 +75,7 @@
                       </div>
                     </n-tooltip>
                   </span>
-                  <n-input-number v-model:value="craftingReductions.general.greatSuccess" :min="0" :max="30" :show-button="false" :disabled="!enableGreatSuccess">
+                  <InputNumber v-model:value="craftingReductions.general.greatSuccess" :min="0" :max="30" :show-button="false" :disabled="!enableGreatSuccess">
                     <template #suffix>
                       <div @click="enableGreatSuccess = !enableGreatSuccess" style="display: flex; align-items: center; cursor: pointer; height: 100%;">
                         <n-icon size="24">
@@ -85,52 +85,52 @@
                         </n-icon>
                       </div>
                     </template>
-                  </n-input-number>
+                  </InputNumber>
                 </div>
               </div>
               <div class="category-group">
                 <h3>Battle Items</h3>
                 <div class="input-group">
                   <span>Cost Reduction (%)</span>
-                  <n-input-number v-model:value="craftingReductions.battle.cost" :min="0" :max="10" :show-button="false" />
+                  <InputNumber v-model:value="craftingReductions.battle.cost" :min="0" :max="10" :show-button="false" />
                 </div>
                 <div class="input-group">
                   <span>Time Reduction (%)</span>
-                  <n-input-number v-model:value="craftingReductions.battle.time" :min="0" :max="10" :show-button="false" />
+                  <InputNumber v-model:value="craftingReductions.battle.time" :min="0" :max="10" :show-button="false" />
                 </div>
                 <div class="input-group">
                   <span>Great Success (%)</span>
-                  <n-input-number v-model:value="craftingReductions.battle.greatSuccess" :min="0" :max="10" :show-button="false" :disabled="!enableGreatSuccess" />
+                  <InputNumber v-model:value="craftingReductions.battle.greatSuccess" :min="0" :max="10" :show-button="false" :disabled="!enableGreatSuccess" />
                 </div>
               </div>
               <div class="category-group">
                 <h3>Cooking</h3>
                 <div class="input-group">
                   <span>Cost Reduction (%)</span>
-                  <n-input-number v-model:value="craftingReductions.cooking.cost" :min="0" :max="10" :show-button="false" />
+                  <InputNumber v-model:value="craftingReductions.cooking.cost" :min="0" :max="10" :show-button="false" />
                 </div>
                 <div class="input-group">
                   <span>Time Reduction (%)</span>
-                  <n-input-number v-model:value="craftingReductions.cooking.time" :min="0" :max="10" :show-button="false" />
+                  <InputNumber v-model:value="craftingReductions.cooking.time" :min="0" :max="10" :show-button="false" />
                 </div>
                 <div class="input-group">
                   <span>Great Success (%)</span>
-                  <n-input-number v-model:value="craftingReductions.cooking.greatSuccess" :min="0" :max="10" :show-button="false" :disabled="!enableGreatSuccess" />
+                  <InputNumber v-model:value="craftingReductions.cooking.greatSuccess" :min="0" :max="10" :show-button="false" :disabled="!enableGreatSuccess" />
                 </div>
               </div>
               <div class="category-group">
                 <h3>Special</h3>
                 <div class="input-group">
                   <span>Cost Reduction (%)</span>
-                  <n-input-number v-model:value="craftingReductions.special.cost" :min="0" :max="10" :show-button="false" />
+                  <InputNumber v-model:value="craftingReductions.special.cost" :min="0" :max="10" :show-button="false" />
                 </div>
                 <div class="input-group">
                   <span>Time Reduction (%)</span>
-                  <n-input-number v-model:value="craftingReductions.special.time" :min="0" :max="10" :show-button="false" />
+                  <InputNumber v-model:value="craftingReductions.special.time" :min="0" :max="10" :show-button="false" />
                 </div>
                 <div class="input-group">
                   <span>Great Success (%)</span>
-                  <n-input-number v-model:value="craftingReductions.special.greatSuccess" :min="0" :max="10" :show-button="false" :disabled="!enableGreatSuccess" />
+                  <InputNumber v-model:value="craftingReductions.special.greatSuccess" :min="0" :max="10" :show-button="false" :disabled="!enableGreatSuccess" />
                 </div>
               </div>
             </div>
@@ -149,8 +149,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted } from 'vue';
-import { NInputNumber, NCard, NCollapse, NCollapseItem, NSwitch, NTooltip, NIcon, NButton } from 'naive-ui';
+import { reactive, ref, watch, onMounted } from 'vue';
+import { NCard, NCollapse, NCollapseItem, NSwitch, NTooltip, NIcon, NButton } from 'naive-ui';
+import InputNumber from './InputNumber.vue';
 import CraftingCalculator from './CraftingCalculator.vue';
 import { recipes, materialCosts } from '../store';
 
