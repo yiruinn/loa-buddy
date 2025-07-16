@@ -39,7 +39,20 @@
                 </div>
                 <div class="input-group">
                   <span>Time Reduction (%)</span>
-                  <n-input-number v-model:value="craftingReductions.general.time" :min="0" :max="30" :show-button="false" />
+                  <n-input-number
+                    v-model:value="generalTimeForInput"
+                    @focus="handleGeneralTimeFocus"
+                    @blur="handleGeneralTimeBlur"
+                    :min="0"
+                    :max="30"
+                    :show-button="false"
+                  >
+                    <template #suffix>
+                      <div @mousedown.stop @click="toggleTimeBonus" style="display: flex; align-items: center; cursor: pointer;">
+                        <img src="/icons/aura.webp" alt="Aura" :style="{ width: '24px', height: '24px', filter: timeReductionBonus ? 'none' : 'grayscale(100%)' }">
+                      </div>
+                    </template>
+                  </n-input-number>
                 </div>
                 <div class="input-group">
                   <span style="display: flex; align-items: center; gap: 4px;">
@@ -139,6 +152,7 @@ import { recipes, materialCosts } from '../store';
 
 const useLowestPrice = ref(false);
 const enableGreatSuccess = ref(false);
+const timeReductionBonus = ref(false);
 
 const craftingReductions = reactive({
   general: { cost: 0, time: 0, greatSuccess: 0 },
@@ -146,6 +160,33 @@ const craftingReductions = reactive({
   cooking: { cost: 0, time: 0, greatSuccess: 0 },
   special: { cost: 0, time: 0, greatSuccess: 0 },
 });
+
+const rawGeneralTime = ref(0);
+const generalTimeForInput = ref(0);
+
+const handleGeneralTimeFocus = () => {
+  generalTimeForInput.value = rawGeneralTime.value;
+};
+
+const handleGeneralTimeBlur = () => {
+  rawGeneralTime.value = generalTimeForInput.value;
+  let finalValue = rawGeneralTime.value || 0;
+  if (timeReductionBonus.value) {
+    finalValue += 10;
+  }
+  generalTimeForInput.value = Math.min(30, finalValue);
+  craftingReductions.general.time = generalTimeForInput.value;
+};
+
+const toggleTimeBonus = () => {
+  timeReductionBonus.value = !timeReductionBonus.value;
+  let finalValue = rawGeneralTime.value || 0;
+  if (timeReductionBonus.value) {
+    finalValue += 10;
+  }
+  generalTimeForInput.value = Math.min(30, finalValue);
+  craftingReductions.general.time = generalTimeForInput.value;
+};
 
 const localRecipes = ref([]);
 
@@ -183,6 +224,10 @@ watch(enableGreatSuccess, (newValue) => {
   localStorage.setItem('enableGreatSuccess', JSON.stringify(newValue));
 });
 
+watch(timeReductionBonus, (newValue) => {
+  localStorage.setItem('timeReductionBonus', JSON.stringify(newValue));
+});
+
 watch(craftingReductions, (newValue) => {
   localStorage.setItem('craftingReductions', JSON.stringify(newValue));
 });
@@ -205,6 +250,18 @@ onMounted(() => {
   if (savedUseLowestPrice !== null) {
     useLowestPrice.value = JSON.parse(savedUseLowestPrice);
   }
+  const savedTimeReductionBonus = localStorage.getItem('timeReductionBonus');
+  if (savedTimeReductionBonus !== null) {
+    timeReductionBonus.value = JSON.parse(savedTimeReductionBonus);
+  }
+
+  const storedTime = craftingReductions.general.time || 0;
+  generalTimeForInput.value = storedTime;
+  let baseTime = storedTime;
+  if (timeReductionBonus.value) {
+    baseTime = Math.max(0, storedTime - 10);
+  }
+  rawGeneralTime.value = baseTime;
 });
 </script>
 
