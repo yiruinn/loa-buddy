@@ -261,7 +261,12 @@ const getUnitPrice = (recipe, index) => {
   return (getTotalCost(recipe, index) / effectiveQuantity).toFixed(2);
 }
 
-const calculateTax = (sellingPrice) => Math.ceil(sellingPrice * 0.05);
+const calculateTax = (sellingPrice) => {
+  if (sellingPrice <= 1) {
+    return 0;
+  }
+  return Math.ceil(sellingPrice * 0.05);
+}
 
 const getProfit = (recipe, index) => {
   const totalCost = getTotalCost(recipe, index);
