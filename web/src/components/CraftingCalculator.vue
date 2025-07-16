@@ -44,7 +44,37 @@
                   />
                 </td>
                 <td>{{ getAdjustedCraftingCost(recipe) }}</td>
-                <td>{{ getTotalCost(recipe, getRecipeIndex(recipe)).toFixed(2) }}</td>
+                <td>
+                  <n-tooltip trigger="hover">
+                    <template #trigger>
+                      <span>{{ getTotalCost(recipe, getRecipeIndex(recipe)).toFixed(2) }}g</span>
+                    </template>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                      <div v-for="(line, i) in getCostBreakdown(recipe, getRecipeIndex(recipe))" :key="i" style="display: grid; grid-template-columns: auto auto; justify-content: start; align-items: center; gap: 8px;">
+                        <div style="display: flex; align-items: center; justify-content: flex-start; gap: 8px;">
+                          <n-tooltip trigger="hover">
+                            <template #trigger>
+                              <div class="source-indicator" :class="getIndicatorClass(line)"></div>
+                            </template>
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                              <span>{{ line.materialPrice }}g</span>
+                              <div v-if="isExchangeCheaper(line)" style="display: flex; align-items: center; gap: 4px;">
+                                <template v-for="(pathId, i) in line.path" :key="pathId">
+                                  <img :src="`/icons/${pathId}.webp`" style="width: 24px; height: 24px;" />
+                                  <span v-if="i < line.path.length - 1" style="font-size: 16px; color: #fff;">→</span>
+                                </template>
+                              </div>
+                            </div>
+                          </n-tooltip>
+                          <img :src="line.icon" style="width: 24px; height: 24px;" />
+                        </div>
+                        <div style="font-weight: bold;">
+                          {{ line.totalCost }}g
+                        </div>
+                      </div>
+                    </div>
+                  </n-tooltip>
+                </td>
                 <td :class="getUnitPriceClass(recipe, getRecipeIndex(recipe))">{{ getUnitPrice(recipe, getRecipeIndex(recipe)) }}</td>
                 <td>
                   <n-input-number
@@ -69,9 +99,9 @@
 <script setup>
 import { ref, watch, onMounted, computed } from 'vue';
 import {
-  NCard, NTable, NInputNumber, NSelect, NCollapse, NCollapseItem
+  NCard, NTable, NInputNumber, NSelect, NCollapse, NCollapseItem, NTooltip
 } from 'naive-ui';
-import { materialCosts } from '../store';
+import { materialCosts, materialsList } from '../store';
 
 const props = defineProps({
   recipes: {
@@ -162,6 +192,39 @@ const calculateMaterialCost = (items) => {
   }, 0);
 };
 
+const getCostBreakdown = (recipe, index) => {
+  const selectedCategory = selectedCategories.value[index];
+  const selectedOption = recipe.materialOptions.find(o => o.category === selectedCategory);
+  const priceKey = props.useLowestPrice ? 'effectivePrice' : 'marketPrice';
+
+  const materialDetails = selectedOption.items.map(item => {
+    const materialData = materialCosts.materials[item.id];
+    const materialPrice = materialData?.[priceKey] || 0;
+    const unitPrice = materialPrice / 100;
+    const totalCost = item.quantity * unitPrice;
+    const iconPath = `/icons/${item.id}.webp`;
+    return {
+      materialPrice: materialPrice.toFixed(2),
+      totalCost: totalCost.toFixed(2),
+      icon: iconPath,
+      source: materialData?.source,
+      path: materialData?.path
+    };
+  });
+
+  const craftingCost = getAdjustedCraftingCost(recipe);
+  const breakdown = [
+    ...materialDetails,
+    {
+      materialPrice: (1).toFixed(2),
+      totalCost: craftingCost.toFixed(2),
+      icon: '/icons/gold.webp'
+    }
+  ];
+
+  return breakdown;
+};
+
 const getSortedMaterialOptions = (recipe) => {
   const adjustedGoldCost = getAdjustedCraftingCost(recipe);
   return recipe.materialOptions
@@ -231,6 +294,17 @@ const getUnitPriceClass = (recipe, index) => {
     return 'loss';
   }
   return '';
+};
+
+const isExchangeCheaper = (line) => {
+  return props.useLowestPrice && line.source === 'exchange';
+};
+
+const getIndicatorClass = (line) => {
+  if (isExchangeCheaper(line)) {
+    return 'source-exchange-available';
+  }
+  return 'source-lowest';
 };
 
 const initializeCategories = () => {
@@ -308,5 +382,21 @@ watch(() => [
 
 .loss {
   color: #e88080;
+}
+
+.source-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.source-lowest {
+  background-color: #63e2b7; /* Green */
+  cursor: pointer;
+}
+
+.source-exchange-available {
+  background-color: #e2d463; /* Yellow */
+  cursor: pointer;
 }
 </style>
