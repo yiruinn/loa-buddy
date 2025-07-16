@@ -48,7 +48,7 @@
                     :show-button="false"
                   >
                     <template #suffix>
-                      <div @mousedown.stop @click="toggleTimeBonus" style="display: flex; align-items: center; cursor: pointer;">
+                      <div @mousedown.stop @click="toggleTimeBonus" style="display: flex; align-items: center; cursor: pointer; height: 100%;">
                         <img src="/icons/aura.webp" alt="Aura" :style="{ width: '24px', height: '24px', filter: timeReductionBonus ? 'none' : 'grayscale(100%)' }">
                       </div>
                     </template>
@@ -77,9 +77,13 @@
                   </span>
                   <n-input-number v-model:value="craftingReductions.general.greatSuccess" :min="0" :max="30" :show-button="false" :disabled="!enableGreatSuccess">
                     <template #suffix>
-                      <n-button @click="enableGreatSuccess = !enableGreatSuccess" size="tiny" :style="{ backgroundColor: enableGreatSuccess ? '#63e2b7' : '#e88080', width: '10px', height: '10px', padding: 0, borderRadius: '50%' }">
-                        &nbsp;
-                      </n-button>
+                      <div @click="enableGreatSuccess = !enableGreatSuccess" style="display: flex; align-items: center; cursor: pointer; height: 100%;">
+                        <n-icon size="24">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" :style="{ color: enableGreatSuccess ? '#63e2b7' : 'grey' }">
+                            <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="20" font-weight="bold" font-style="normal" fill="currentColor">x2</text>
+                          </svg>
+                        </n-icon>
+                      </div>
                     </template>
                   </n-input-number>
                 </div>
