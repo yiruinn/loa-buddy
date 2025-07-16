@@ -56,7 +56,9 @@
                         Expected Yield (EY) is:<br>
                         <b>quantity * (1 + GSC / 100)</b><br>
                         Unit Price is calculated as:<br>
-                        <b>totalCost / EY</b>
+                        <b>totalCost / EY</b><br>
+                        Net Profit (taxed) is:<br>
+                        <b> [(price - tax) * EY] - totalCost </b>
                       </div>
                     </n-tooltip>
                   </span>

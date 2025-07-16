@@ -25,7 +25,7 @@
                 <th style="width: 120px">Total Cost</th>
                 <th style="width: 120px">Unit Price</th>
                 <th style="width: 120px">Selling Price</th>
-                <th style="width: 120px">Unit Profit (taxed)</th>
+                <th style="width: 120px">Net Profit (taxed)</th>
                 <th style="width: 120px">Craft Time</th>
                 <th style="width: 120px">Profit/Hour</th>
               </tr>
@@ -263,16 +263,20 @@ const getUnitPrice = (recipe, index) => {
 const calculateTax = (sellingPrice) => Math.ceil(sellingPrice * 0.05);
 
 const getProfit = (recipe, index) => {
+  const totalCost = getTotalCost(recipe, index);
+  const greatSuccessChance = getGreatSuccessChance(recipe) / 100;
+  const effectiveQuantity = recipe.quantity * (1 + greatSuccessChance);
   const tax = calculateTax(recipe.sellingPrice);
-  return (recipe.sellingPrice - tax - parseFloat(getUnitPrice(recipe, index))).toFixed(2);
+  const netSellPrice = recipe.sellingPrice - tax;
+  const netIncome = effectiveQuantity * netSellPrice;
+  const totalProfit = netIncome - totalCost;
+  return totalProfit.toFixed(2);
 };
 
 const getProfitPerHour = (recipe, index) => {
-  const profitValue = parseFloat(getProfit(recipe, index));
+  const totalProfit = parseFloat(getProfit(recipe, index));
   const timeInHours = parseFloat(getAdjustedCraftingTime(recipe)) / 60;
-  const greatSuccessChance = getGreatSuccessChance(recipe) / 100;
-  const effectiveQuantity = recipe.quantity * (1 + greatSuccessChance);
-  return ((profitValue * effectiveQuantity * craftingSlots.value) / timeInHours).toFixed(2);
+  return ((totalProfit * craftingSlots.value) / timeInHours).toFixed(2);
 };
 
 const getProfitClass = (recipe, index) => {
