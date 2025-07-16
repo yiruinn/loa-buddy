@@ -4,10 +4,20 @@
     :layout="tradeSkillLayout"
   />
   <div style="margin-top: 20px;"></div>
-  <!-- <MaterialCosts
+  <MaterialCosts
     title="Honing Materials"
     :layout="fusionMaterialLayout"
-  /> -->
+  />
+  <div style="margin-top: 20px;"></div>
+  <MaterialCosts
+    title="Combat Supplies"
+    :layout="combatSuppliesLayout"
+  />
+  <div style="margin-top: 20px;"></div>
+  <MaterialCosts
+    title="Cooking"
+    :layout="cookingLayout"
+  />
 </template>
 
 <script setup>
@@ -28,11 +38,25 @@ const tradeSkillLayout = [
 
 const fusionMaterialLayout = [
   [
-    { 
-      category: 'Fusion Materials', 
+    {
+      category: 'Fusion Materials',
       items: ['oreha_fusion_material', 'superior_oreha_fusion_material', 'prime_oreha_fusion_material', 'abidos_fusion_material'],
       columns: 2
     }
+  ]
+];
+
+const combatSuppliesLayout = [
+  [
+    { category: 'Recovery', items: ['elemental_hp_potion'] },
+    { category: 'Offense', items: ['dark_grenade'] },
+    { category: 'Utility', items: ['sacred_charm'] },
+  ]
+];
+
+const cookingLayout = [
+  [
+    { category: 'Feasts', items: ['masters_chewy_grilled', 'masters_herb_steak'] }
   ]
 ];
 </script>

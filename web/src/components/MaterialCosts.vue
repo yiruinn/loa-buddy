@@ -47,13 +47,19 @@
             <div v-for="(row, rowIndex) in layout" :key="rowIndex" class="material-row">
               <div v-for="group in row" :key="group.category" class="material-group">
                 <div class="category-header">
-                  <img :src="getCategoryIcon(group.category)" :alt="group.category" class="category-icon" />
+                  <img v-if="isUrl(getCategoryIcon(group.category))" :src="getCategoryIcon(group.category)" :alt="group.category" class="category-icon" />
+                  <n-icon v-else size="22">
+                    <component :is="getCategoryIcon(group.category)" />
+                  </n-icon>
                   <h3>{{ group.category }}</h3>
                 </div>
                 <div class="items-container" :style="group.columns ? { display: 'grid', 'grid-template-columns': `repeat(${group.columns}, 1fr)`, 'gap': '8px' } : {}">
                   <div v-for="itemId in group.items" :key="itemId" class="material-cost-item">
                     <div class="material-info">
-                      <img :src="`/icons/${itemId}.webp`" :alt="getMaterial(itemId)?.name" class="material-icon" />
+                      <img v-if="itemIconExists(itemId)" :src="`/icons/${itemId}.webp`" :alt="getMaterial(itemId)?.name" class="material-icon" />
+                      <n-icon v-else size="18">
+                        <component :is="getLetterIcon(getMaterial(itemId)?.name)" />
+                      </n-icon>
                       <span>{{ getMaterial(itemId)?.name }}</span>
                       <n-tooltip v-if="isOutdated(itemId)" trigger="hover">
                         <template #trigger>
@@ -100,12 +106,13 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, h } from 'vue';
 import { NCard, NCollapse, NCollapseItem, NButton, NSelect, NTooltip, NIcon } from 'naive-ui';
 import InputNumber from './InputNumber.vue';
 import { materialCosts, updateAllPrices, saveMaterialCosts, recalculateEffectiveCosts, materialsList } from '../store';
 
 import { Warning } from '@vicons/ionicons5';
+import { LetterA, LetterB, LetterC, LetterD, LetterE, LetterF, LetterG, LetterH, LetterI, LetterJ, LetterK, LetterL, LetterM, LetterN, LetterO, LetterP, LetterQ, LetterR, LetterS, LetterT, LetterU, LetterV, LetterW, LetterX, LetterY, LetterZ } from '@vicons/tabler';
 
 const props = defineProps({
   title: {
@@ -236,17 +243,50 @@ const formattedLatestMaterialUpdate = computed(() => {
   return date.toLocaleString();
 });
 
+const letterIcons = { A: LetterA, B: LetterB, C: LetterC, D: LetterD, E: LetterE, F: LetterF, G: LetterG, H: LetterH, I: LetterI, J: LetterJ, K: LetterK, L: LetterL, M: LetterM, N: LetterN, O: LetterO, P: LetterP, Q: LetterQ, R: LetterR, S: LetterS, T: LetterT, U: LetterU, V: LetterV, W: LetterW, X: LetterX, Y: LetterY, Z: LetterZ };
+
 const getCategoryIcon = (category) => {
   const validIconCategories = ['foraging', 'logging', 'mining', 'hunting', 'fishing', 'excavating'];
   const categoryLower = category.toLowerCase();
   if (validIconCategories.includes(categoryLower)) {
     return `/icons/${categoryLower}.webp`;
   }
-  // Fallback to a generated SVG placeholder with the first letter of the category
   const firstLetter = category.charAt(0).toUpperCase();
-  const bgColor = '%23444'; // Darker grey for the background
-  const textColor = '%23AAA'; // Lighter grey for the text
-  return `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><rect width="24" height="24" rx="4" style="fill: ${bgColor};"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="12" style="fill: ${textColor};">${firstLetter}</text></svg>`;
+  const icon = letterIcons[firstLetter];
+  return icon ? () => h(icon) : null;
+};
+
+const isUrl = (value) => {
+  return typeof value === 'string' && value.startsWith('/');
+}
+
+const existingIcons = new Set([
+  'abidos_fusion_material.webp', 'abidos_iron_ore.webp', 'abidos_relic.webp',
+  'abidos_solar_carp.webp', 'abidos_thick_raw_meat.webp', 'abidos_timber.webp',
+  'abidos_wild_flower.webp', 'ancient_relic.webp', 'aura.webp',
+  'bright_wild_flower.webp', 'excavating.webp', 'excavating_powder.webp',
+  'fish.webp', 'fishing.webp', 'fishing_powder.webp', 'foraging.webp',
+  'gathering_powder.webp', 'gold.webp', 'heavy_iron_ore.webp', 'hunting.webp',
+  'hunting_powder.webp', 'iron_ore.webp', 'logging.webp', 'logging_powder.webp',
+  'mining.webp', 'mining_powder.webp', 'oreha_fusion_material.webp',
+  'oreha_relic.webp', 'oreha_solar_carp.webp', 'oreha_thick_meat.webp',
+  'prime_oreha_fusion_material.webp', 'rare_relic.webp', 'redflesh_fish.webp',
+  'shy_wild_flower.webp', 'strong_iron_ore.webp', 'sturdy_timber.webp',
+  'superior_oreha_fusion_material.webp', 'tender_timber.webp',
+  'thick_raw_meat.webp', 'timber.webp', 'treated_meat.webp', 'wild_flower.webp'
+]);
+
+const itemIconExists = (itemId) => {
+  return existingIcons.has(`${itemId}.webp`);
+};
+
+const getLetterIcon = (name) => {
+  if (!name) return null;
+  const match = name.match(/[a-zA-Z]/);
+  if (!match) return null; // Or return a default icon if you have one
+  const firstLetter = match[0].toUpperCase();
+  const icon = letterIcons[firstLetter];
+  return icon ? () => h(icon) : null;
 };
 </script>
 
