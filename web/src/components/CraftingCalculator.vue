@@ -27,11 +27,16 @@
                 <th style="width: 120px">
                   <div style="display: flex; align-items: center; gap: 8px;">
                     Selling Price
-                    <n-button text @click="pullPrices(group)">
-                      <template #icon>
-                        <n-icon :component="ArrowUpload24Regular" />
+                    <n-tooltip trigger="hover" :delay="1000">
+                      <template #trigger>
+                        <n-button text @click="pullPrices(group, $event)">
+                          <template #icon>
+                            <n-icon :component="ArrowUpload24Regular" />
+                          </template>
+                        </n-button>
                       </template>
-                    </n-button>
+                      Pull prices from material prices page
+                    </n-tooltip>
                   </div>
                 </th>
                 <th style="width: 120px">Net Profit (taxed)</th>
@@ -167,7 +172,7 @@ const groupedRecipes = computed(() => {
   return orderedGroups;
 });
 
-const pullPrices = (recipesToUpdate) => {
+const pullPrices = (recipesToUpdate, event) => {
   recipesToUpdate.forEach(recipe => {
     const materialId = recipe.id;
     if (materialId && materialCosts.materials[materialId]) {
@@ -177,6 +182,9 @@ const pullPrices = (recipesToUpdate) => {
       }
     }
   });
+  if (event) {
+    event.currentTarget.blur();
+  }
 };
 
 const getRecipeIndex = (recipe) => {

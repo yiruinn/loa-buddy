@@ -48,9 +48,14 @@
                     :show-button="false"
                   >
                     <template #suffix>
-                      <div @mousedown.stop @click="toggleTimeBonus" style="display: flex; align-items: center; cursor: pointer; height: 100%;">
-                        <img src="/icons/aura.webp" alt="Aura" :style="{ width: '24px', height: '24px', filter: timeReductionBonus ? 'none' : 'grayscale(100%)' }">
-                      </div>
+                      <n-tooltip trigger="hover" :delay="500">
+                        <template #trigger>
+                          <div @mousedown.stop @click="toggleTimeBonus" style="display: flex; align-items: center; cursor: pointer; height: 100%;">
+                            <img src="/icons/aura.webp" alt="Aura" :style="{ width: '24px', height: '24px', filter: timeReductionBonus ? 'none' : 'grayscale(100%)' }">
+                          </div>
+                        </template>
+                        Include aura time reduction bonus
+                      </n-tooltip>
                     </template>
                   </InputNumber>
                 </div>
@@ -77,13 +82,18 @@
                   </span>
                   <InputNumber v-model:value="craftingReductions.general.greatSuccess" :min="0" :max="30" :show-button="false" :disabled="!enableGreatSuccess">
                     <template #suffix>
-                      <div @click="enableGreatSuccess = !enableGreatSuccess" style="display: flex; align-items: center; cursor: pointer; height: 100%;">
-                        <n-icon size="24">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" :style="{ color: enableGreatSuccess ? '#63e2b7' : 'grey' }">
-                            <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="20" font-weight="bold" font-style="normal" fill="currentColor">x2</text>
-                          </svg>
-                        </n-icon>
-                      </div>
+                      <n-tooltip trigger="hover" :delay="1000">
+                        <template #trigger>
+                          <div @click="enableGreatSuccess = !enableGreatSuccess" style="display: flex; align-items: center; cursor: pointer; height: 100%;">
+                            <n-icon size="24">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" :style="{ color: enableGreatSuccess ? '#63e2b7' : 'grey' }">
+                                <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-size="20" font-weight="bold" font-style="normal" fill="currentColor">x2</text>
+                              </svg>
+                            </n-icon>
+                          </div>
+                        </template>
+                        Enable great success in profit calculation
+                      </n-tooltip>
                     </template>
                   </InputNumber>
                 </div>
